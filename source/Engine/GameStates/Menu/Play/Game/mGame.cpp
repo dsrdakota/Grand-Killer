@@ -10,7 +10,6 @@ mGame::mGame()
 	map = &Map::Instance();
 
 	taxi = new Car(carType::Type::Taxi,sf::Vector2f(4585,4759));
-	//taxi->setPhycics(taxi);
 
 	player = &Player::Instance();
 }
@@ -29,9 +28,11 @@ void mGame::play()
 
 		player->move();
 
-		map->draw();
+		map->drawUnder();
 
 		player->draw();
+
+		map->drawOn();
 
 		renderSprites::Instance().run();
 

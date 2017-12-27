@@ -27,50 +27,33 @@ void Traces::setTraces()
 	int x=0, y=0; // rect Texture
 	for (auto i = 0;i < 4;++i)
 	{
+		sf::Sprite *trace = nullptr;
+		bool drawTrace = false;
 		if (grassHitbox->getPixel(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2,
 			tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2) == sf::Color(133, 91, 0) && // hitbox is on Grass
 			!isSameTraceOnVector(sf::Vector2f(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2, // trace isnt in vector
 				tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2),
 				tiresPos[i].getRotation()))
 		{
-			sf::Sprite *trace = new sf::Sprite(*traceGrassTexture);
+			trace = new sf::Sprite(*traceGrassTexture);
+			drawTrace = true;
+		}
+
+		else if (fabs(*car->getOverSteerValue()) > 20)
+		{
+			trace = new sf::Sprite(*traceAsphaltTexture);
+			trace->setColor(sf::Color(0, 0, 0, fabs(*car->getOverSteerValue()) *1.25 + 75));
+			drawTrace = true;
+		}
+
+		if (drawTrace)
+		{
 			trace->setOrigin(2.5, 2.5);
 			trace->setPosition(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2,
 				tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2);
 			trace->setRotation(tiresPos[i].getRotation());
 
 			traces.push_back(std::make_pair(trace, 5));
-
-			continue;
-		}
-
-
-		for (auto j = 0;j < 6;j++)
-		{
-			if (grassHitbox->getPixel(tiresHitbox[i][j]->getGlobalBounds().left + tiresHitbox[i][j]->getGlobalBounds().width / 2,
-				tiresHitbox[i][j]->getGlobalBounds().top + tiresHitbox[i][j]->getGlobalBounds().height / 2) == sf::Color(133, 91, 0) && // hitbox is on Grass
-				!isSameTraceOnVector(sf::Vector2f(tiresHitbox[i][j]->getGlobalBounds().left + tiresHitbox[i][j]->getGlobalBounds().width / 2, // trace isnt in vector
-					tiresHitbox[i][j]->getGlobalBounds().top + tiresHitbox[i][j]->getGlobalBounds().height / 2),
-					tiresHitbox[i][j]->getRotation()))
-			{
-				sf::Sprite *trace = new sf::Sprite(*traceGrassTexture);
-				trace->setTextureRect(sf::IntRect(x, y, 4, 9));
-				trace->setOrigin(2.5, 2.5);
-				trace->setPosition(tiresHitbox[i][j]->getGlobalBounds().left + tiresHitbox[i][j]->getGlobalBounds().width / 2,
-					tiresHitbox[i][j]->getGlobalBounds().top + tiresHitbox[i][j]->getGlobalBounds().height / 2);
-				trace->setRotation(tiresHitbox[i][j]->getRotation());
-
-				traces.push_back(std::make_pair(trace, 5));
-
-				if (j % 2 == 0)
-					x = 0;
-				else
-					x = 4;
-
-				if (j % 2 == 0 && j != 0)
-					y += 9;
-
-			}
 		}
 	}
 	updateTimeInTrace();

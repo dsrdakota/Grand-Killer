@@ -13,12 +13,23 @@ Map::Map() : window(Game::Instance().getWindow())
 
 	grassHitbox = new sf::Image;
 	grassHitbox->loadFromFile("data/Map/Hitboxes/grassHitbox.png");
+	collisionHitbox = new sf::Image;
+	collisionHitbox->loadFromFile("data/Map/Hitboxes/collisionHitbox.png");
+
+	swimmingPool = new SwimmingPool;
+	otherElements = new Other;
+	trafficSigns = new TrafficSigns;
 }
 
 Map::~Map()
 {
 	window->setView(window->getDefaultView());
 	delete map;
+
+	delete grassHitbox;
+	delete collisionHitbox;
+	delete swimmingPool;
+	delete otherElements;
 }
 
 void Map::setView(const sf::Vector2f & center)
@@ -45,9 +56,20 @@ void Map::updateView(const sf::Vector2f &newerView)
 	
 }
 
-void Map::draw()
+void Map::drawUnder()
 {
 	renderSprites::Instance().addToRender(map);
+
+	swimmingPool->draw();
+
+	trafficSigns->drawUnder();
+}
+
+void Map::drawOn()
+{
+	otherElements->draw();
+
+	trafficSigns->drawOn();
 }
 
 bool Map::isOutsideView(const sf::Vector2f & pos)
