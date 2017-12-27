@@ -11,7 +11,7 @@
 Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game::Instance().getWindow())
 {
 	this->type = new carType::Type(type);
-	shape = new Shape();
+	shape = new Shape;
 
 	std::string pathToShape = "data/Models/Cars/";
 	std::string pathToTexture = pathToShape;
@@ -50,7 +50,6 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	}
 	tire = new Tire(this,type);
 	door = new Door(type);
-
 	shape->setShape(pathToShape, pathToTexture, nameTexture);
 
 	shape->setPosition(startPos);
@@ -61,6 +60,15 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 
 	phycics = new carPhycics(this);
 
+	for (auto i = 0;i < shape->getShape()->getPointCount();i++)
+	{
+		sf::CircleShape *buf = new sf::CircleShape(1);
+		buf->setOrigin(shape->getShape()->getOrigin() - shape->getShape()->getPoint(i));
+		buf->setFillColor(sf::Color::Red);
+
+		buf->setPosition(shape->getShape()->getPosition());
+		hitboxes.push_back(buf);
+	}
 }
 
 Car::~Car()
@@ -171,6 +179,9 @@ void Car::move(const sf::Vector2f & offset)
 	door->move(offset);
 	tire->move(offset);
 	phycics->move(offset);
+
+	for (const auto &i : hitboxes)
+		i->move(offset);
 }
 
 void Car::rotate(const double & angle)
@@ -178,6 +189,9 @@ void Car::rotate(const double & angle)
 	shape->getShape()->rotate(static_cast<float>(angle));
 	door->rotate(static_cast<float>(angle));
 	tire->rotate(angle, shape->getShape());
+
+	for (const auto &i : hitboxes)
+		i->rotate(angle);
 }
 
 void Car::updatePosition()
@@ -238,6 +252,9 @@ void Car::draw()
 	door->drawDoors();
 
 	phycics->draw();
+
+	for(const auto &i:hitboxes)
+		renderSprites::Instance().addToRender(i);
 
 	//tire->draw();
 

@@ -7,16 +7,18 @@
 
 mGame::mGame()
 {
+	cars = new std::vector<Car*>;
 	map = &Map::Instance();
 
 	taxi = new Car(carType::Type::Taxi,sf::Vector2f(4585,4759));
+	cars->push_back(taxi);
 
 	player = &Player::Instance();
 }
 
 mGame::~mGame()
 {
-	
+	delete cars;
 }
 
 void mGame::play()
@@ -38,4 +40,9 @@ void mGame::play()
 
 		TimeManager::getTimeOnClocks();
 	}
+}
+
+std::vector<Car*> mGame::getAllCars()
+{
+	return *cars;
 }

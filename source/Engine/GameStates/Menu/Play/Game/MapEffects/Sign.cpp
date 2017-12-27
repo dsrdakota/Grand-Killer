@@ -1,6 +1,9 @@
 #include "Sign.hpp"
 
 #include "../../../../../../Manager/Texture.hpp"
+#include "../mGame.hpp"
+
+#include <iostream>
 
 Sign::Sign(const sf::Vector2f &startPos, const float &rotation)
 {
@@ -49,4 +52,10 @@ sf::CircleShape * Sign::getSignHitbox()
 int Sign::getDrawState()
 {
 	return static_cast<int>(state);
+}
+
+void Sign::checkCollision()
+{
+	
+
 }

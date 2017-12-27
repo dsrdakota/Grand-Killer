@@ -58,6 +58,8 @@ private:
 	
 	carPhycics *phycics;
 
+	std::vector<sf::CircleShape*>hitboxes;
+
 	void gas(const sf::Keyboard::Key &key);
 	void brake(const sf::Keyboard::Key &key);
 	void handBrake(const sf::Keyboard::Key &key);

@@ -31,6 +31,5 @@ void SwimmingPool::draw()
 		clock.clock->restart();
 		*clock.time = sf::Time::Zero;
 	}
-
-	renderSprites::Instance().addToRender(swimmingPool);
+		renderSprites::Instance().addToRender(swimmingPool);
 }

@@ -51,11 +51,10 @@ void Menu::play()
 
 	Game::loadingScreen();
 
-	mGame *game = new mGame;
+	mGame *game = &mGame::Instance();
 	wsk = game;
 	wsk->play();
 
 	wsk = nullptr;
-	delete game;
 	delete wsk;
 }

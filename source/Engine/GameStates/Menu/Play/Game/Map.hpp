@@ -17,8 +17,8 @@ public:
 
 	inline static Map& Instance()
 	{
-		static Map engine;
-		return engine;
+		static Map map;
+		return map;
 	}
 
 	void setView(const sf::Vector2f &center);

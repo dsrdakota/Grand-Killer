@@ -1,7 +1,6 @@
 #include "carPhycics.hpp"
 
 #include "../Car/Car.hpp"
-#include <iostream>
 
 carPhycics::carPhycics(Car *car)
 {

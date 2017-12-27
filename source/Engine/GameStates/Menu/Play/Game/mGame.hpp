@@ -12,11 +12,25 @@ class mGame : public smallerEngine
 public:
 
 	mGame();
-	~mGame();
+
+	mGame(const mGame &) = delete;
+	void operator=(const mGame &) = delete;
+
+	inline static mGame& Instance()
+	{
+		static mGame game;
+		return game;
+	}
 
 	void play() override;
 
+	std::vector<Car*> getAllCars();
+
 private:
+
+	~mGame();
+
+	std::vector<Car*> *cars;
 
 	Map *map;
 	Player *player;

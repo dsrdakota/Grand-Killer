@@ -15,6 +15,8 @@ public:
 	sf::CircleShape *getSignHitbox();
 	int getDrawState();
 
+	void checkCollision();
+
 private:
 
 	enum class drawState

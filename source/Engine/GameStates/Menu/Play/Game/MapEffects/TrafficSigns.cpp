@@ -17,6 +17,8 @@ TrafficSigns::~TrafficSigns()
 
 void TrafficSigns::drawUnder()
 {
+	signs[0].checkCollision();
+
 	for(auto i=0;i<5;++i)
 		if (signs[i].getDrawState() == -1) // -1 Under
 		{
@@ -27,6 +29,8 @@ void TrafficSigns::drawUnder()
 
 void TrafficSigns::drawOn()
 {
+	signs[0].checkCollision();
+
 	for (auto i = 0;i<5;++i)
 		if (signs[i].getDrawState() == 1) // 1 On
 		{
