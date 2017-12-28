@@ -19,6 +19,7 @@ Map::Map() : window(Game::Instance().getWindow())
 	swimmingPool = new SwimmingPool;
 	otherElements = new Other;
 	trafficSigns = new TrafficSigns;
+	trafficLights = new TrafficLights;
 }
 
 Map::~Map()
@@ -30,6 +31,8 @@ Map::~Map()
 	delete collisionHitbox;
 	delete swimmingPool;
 	delete otherElements;
+	delete trafficSigns;
+	delete trafficLights;
 }
 
 void Map::setView(const sf::Vector2f & center)
@@ -63,6 +66,8 @@ void Map::drawUnder()
 	swimmingPool->draw();
 
 	trafficSigns->drawUnder();
+
+	trafficLights->drawUnder();
 }
 
 void Map::drawOn()
@@ -70,6 +75,8 @@ void Map::drawOn()
 	otherElements->draw();
 
 	trafficSigns->drawOn();
+
+	trafficLights->drawOn();
 }
 
 bool Map::isOutsideView(const sf::Vector2f & pos)

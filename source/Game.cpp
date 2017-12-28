@@ -35,12 +35,12 @@ Game::Game() : m_status(status::Initializing)
 
 		window = new sf::RenderWindow(sf::VideoMode(width, height, colors), "Grand Killer", windowMode, settings);
 		window->setFramerateLimit(fps);
+		window->setVerticalSyncEnabled(true);
 
 	}
 	else
 		window = new sf::RenderWindow(sf::VideoMode(300, 100, 32), "Grand Killer",sf::Style::Default);
 
-	window->setVerticalSyncEnabled(true);
 	delete config;	
 
 	//setIco();

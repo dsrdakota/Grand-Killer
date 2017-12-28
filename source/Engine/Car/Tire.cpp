@@ -148,14 +148,14 @@ void Tire::rotate(const double & angle, const sf::ConvexShape *car)
 {
 	for (int i = 0;i < 4;++i)
 	{
-		tires[i].rotate(angle);
-		tiresPos[i].rotate(angle);
+		tires[i].rotate(static_cast<float>(angle));
+		tiresPos[i].rotate(static_cast<float>(angle));
 
 		tires[i].setPosition(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2,
 			tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2);
 
 		for (auto j = 0;j<6;++j)
-			tiresHitbox[i][j]->rotate(angle);
+			tiresHitbox[i][j]->rotate(static_cast<float>(angle));
 	}
 }
 

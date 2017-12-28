@@ -60,7 +60,7 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 
 	phycics = new carPhycics(this);
 
-	for (auto i = 0;i < shape->getShape()->getPointCount();i++)
+	for (size_t i = 0;i < shape->getShape()->getPointCount();i++)
 	{
 		sf::CircleShape *buf = new sf::CircleShape(1);
 		buf->setOrigin(shape->getShape()->getOrigin() - shape->getShape()->getPoint(i));
@@ -80,9 +80,24 @@ Car::~Car()
 	delete phycics; // kappa
 }
 
+std::vector<sf::CircleShape*> Car::getAllHitboxes()
+{
+	return hitboxes;
+}
+
 double Car::getSpeed()
 {
 	return *phycics->getPhycicsMove()->getSpeed();
+}
+
+void Car::setSpeed(const float &speed)
+{
+	phycics->getPhycicsMove()->setSpeed(speed);
+}
+
+sf::Vector2f Car::getMovementVector()
+{
+	return phycics->getPhycicsMove()->getMovementVector(shape->getShape()->getRotation() - static_cast<float>(*getOverSteerValue()));
 }
 
 const double Car::getMaxSpeed()
@@ -191,7 +206,7 @@ void Car::rotate(const double & angle)
 	tire->rotate(angle, shape->getShape());
 
 	for (const auto &i : hitboxes)
-		i->rotate(angle);
+		i->rotate(static_cast<float>(angle));
 }
 
 void Car::updatePosition()

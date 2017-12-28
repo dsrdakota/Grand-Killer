@@ -61,6 +61,33 @@ const double * Movement::getSpeed()
 	return speed;
 }
 
+void Movement::setSpeed(const float & speed)
+{
+	if (speed > 0 && *movingState != stateMoving::stop)
+	{
+		switch (*movingState)
+		{
+		case stateMoving::front:
+
+			if (speed < *MAX_SPEED)
+				*speedf = speed;
+
+			break;
+		case stateMoving::back:
+
+			if (speed < *MAX_SPEED / 2)
+				*speedb = speed;
+
+			break;
+		}
+	}
+	else if (speed <= 0)
+	{
+		*speedf = 0;
+		*speedb = 0;
+	}
+}
+
 const double * Movement::getMaxSpeed()
 {
 	return MAX_SPEED;
@@ -88,10 +115,7 @@ void Movement::gas(const sf::Keyboard::Key & key)
 void Movement::brake(const sf::Keyboard::Key & key)
 {
 	if (sf::Keyboard::isKeyPressed(key))
-	{
-
 		acceleratingFunction(speedb, speedf, *MAX_SPEED / 2, stateKeyGas);
-	}
 	else
 		stateKeyBrake = false;
 

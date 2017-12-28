@@ -5,6 +5,7 @@
 #include "MapEffects/SwimmingPool.hpp"
 #include "MapEffects/OtherElements.hpp"
 #include "MapEffects/TrafficSigns.hpp"
+#include "MapEffects/TrafficLights.hpp"
 
 class Map
 {
@@ -46,4 +47,5 @@ private:
 	SwimmingPool *swimmingPool;
 	Other *otherElements; // leaves & roofs
 	TrafficSigns *trafficSigns;
+	TrafficLights *trafficLights;
 };

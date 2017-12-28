@@ -24,7 +24,10 @@ public:
 	inline Shape *getShape() { return shape; }
 	inline Door* getDoors() { return door; }
 	inline Tire* getTires() { return tire; }
+	std::vector<sf::CircleShape*> getAllHitboxes();
 	double getSpeed();
+	void setSpeed(const float &speed);
+	sf::Vector2f getMovementVector();
 	const double getMaxSpeed();
 	const double *getOverSteerValue();
 	const int getOverSteerSide();

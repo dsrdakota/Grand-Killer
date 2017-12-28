@@ -29,8 +29,8 @@ void Traces::setTraces()
 	{
 		sf::Sprite *trace = nullptr;
 		bool drawTrace = false;
-		if (grassHitbox->getPixel(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2,
-			tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2) == sf::Color(133, 91, 0) && // hitbox is on Grass
+		if (grassHitbox->getPixel(static_cast<unsigned>(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2),
+			static_cast<unsigned>(tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2)) == sf::Color(133, 91, 0) && // hitbox is on Grass
 			!isSameTraceOnVector(sf::Vector2f(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2, // trace isnt in vector
 				tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2),
 				tiresPos[i].getRotation()))
@@ -42,7 +42,7 @@ void Traces::setTraces()
 		else if (fabs(*car->getOverSteerValue()) > 20)
 		{
 			trace = new sf::Sprite(*traceAsphaltTexture);
-			trace->setColor(sf::Color(0, 0, 0, fabs(*car->getOverSteerValue()) *1.25 + 75));
+			trace->setColor(sf::Color(0, 0, 0, static_cast<sf::Uint8>(fabs(*car->getOverSteerValue()) *1.25 + 75)));
 			drawTrace = true;
 		}
 
@@ -67,7 +67,7 @@ void Traces::draw()
 			delete traces[i].first;
 		traces.erase(traces.begin(), traces.begin() + 50);
 	}
-	for (auto i=0;i<traces.size();i++)
+	for (size_t i=0;i<traces.size();i++)
 	{
 		if (traces[i].second <= 0 && Map::isOutsideView(traces[i].first->getPosition()))
 		{
