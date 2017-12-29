@@ -6,6 +6,7 @@
 #include "toTurn.hpp"
 #include "../../Manager/renderSprites.hpp"
 #include "Movement.hpp"
+#include "Collision.hpp"
 
 class carPhycics
 {
@@ -32,6 +33,8 @@ private:
 	
 	toTurn *turnPhycics;
 	Movement *movePhycics;
+	Collision *collisionPhycics;
+
 	const double *SPEED_ROTATE_TIRE;
 	const double *SPEED_ROTATE_CAR;
 };

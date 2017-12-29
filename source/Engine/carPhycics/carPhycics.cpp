@@ -34,6 +34,7 @@ carPhycics::carPhycics(Car *car)
 
 	turnPhycics = new toTurn(car, std::make_pair(car->getTires()->getTires(0), car->getTires()->getTires(1)), std::make_pair(car->getTires()->getTires(2), car->getTires()->getTires(3)),car->getTires()->getPairTireHitboxFront(), SPEED_ROTATE_TIRE,SPEED_ROTATE_CAR);
 	movePhycics = new Movement(car);
+	collisionPhycics = new Collision(car);
 }
 
 carPhycics::~carPhycics()
@@ -74,5 +75,5 @@ void carPhycics::move(const sf::Vector2f &offset)
 
 void carPhycics::draw()
 {
-	
+	collisionPhycics->draw();
 }

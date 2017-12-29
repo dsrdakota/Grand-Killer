@@ -60,8 +60,6 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	tire->setPosition(shape->getShape(), type);
 	mirror->setPosition(shape->getShape(), type);
 
-	phycics = new carPhycics(this);
-
 	for (size_t i = 0;i < shape->getShape()->getPointCount();i++)
 	{
 		sf::CircleShape *buf = new sf::CircleShape(1);
@@ -71,6 +69,8 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 		buf->setPosition(shape->getShape()->getPosition());
 		hitboxes.push_back(buf);
 	}
+
+	phycics = new carPhycics(this);
 }
 
 Car::~Car()
@@ -279,8 +279,8 @@ void Car::draw()
 
 	phycics->draw();
 
-	//for(const auto &i:hitboxes)
-		//renderSprites::Instance().addToRender(i);
+	renderSprites::Instance().addToRender(hitboxes[15]);
+	renderSprites::Instance().addToRender(hitboxes[100]);
 
 	//tire->draw();
 
