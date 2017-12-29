@@ -8,6 +8,8 @@ public:
 	TrafficLights();
 	~TrafficLights();
 
+	std::vector<sf::CircleShape*> getAllLightsHitbox();
+
 	void drawUnder();
 	void drawOn();
 
@@ -15,10 +17,10 @@ private:
 
 	enum class State
 	{
-		Up,
 		Down,
-		Left,
-		Right
+		Right,
+		Up,
+		Left
 	};
 
 	std::vector<Light*>lightsUp;
@@ -27,6 +29,12 @@ private:
 	std::vector<Light*>lightsRight;
 
 	State *lightState;
+	Time clock;
+	int timeOfAnimation;
 
-	void draw(const std::vector<Light*> &lights);
+	void playAnimation();
+	void checkLight(const std::vector<Light*> &lights);
+	void changeLight(const std::vector<Light*> &lights, const std::string &lightName);
+	void deleteLights(const std::vector<Light*> &lights);
+	void draw(const std::vector<Light*> &lights,const int &drawState);
 };

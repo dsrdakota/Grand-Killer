@@ -50,6 +50,7 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	}
 	tire = new Tire(this,type);
 	door = new Door(type);
+	mirror = new Mirror(type);
 	shape->setShape(pathToShape, pathToTexture, nameTexture);
 
 	shape->setPosition(startPos);
@@ -57,6 +58,7 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 
 	door->setPosition(shape->getShape(), type);
 	tire->setPosition(shape->getShape(), type);
+	mirror->setPosition(shape->getShape(), type);
 
 	phycics = new carPhycics(this);
 
@@ -75,6 +77,8 @@ Car::~Car()
 {
 	delete shape;
 	delete door;
+	delete tire;
+	delete mirror;
 	delete weight;
 
 	delete phycics; // kappa
@@ -193,6 +197,7 @@ void Car::move(const sf::Vector2f & offset)
 	shape->getShape()->move(offset);
 	door->move(offset);
 	tire->move(offset);
+	mirror->move(offset);
 	phycics->move(offset);
 
 	for (const auto &i : hitboxes)
@@ -204,6 +209,7 @@ void Car::rotate(const double & angle)
 	shape->getShape()->rotate(static_cast<float>(angle));
 	door->rotate(static_cast<float>(angle));
 	tire->rotate(angle, shape->getShape());
+	mirror->rotate(angle);
 
 	for (const auto &i : hitboxes)
 		i->rotate(static_cast<float>(angle));
@@ -211,6 +217,7 @@ void Car::rotate(const double & angle)
 
 void Car::updatePosition()
 {
+	mirror->checkCollision();
 	phycics->updatePosition();
 }
 
@@ -258,6 +265,8 @@ void Car::closeDoors(const Door::Side & side, const sf::Keyboard::Key &key)
 
 void Car::draw()
 {
+	mirror->drawUnder();
+
 	tire->draw();
 
 	door->drawCenter();
@@ -266,10 +275,12 @@ void Car::draw()
 
 	door->drawDoors();
 
+	mirror->drawOn();
+
 	phycics->draw();
 
-	for(const auto &i:hitboxes)
-		renderSprites::Instance().addToRender(i);
+	//for(const auto &i:hitboxes)
+		//renderSprites::Instance().addToRender(i);
 
 	//tire->draw();
 

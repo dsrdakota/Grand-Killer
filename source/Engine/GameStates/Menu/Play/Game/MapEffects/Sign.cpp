@@ -106,7 +106,7 @@ void Sign::playAnimation()
 		sign->rotate(rotateSpeed);
 		hitboxSign->rotate(rotateSpeed);
 
-		speedAnimation -= 0.5;
+		speedAnimation -= 0.5f;
 	}
 
 	if (clockOfAnimation.time->asSeconds() >= 1)

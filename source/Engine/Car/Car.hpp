@@ -6,6 +6,7 @@
 #include "../../Framework/Shapes.hpp"
 #include "Door.hpp"
 #include "Tire.hpp"
+#include "Mirror.hpp"
 #include "carType.hpp"
 #include "../GameStates/Menu/Play/Game/Map.hpp"
 
@@ -59,6 +60,8 @@ private:
 
 	Tire *tire;
 	
+	Mirror *mirror;
+
 	carPhycics *phycics;
 
 	std::vector<sf::CircleShape*>hitboxes;

@@ -1,7 +1,6 @@
 #include "Door.hpp"
 #include "../../Manager/renderSprites.hpp"
 
-#include <iostream>
 #include <string>
 #include <fstream>
 
@@ -160,8 +159,6 @@ void Door::openDoor(sf::ConvexShape *door, float *angle, const size_t &index)
 		angleOpen[index] += *angle;
 
 		rotate(door,angle,setHinge(index).first,setHinge(index).second);
-	
-		std::cout << angleOpen[index] << std::endl;
 
 		if (angleOpen[index] == *MAX_ANGLE_OPEN)angleClose[index] = 0;
 		else angleClose[index] = -(*MAX_ANGLE_OPEN - angleOpen[index]);
@@ -190,8 +187,6 @@ void Door::closeDoor(sf::ConvexShape *door, float *angle, const size_t &index)
 	{
 		angleClose[index] -= -(*angle);
 		rotate(door, angle, setHinge(index).first, setHinge(index).second);
-
-		std::cout << angleClose[index] << std::endl;
 
 		if (angleClose[index] == *MAX_ANGLE_CLOSE) angleOpen[index] = 0;
 		else angleOpen[index] = -(*MAX_ANGLE_CLOSE - angleClose[index]);

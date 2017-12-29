@@ -9,6 +9,8 @@ public:
 	TrafficSigns();
 	~TrafficSigns();
 
+	std::vector<sf::CircleShape*> getAllSignsHitbox();
+
 	void drawUnder();
 	void drawOn();
 

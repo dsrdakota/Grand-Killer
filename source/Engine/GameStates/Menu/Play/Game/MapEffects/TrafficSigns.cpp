@@ -19,6 +19,15 @@ TrafficSigns::~TrafficSigns()
 	delete[]signs;
 }
 
+std::vector<sf::CircleShape*> TrafficSigns::getAllSignsHitbox()
+{
+	std::vector<sf::CircleShape*> hitboxes;
+	for (auto i = 0;i < 5;++i)
+		hitboxes.push_back(signs->getSignHitbox());
+
+	return hitboxes;
+}
+
 void TrafficSigns::drawUnder()
 {
 	for (auto i = 0;i < 5;++i)
@@ -28,7 +37,7 @@ void TrafficSigns::drawUnder()
 		if (signs[i].getDrawState() == -1) // -1 Under
 		{
 			renderSprites::Instance().addToRender(signs[i].getSignSprite());
-			renderSprites::Instance().addToRender(signs[i].getSignHitbox());
+			//renderSprites::Instance().addToRender(signs[i].getSignHitbox());
 		}
 }
 
@@ -41,6 +50,6 @@ void TrafficSigns::drawOn()
 		if (signs[i].getDrawState() == 1) // 1 On
 		{
 			renderSprites::Instance().addToRender(signs[i].getSignSprite());
-			renderSprites::Instance().addToRender(signs[i].getSignHitbox());
+			//renderSprites::Instance().addToRender(signs[i].getSignHitbox());
 		}
 }

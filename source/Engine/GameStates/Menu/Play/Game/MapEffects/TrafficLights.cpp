@@ -3,6 +3,8 @@
 #include "../../../../../../Manager/texture.hpp"
 #include "../../../../../../Manager/renderSprites.hpp"
 
+#include <iostream>
+
 TrafficLights::TrafficLights()
 {
 	textureManager::load("stake", "data/Map/Traffic/Lights/stake.png");
@@ -48,35 +50,135 @@ TrafficLights::TrafficLights()
 	lightsRight[1]->setPosition(sf::Vector2f(1409, 2264), 90);
 
 	lightState = new State(State::Down);
+
+	timeOfAnimation = 6;
 }
 
 TrafficLights::~TrafficLights()
 {
+	deleteLights(lightsDown);
+	deleteLights(lightsLeft);
+	deleteLights(lightsRight);
+	deleteLights(lightsUp);
+
 	delete lightState;
+}
+
+std::vector<sf::CircleShape*> TrafficLights::getAllLightsHitbox()
+{
+	std::vector<sf::CircleShape*>hitboxes;
+	
+	for (const auto &i : lightsDown)
+		hitboxes.push_back(i->getLightHitbox());
+
+	for (const auto &i : lightsUp)
+		hitboxes.push_back(i->getLightHitbox());
+
+	for (const auto &i : lightsLeft)
+		hitboxes.push_back(i->getLightHitbox());
+	
+	for (const auto &i : lightsRight)
+		hitboxes.push_back(i->getLightHitbox());
+	
+	return hitboxes;
 }
 
 void TrafficLights::drawUnder()
 {
-	draw(lightsDown);
-	draw(lightsUp);
-	draw(lightsLeft);
-	draw(lightsRight);
+	playAnimation();
+
+	draw(lightsDown, -1);
+	draw(lightsUp, -1);
+	draw(lightsLeft, -1);
+	draw(lightsRight, -1);
 }
 
 void TrafficLights::drawOn()
 {
-	draw(lightsDown);
-	draw(lightsUp);
-	draw(lightsLeft);
-	draw(lightsRight);
+	draw(lightsDown, 1);
+	draw(lightsUp, 1);
+	draw(lightsLeft, 1);
+	draw(lightsRight, 1);
 }
 
-void TrafficLights::draw(const std::vector<Light*>& lights)
+void TrafficLights::playAnimation()
+{
+	switch (*lightState)
+	{
+	case State::Down:
+
+		checkLight(lightsDown);
+
+		break;
+	case State::Left:
+
+		checkLight(lightsLeft);
+
+		break;
+	case State::Right:
+
+		checkLight(lightsRight);
+
+		break;
+	case State::Up:
+
+		checkLight(lightsUp);
+
+		break;
+	}
+
+	if (clock.time->asSeconds() >= 1)
+	{
+		timeOfAnimation--;
+		clock.clock->restart();
+		*clock.time = sf::Time::Zero;
+	}
+
+	 // next State
+	if (timeOfAnimation <= 0)
+	{
+		*lightState =
+			static_cast<int>(*lightState) < 3 ? static_cast<State>(static_cast<int>(*lightState) + 1) :
+			*lightState = State::Down;
+		timeOfAnimation = 6;
+	}
+}
+
+void TrafficLights::checkLight(const std::vector<Light*>& lights)
+{
+	if (timeOfAnimation == 6)
+		changeLight(lights, "light2");
+	else if (timeOfAnimation < 6 && timeOfAnimation > 2)
+		changeLight(lights, "light3");
+	else if (timeOfAnimation == 2)
+		changeLight(lights, "light4");
+	else if (timeOfAnimation == 1)
+		changeLight(lights, "light1");
+}
+
+void TrafficLights::changeLight(const std::vector<Light*>& lights, const std::string & lightName)
+{
+	for (const auto &i : lights)
+		if (i->getDrawState() != -1) // is not broken
+			i->getLightSprite()->setTexture(*textureManager::get(lightName));
+}
+
+void TrafficLights::deleteLights(const std::vector<Light*>& lights)
+{
+	for (const auto &i : lights)
+		delete i;
+}
+
+void TrafficLights::draw(const std::vector<Light*>& lights, const int &drawState)
 {
 	for (size_t i = 0;i<lights.size();++i)
 	{
-		renderSprites::Instance().addToRender(lights[i]->getStakeSprite());
-		renderSprites::Instance().addToRender(lights[i]->getLightSprite());
-		renderSprites::Instance().addToRender(lights[i]->getLightHitbox());
+		if (lights[i]->getDrawState() == drawState)
+		{
+			lights[i]->checkCollision();
+			renderSprites::Instance().addToRender(lights[i]->getStakeSprite());
+			renderSprites::Instance().addToRender(lights[i]->getLightSprite());
+			//renderSprites::Instance().addToRender(lights[i]->getLightHitbox());
+		}
 	}
 }

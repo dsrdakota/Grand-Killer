@@ -10,8 +10,7 @@
 class mGame : public smallerEngine
 {
 public:
-
-	mGame();
+	~mGame();
 
 	mGame(const mGame &) = delete;
 	void operator=(const mGame &) = delete;
@@ -28,7 +27,7 @@ public:
 
 private:
 
-	~mGame();
+	mGame();
 
 	std::vector<Car*> *cars;
 

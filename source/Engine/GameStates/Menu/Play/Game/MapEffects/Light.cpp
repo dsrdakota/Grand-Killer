@@ -73,8 +73,85 @@ int Light::getDrawState()
 
 void Light::checkCollision()
 {
+	auto allCars = mGame::Instance().getAllCars();
+
+	for (const auto &i : allCars)
+	{
+		auto allHitboxOfCar = i->getAllHitboxes();
+		for (const auto &j : allHitboxOfCar)
+		{
+			if (hitboxLight->getGlobalBounds().intersects(j->getGlobalBounds()) && !animation)
+			{
+				state = drawState::Under;
+				light->setTexture(*textureManager::get("light4"));
+
+				moveOffset = i->getMovementVector();
+				speedAnimation = static_cast<float>(i->getSpeed());
+				i->setSpeed(static_cast<float>(i->getSpeed()) - 2.f);
+
+				stake->move(moveOffset.x * speedAnimation, moveOffset.y * speedAnimation);
+				light->move(moveOffset.x * speedAnimation, moveOffset.y * speedAnimation);
+				hitboxLight->move(moveOffset.x * speedAnimation, moveOffset.y * speedAnimation);
+
+				rotateSpeed = static_cast<float>(*i->getOverSteerValue()) / 8.f * -1.f;
+
+				stake->rotate(rotateSpeed);
+				light->rotate(rotateSpeed);
+				hitboxLight->rotate(rotateSpeed);
+			}
+			else if (moveOffset != sf::Vector2f(0, 0) && speedAnimation != 0)
+				animation = true;
+		}
+	}
+
+	if (animation)
+		playAnimation();
 }
 
 void Light::playAnimation()
 {
+	if (speedAnimation > 0)
+	{
+		stake->move(moveOffset.x * speedAnimation, moveOffset.y * speedAnimation);
+		light->move(moveOffset.x * speedAnimation, moveOffset.y * speedAnimation);
+		hitboxLight->move(moveOffset.x * speedAnimation, moveOffset.y * speedAnimation);
+
+		stake->rotate(rotateSpeed);
+		light->rotate(rotateSpeed);
+		hitboxLight->rotate(rotateSpeed);
+
+		speedAnimation -= 0.8f;
+	}
+
+	if (clockOfAnimation.time->asSeconds() >= 1)
+	{
+		if (timeOfAnimation > 0)
+			timeOfAnimation--;
+		clockOfAnimation.clock->restart();
+		*clockOfAnimation.time = sf::Time::Zero;
+	}
+
+	if (speedAnimation <= 0 && timeOfAnimation <= 0 &&
+		Map::isOutsideView(sf::Vector2f(stake->getGlobalBounds().left, stake->getGlobalBounds().top)) && // left-up corner
+		Map::isOutsideView(sf::Vector2f(stake->getGlobalBounds().left + stake->getGlobalBounds().width, stake->getGlobalBounds().top)) && // right-up corner
+		Map::isOutsideView(sf::Vector2f(stake->getGlobalBounds().left + stake->getGlobalBounds().width, stake->getGlobalBounds().top + stake->getGlobalBounds().height)) && // right-down corner
+		Map::isOutsideView(sf::Vector2f(stake->getGlobalBounds().left, stake->getGlobalBounds().top + stake->getGlobalBounds().height)) && // left-down corner
+		Map::isOutsideView(startPosition))
+	{
+		state = drawState::On;
+		animation = false;
+		speedAnimation = 0;
+		moveOffset = sf::Vector2f(0, 0);
+		timeOfAnimation = 6;
+
+		stake->setPosition(startPosition);
+		light->setPosition(startPosition);
+		hitboxLight->setPosition(startPosition);
+
+		stake->setRotation(startRotation);
+		hitboxLight->setRotation(startRotation);
+		light->setRotation(startRotation);
+
+		light->setTexture(*textureManager::get("light1"));
+	}
 }

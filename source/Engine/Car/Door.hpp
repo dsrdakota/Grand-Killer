@@ -4,7 +4,6 @@
 #include "carType.hpp"
 #include "../../Framework/Shapes.hpp"
 #include <unordered_map>
-#include "carType.hpp"
 
 class Door
 {

@@ -32,6 +32,8 @@ public:
 
 	sf::Image* getGrassHitbox() { return grassHitbox; }
 	sf::Image* getCollisionHitbox() { return collisionHitbox; }
+	TrafficSigns* getAllTrafficSigns() { return trafficSigns; }
+	TrafficLights* getAllTrafficLights() { return trafficLights; }
 
 private:
 	Map();
