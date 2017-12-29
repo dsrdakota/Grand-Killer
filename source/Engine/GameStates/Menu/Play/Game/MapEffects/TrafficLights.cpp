@@ -139,7 +139,7 @@ void TrafficLights::playAnimation()
 	{
 		*lightState =
 			static_cast<int>(*lightState) < 3 ? static_cast<State>(static_cast<int>(*lightState) + 1) :
-			*lightState = State::Down;
+			State::Down;
 		timeOfAnimation = 6;
 	}
 }
