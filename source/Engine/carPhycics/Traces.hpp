@@ -16,15 +16,15 @@ private:
 
 	Car *car;
 
-	sf::Texture* traceGrassTexture;
-	sf::Texture* traceAsphaltTexture;
-
 	const sf::CircleShape *tiresPos;
 	const std::vector<sf::CircleShape*>*tiresHitbox;
-	std::vector<std::pair<sf::Sprite*,int>>traces;
+
+	std::vector<std::pair<std::pair<sf::Vector2f, float>, int>>tracesGrassPos;
+	std::vector<std::pair<std::pair<sf::Vector2f, float>, int>>tracesAsphaltPos;
 
 	Time clock;
 
+	void drawOneTypeTraces(std::vector<std::pair<std::pair<sf::Vector2f, float>, int>> &tracesPos, const std::string &nameTexture);
 	void updateTimeInTrace();
-	bool isSameTraceOnVector(const sf::Vector2f &pos, const float &rot);
+	bool isSameTraceOnVector(std::vector<std::pair<std::pair<sf::Vector2f, float>, int>>tracesPosVector, const sf::Vector2f &pos);
 };

@@ -279,9 +279,6 @@ void Car::draw()
 
 	phycics->draw();
 
-	renderSprites::Instance().addToRender(hitboxes[15]);
-	renderSprites::Instance().addToRender(hitboxes[100]);
-
 	//tire->draw();
 
 }
