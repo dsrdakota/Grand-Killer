@@ -7,7 +7,6 @@ class Traces
 {
 public:
 	Traces(Car *car, const sf::CircleShape *tiresPos, const std::vector<sf::CircleShape*>*tiresHitbox);
-	~Traces();
 
 	void setTraces();
 	void draw();

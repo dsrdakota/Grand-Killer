@@ -17,10 +17,6 @@ Traces::Traces(Car *car, const sf::CircleShape *tiresPos, const std::vector<sf::
 	textureManager::load("traceAsphaltTexture", "data/Models/Cars/Taxi/tracesTexture/asphalt.png");
 }
 
-Traces::~Traces()
-{
-}
-
 void Traces::setTraces()
 {
 	sf::Image *grassHitbox = Map::Instance().getGrassHitbox();
@@ -36,7 +32,9 @@ void Traces::setTraces()
 
 		else if (fabs(*car->getOverSteerValue()) > 20 && 
 			!isSameTraceOnVector(tracesAsphaltPos, sf::Vector2f(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2, // trace isnt in vector
-			tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2)))
+			tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2)) &&
+			!isSameTraceOnVector(tracesGrassPos, sf::Vector2f(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2, // trace isnt in vector
+				tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2)))
 
 			tracesAsphaltPos.push_back(std::make_pair(std::make_pair(sf::Vector2f(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2, // trace isnt in vector
 				tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2), tiresPos[i].getRotation()),5));

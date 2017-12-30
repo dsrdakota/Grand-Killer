@@ -37,6 +37,17 @@ public:
 	int getStateMoving();
 	bool isSlide();
 
+	enum class collisionSide
+	{
+		Front,
+		Back,
+		Left,
+		Right,
+		None
+	};
+
+	bool &getBoolIsCollision(const collisionSide &side);
+
 	void toControl() override;
 	void setCamera() override;
 	void draw() override; 
@@ -65,6 +76,8 @@ private:
 	carPhycics *phycics;
 
 	std::vector<sf::CircleShape*>hitboxes;
+
+	bool isCollision[5];
 
 	void gas(const sf::Keyboard::Key &key);
 	void brake(const sf::Keyboard::Key &key);

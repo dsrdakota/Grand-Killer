@@ -66,6 +66,7 @@ void carPhycics::updatePosition()
 {
 	turnPhycics->updatePosition();
 	movePhycics->updatePosition();
+	collisionPhycics->checkCollisions();
 }
 
 void carPhycics::move(const sf::Vector2f &offset)

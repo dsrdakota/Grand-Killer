@@ -70,6 +70,9 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 		hitboxes.push_back(buf);
 	}
 
+	for (auto &i : isCollision)
+		i = false;
+
 	phycics = new carPhycics(this);
 }
 
@@ -137,6 +140,11 @@ int Car::getStateMoving()
 bool Car::isSlide()
 {
 	return phycics->getPhycicsTurn()->isSlide();
+}
+
+bool & Car::getBoolIsCollision(const collisionSide & side)
+{	
+	return isCollision[static_cast<int>(side)];
 }
 
 void Car::toControl()

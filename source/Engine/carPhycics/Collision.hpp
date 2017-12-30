@@ -10,21 +10,25 @@ public:
 	Collision(Car *car);
 	~Collision();
 
+	void checkCollisions();
 	void draw();
 
 private:
 
-	std::vector<sf::CircleShape*>upHitboxes;
-	std::vector<sf::CircleShape*>upRightHitboxes;
-	std::vector<sf::CircleShape*>rightHitboxes;
-	std::vector<sf::CircleShape*>downRightHitboxes;
-	std::vector<sf::CircleShape*>downHitboxes;
-	std::vector<sf::CircleShape*>downLeftHitboxes;
-	std::vector<sf::CircleShape*>leftHitboxes;
-	std::vector<sf::CircleShape*>upLeftHitboxes;
+	sf::Image *collsisionArea;
+
+	std::vector<std::pair<sf::CircleShape*, unsigned int>>upHitboxes;
+	std::vector<std::pair<sf::CircleShape*, unsigned int>>upRightHitboxes;
+	std::vector<std::pair<sf::CircleShape*, unsigned int>>rightHitboxes;
+	std::vector<std::pair<sf::CircleShape*, unsigned int>>downRightHitboxes;
+	std::vector<std::pair<sf::CircleShape*, unsigned int>>downHitboxes;
+	std::vector<std::pair<sf::CircleShape*, unsigned int>>downLeftHitboxes;
+	std::vector<std::pair<sf::CircleShape*, unsigned int>>leftHitboxes;
+	std::vector<std::pair<sf::CircleShape*, unsigned int>>upLeftHitboxes;
 
 	Car *car;
 	
-	void setHitbox(std::vector<sf::CircleShape*>&hitbox, const sf::Vector2f &range, const sf::Color &color = sf::Color::White);
+	void setHitbox(std::vector<std::pair<sf::CircleShape*, unsigned int>>&hitbox, const sf::Vector2f &range, const sf::Color &color = sf::Color::White);
 
+	Car::collisionSide whereIsCollision();
 };
