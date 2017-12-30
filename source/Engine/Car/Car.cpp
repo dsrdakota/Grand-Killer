@@ -2,7 +2,7 @@
 #include "../../Manager/Texture.hpp"
 #include "../../Manager/renderSprites.hpp"
 
-#include "../carPhycics/carPhycics.hpp"
+#include "../carPhysics/carPhysics.hpp"
 
 #include <iostream>
 #include <string>
@@ -73,7 +73,7 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	for (auto &i : isCollision)
 		i = false;
 
-	phycics = new carPhycics(this);
+	phycics = new carPhysics(this);
 }
 
 Car::~Car()
@@ -102,9 +102,10 @@ void Car::setSpeed(const float &speed)
 	phycics->getPhycicsMove()->setSpeed(speed);
 }
 
-sf::Vector2f Car::getMovementVector()
+sf::Vector2f Car::getMovementVector(const float &rot)
 {
-	return phycics->getPhycicsMove()->getMovementVector(shape->getShape()->getRotation() - static_cast<float>(*getOverSteerValue()));
+	if(rot == 361) return phycics->getPhycicsMove()->getMovementVector(shape->getShape()->getRotation() - static_cast<float>(*getOverSteerValue()));
+	return phycics->getPhycicsMove()->getMovementVector(rot);
 }
 
 const double Car::getMaxSpeed()
@@ -197,7 +198,7 @@ void Car::setCamera()
 
 void Car::setPhycics(Car *car)
 {
-	phycics = new carPhycics(car);
+	phycics = new carPhysics(car);
 }
 
 void Car::move(const sf::Vector2f & offset)

@@ -12,7 +12,7 @@
 
 #include "../Player/playerStates.hpp"
 
-class carPhycics;
+class carPhysics;
 
 class Car : public playerStates
 {
@@ -28,7 +28,7 @@ public:
 	std::vector<sf::CircleShape*> getAllHitboxes();
 	double getSpeed();
 	void setSpeed(const float &speed);
-	sf::Vector2f getMovementVector();
+	sf::Vector2f getMovementVector(const float &rot = 361);
 	const double getMaxSpeed();
 	const double *getOverSteerValue();
 	const int getOverSteerSide();
@@ -43,6 +43,10 @@ public:
 		Back,
 		Left,
 		Right,
+		RightUp,
+		RightDown,
+		LeftUp,
+		LeftDown,
 		None
 	};
 
@@ -73,11 +77,11 @@ private:
 	
 	Mirror *mirror;
 
-	carPhycics *phycics;
+	carPhysics *phycics;
 
 	std::vector<sf::CircleShape*>hitboxes;
 
-	bool isCollision[5];
+	bool isCollision[9];
 
 	void gas(const sf::Keyboard::Key &key);
 	void brake(const sf::Keyboard::Key &key);
