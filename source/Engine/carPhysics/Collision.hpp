@@ -31,7 +31,8 @@ private:
 	void setHitbox(std::vector<sf::CircleShape*>&hitbox, const sf::Vector2f &range, const sf::Color &color = sf::Color::White);
 
 	Car::collisionSide whereIsCollision();
-	bool checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>&hitbox);
+	bool checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>&hitbox, bool &isCollision);
+	void collisionIs(const std::vector<sf::CircleShape*>&hitbox, const Car::collisionSide &side);
 	void rotateOneHitbox(const std::vector<sf::CircleShape*>&hitbox, const float &angle);
 	void moveOneHitbox(const std::vector<sf::CircleShape*>&hitbox, const sf::Vector2f &offset);
 	float howManyRotate(const std::vector<sf::CircleShape*> &hitbox, const Car::collisionSide &side);
