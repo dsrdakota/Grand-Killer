@@ -37,6 +37,8 @@ private:
 	double *breakingForce; // can change in options
 	const double *MAX_SPEED;
 
+	std::pair<sf::CircleShape*, sf::CircleShape*>tiresDrive; 
+
 	TypeOfDrive drive;
 
 	enum class stateMoving
@@ -55,7 +57,7 @@ private:
 	void move();
 	void acceleratingFunction(double *speed, double *counterSpeed, const double MAX_SPEED,bool &stateKey); // example speedf & speedb < - counter
 	void breakingFunction(double * speed, double breakValue = 0, double minSpeed = 0);
-
+	bool isTireOnGrass(sf::CircleShape * hitbox);
 	float toRad(float degrees);
 
 	// dont delete

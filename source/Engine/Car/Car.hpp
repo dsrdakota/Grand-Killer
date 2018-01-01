@@ -77,7 +77,7 @@ private:
 	
 	Mirror *mirror;
 
-	carPhysics *phycics;
+	carPhysics *physics;
 
 	std::vector<sf::CircleShape*>hitboxes;
 

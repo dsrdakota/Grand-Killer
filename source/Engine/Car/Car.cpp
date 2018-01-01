@@ -73,7 +73,7 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	for (auto &i : isCollision)
 		i = false;
 
-	phycics = new carPhysics(this);
+	physics = new carPhysics(this);
 }
 
 Car::~Car()
@@ -84,7 +84,7 @@ Car::~Car()
 	delete mirror;
 	delete weight;
 
-	delete phycics; // kappa
+	delete physics; // kappa
 }
 
 std::vector<sf::CircleShape*> Car::getAllHitboxes()
@@ -94,53 +94,53 @@ std::vector<sf::CircleShape*> Car::getAllHitboxes()
 
 double Car::getSpeed()
 {
-	return *phycics->getPhycicsMove()->getSpeed();
+	return *physics->getPhycicsMove()->getSpeed();
 }
 
 void Car::setSpeed(const float &speed)
 {
-	phycics->getPhycicsMove()->setSpeed(speed);
+	physics->getPhycicsMove()->setSpeed(speed);
 }
 
 sf::Vector2f Car::getMovementVector(const float &rot)
 {
-	if(rot == 361) return phycics->getPhycicsMove()->getMovementVector(shape->getShape()->getRotation() - static_cast<float>(*getOverSteerValue()));
-	return phycics->getPhycicsMove()->getMovementVector(rot);
+	if(rot == 361) return physics->getPhycicsMove()->getMovementVector(shape->getShape()->getRotation() - static_cast<float>(*getOverSteerValue()));
+	return physics->getPhycicsMove()->getMovementVector(rot);
 }
 
 const double Car::getMaxSpeed()
 {
-	return *phycics->getPhycicsMove()->getMaxSpeed();
+	return *physics->getPhycicsMove()->getMaxSpeed();
 }
 
 const double * Car::getOverSteerValue()
 {
-	return phycics->getPhycicsTurn()->getOverSteerValue();
+	return physics->getPhycicsTurn()->getOverSteerValue();
 }
 
 const int Car::getOverSteerSide()
 {
-	return phycics->getPhycicsTurn()->getSlidePhycics()->getOverSteerSide();
+	return physics->getPhycicsTurn()->getSlidePhycics()->getOverSteerSide();
 }
 
 double * Car::getBreakingForceOfSlide()
 {
-	return phycics->getPhycicsTurn()->getSlidePhycics()->getBreakingForceOfSlide();
+	return physics->getPhycicsTurn()->getSlidePhycics()->getBreakingForceOfSlide();
 }
 
 int Car::getTypeOfDrive()
 {
-	return phycics->getPhycicsMove()->getTypeOfDrive();
+	return physics->getPhycicsMove()->getTypeOfDrive();
 }
 
 int Car::getStateMoving()
 {
-	return phycics->getPhycicsMove()->getStateMoving();
+	return physics->getPhycicsMove()->getStateMoving();
 }
 
 bool Car::isSlide()
 {
-	return phycics->getPhycicsTurn()->isSlide();
+	return physics->getPhycicsTurn()->isSlide();
 }
 
 bool & Car::getBoolIsCollision(const collisionSide & side)
@@ -198,7 +198,7 @@ void Car::setCamera()
 
 void Car::setPhycics(Car *car)
 {
-	phycics = new carPhysics(car);
+	physics = new carPhysics(car);
 }
 
 void Car::move(const sf::Vector2f & offset)
@@ -207,7 +207,7 @@ void Car::move(const sf::Vector2f & offset)
 	door->move(offset);
 	tire->move(offset);
 	mirror->move(offset);
-	phycics->move(offset);
+	physics->move(offset);
 
 	for (const auto &i : hitboxes)
 		i->move(offset);
@@ -227,7 +227,7 @@ void Car::rotate(const double & angle)
 void Car::updatePosition()
 {
 	mirror->checkCollision();
-	phycics->updatePosition();
+	physics->updatePosition();
 }
 
 void Car::openDoors(const Door::Side &side, const sf::Keyboard::Key &key)
@@ -286,7 +286,7 @@ void Car::draw()
 
 	mirror->drawOn();
 
-	phycics->draw();
+	physics->draw();
 
 	//tire->draw();
 
@@ -294,31 +294,31 @@ void Car::draw()
 
 void Car::gas(const sf::Keyboard::Key & key)
 {
-	phycics->boostSpeed(key);
+	physics->boostSpeed(key);
 }
 
 void Car::brake(const sf::Keyboard::Key & key)
 {
-	phycics->reduceSpeed(key);
+	physics->reduceSpeed(key);
 }
 
 void Car::handBrake(const sf::Keyboard::Key & key)
 {
-	phycics->handBrake(key);
+	physics->handBrake(key);
 }
 
 void Car::turnLeft(const sf::Keyboard::Key & key)
 {
 	if (sf::Keyboard::isKeyPressed(key))
-		phycics->turn(toTurn::Direction::Left);
+		physics->turn(toTurn::Direction::Left);
 	else
-		*phycics->getPhycicsTurn()->getStatusKeyToTurn(toTurn::Direction::Left) = toTurn::keyStatus::Released;
+		*physics->getPhycicsTurn()->getStatusKeyToTurn(toTurn::Direction::Left) = toTurn::keyStatus::Released;
 }
 
 void Car::turnRight(const sf::Keyboard::Key & key)
 {
 	if (sf::Keyboard::isKeyPressed(key))
-		phycics->turn(toTurn::Direction::Right);
+		physics->turn(toTurn::Direction::Right);
 	else
-		*phycics->getPhycicsTurn()->getStatusKeyToTurn(toTurn::Direction::Right) = toTurn::keyStatus::Released;
+		*physics->getPhycicsTurn()->getStatusKeyToTurn(toTurn::Direction::Right) = toTurn::keyStatus::Released;
 }

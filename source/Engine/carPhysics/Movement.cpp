@@ -38,6 +38,12 @@ Movement::Movement(Car *car) : car(car)
 	case carType::Type::Truck:
 		break;
 	}
+
+	if (drive != TypeOfDrive::Back)
+		tiresDrive = std::make_pair(car->getTires()->getTiresPos(0), car->getTires()->getTiresPos(1));
+
+	else
+		tiresDrive = std::make_pair(car->getTires()->getTiresPos(2), car->getTires()->getTiresPos(3));
 }
 
 Movement::~Movement()
@@ -103,10 +109,17 @@ void Movement::gas(const sf::Keyboard::Key & key)
 {
 	if (sf::Keyboard::isKeyPressed(key) && !car->getBoolIsCollision(Car::collisionSide::Front))
 	{
-		if (!car->isSlide())
+		if (!car->isSlide() && !sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 			acceleratingFunction(speedf, speedb, *MAX_SPEED, stateKeyGas);
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		{
+			if(!isTireOnGrass(tiresDrive.first) || !isTireOnGrass(tiresDrive.second)) // asphalt
+				breakingFunction(speedf, 0.18, 0);
+			else
+				breakingFunction(speedf, 0.1, 0); // grass
+		}
 		else
-			breakingFunction(speedf, 0.08 ,5);
+			breakingFunction(speedf, 0.1, 5);
 	}
 	else
 		stateKeyGas = false;
@@ -115,7 +128,17 @@ void Movement::gas(const sf::Keyboard::Key & key)
 void Movement::brake(const sf::Keyboard::Key & key)
 {
 	if (sf::Keyboard::isKeyPressed(key) && !car->getBoolIsCollision(Car::collisionSide::Back))
-		acceleratingFunction(speedb, speedf, *MAX_SPEED / 2, stateKeyGas);
+	{
+		if(*speedf <= 0)
+			acceleratingFunction(speedb, speedf, *MAX_SPEED / 2, stateKeyGas);
+		else
+		{
+			if (!isTireOnGrass(tiresDrive.first) || !isTireOnGrass(tiresDrive.second)) // asphalt
+				breakingFunction(speedf, *breakingForce, 0);
+			else
+				breakingFunction(speedf, *breakingForce /3, 0); // grass
+		}
+	}
 	else
 		stateKeyBrake = false;
 
@@ -221,6 +244,18 @@ sf::Vector2f Movement::getMovementVector(float rotation)
 	v.y = -std::cos(rad);
 
 	return v;
+}
+
+bool Movement::isTireOnGrass(sf::CircleShape * hitbox)
+{
+	sf::Image *grassHitbox = Map::Instance().getGrassHitbox();
+
+	if (grassHitbox->getPixel(static_cast<unsigned>(hitbox->getGlobalBounds().left + hitbox->getGlobalBounds().width / 2),
+		static_cast<unsigned>(hitbox->getGlobalBounds().top + hitbox->getGlobalBounds().height / 2)) == sf::Color(133, 91, 0))
+
+		return true;
+
+	return false;
 }
 
 float Movement::toRad(float degrees)

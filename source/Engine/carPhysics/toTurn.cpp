@@ -118,30 +118,10 @@ void toTurn::updatePosition()
 		*drivingStatus = Status::Straight;
 
 	if (*actualValueRotateLeftTire && car->getSpeed() > 0.5)
-	{
-		if (!car->getStateMoving() && !car->getBoolIsCollision(Car::collisionSide::Left))
-		{
-			if (car->getOverSteerSide() == 2)
-				car->rotate(-*actualValueRotateLeftCar * 0.8);
-			else
-				car->rotate(-*actualValueRotateLeftCar);
-		}
-		else if (car->getStateMoving() == 1 && !car->getBoolIsCollision(Car::collisionSide::Right))
-			car->rotate(*actualValueRotateLeftCar);
-	}
+		rotateCar(static_cast<float>(*actualValueRotateLeftCar), Car::collisionSide::Left, Car::collisionSide::Right);
 
 	else if (*actualValueRotateRightTire && car->getSpeed() > 0.5)
-	{
-		if (!car->getStateMoving() && !car->getBoolIsCollision(Car::collisionSide::Right))
-		{
-			if (car->getOverSteerSide() == 1)
-				car->rotate(*actualValueRotateRightCar* 0.8);
-			else
-				car->rotate(*actualValueRotateRightCar);
-		}
-		else if (car->getStateMoving() == 1 && !car->getBoolIsCollision(Car::collisionSide::Left))
-			car->rotate(-*actualValueRotateRightCar);
-	}
+		rotateCar(static_cast<float>(-*actualValueRotateRightCar), Car::collisionSide::Right, Car::collisionSide::Left);
 
 	slide->setOverSteer(static_cast<int>(*drivingStatus));
 }
@@ -184,14 +164,17 @@ void toTurn::straight(sf::Sprite *tire, sf::Sprite *counterTire, double *actualV
 	}
 }
 
-void toTurn::rotate(sf::Transformable *target, const sf::Vector2f &posTarget, const sf::Vector2f &posOrigin, const double *angle)
+void toTurn::rotateCar(const float & actualValueRotateCar, const Car::collisionSide &sideFirst, const Car::collisionSide &sideSecond)
 {
-	sf::Vector2f pos;
-
-	pos.x = (posTarget.x - posOrigin.x) * cos(static_cast<float>(*angle)) - (posTarget.y - posOrigin.y) * sin(static_cast<float>(*angle)) + posOrigin.x;
-	pos.y = (posTarget.x - posOrigin.x) * sin(static_cast<float>(*angle)) + (posTarget.y - posOrigin.y) * cos(static_cast<float>(*angle)) + posOrigin.y;
-
-	target->setPosition(pos);
+	if (!car->getStateMoving() && !car->getBoolIsCollision(sideFirst))
+	{
+		if (car->getOverSteerSide() == 2)
+			car->rotate(-actualValueRotateCar * 0.8);
+		else
+			car->rotate(-actualValueRotateCar);
+	}
+	else if (car->getStateMoving() == 1 && !car->getBoolIsCollision(sideSecond))
+		car->rotate(actualValueRotateCar);
 }
 
 void toTurn::addValue(double & value, const double & addValue, const double & max)

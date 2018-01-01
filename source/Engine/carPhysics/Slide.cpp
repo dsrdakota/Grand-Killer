@@ -186,7 +186,7 @@ void Slide::isTireOnGrass(sf::CircleShape * hitbox, double &powerDoing, double &
 	const double POWER_DOING_ON_GRASS = 0.5;
 
 	const double POWER_REDUCE_ON_ASPHALT = 0.7;
-	const double POWER_REDUCE_ON_GRASS = 0.3;
+	const double POWER_REDUCE_ON_GRASS = 0.5;
 
 	sf::Image *grassHitbox = Map::Instance().getGrassHitbox();
 

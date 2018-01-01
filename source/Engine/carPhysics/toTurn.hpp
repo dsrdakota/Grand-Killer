@@ -72,7 +72,7 @@ private:
 
 	void turn(sf::Sprite *tire, sf::Sprite *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar);
 	void straight(sf::Sprite *tire, sf::Sprite *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar);
-	void rotate(sf::Transformable *target, const sf::Vector2f &posTarget, const sf::Vector2f &posOrigin, const double *angle);
+	void rotateCar(const float & actualValueRotateCar, const Car::collisionSide &sideFirst, const Car::collisionSide &sideSecond);
 
 	void addValue(double &value, const double &addValue, const double &max);
 	void reduceValue(double &value, const double &reduceValue, const double &min);
