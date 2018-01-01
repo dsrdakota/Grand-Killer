@@ -7,6 +7,7 @@ http://www.mediafire.com/file/5fupm8poziu4440/Grand+Killer.rar
 
 Keyboard:
 W - gas
+
 S - break
 A - turn right
 D - turn left
