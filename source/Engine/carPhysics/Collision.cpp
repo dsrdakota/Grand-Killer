@@ -28,6 +28,7 @@ Collision::Collision(Car * car)
 
 Collision::~Collision()
 {
+	
 }
 
 void Collision::checkCollisions()
@@ -87,33 +88,6 @@ void Collision::checkCollisions()
 		lastCollisionSide = Car::collisionSide::None;
 		break;
 	}
-}
-
-void Collision::draw()
-{
-	for (const auto &i : upRightHitboxes)
-		renderSprites::Instance().addToRender(i);
-
-	for (const auto &i : rightHitboxes)
-		renderSprites::Instance().addToRender(i);
-
-	for (const auto &i : downRightHitboxes)
-		renderSprites::Instance().addToRender(i);
-
-	for (const auto &i : downHitboxes)
-		renderSprites::Instance().addToRender(i);
-
-	for (const auto &i : downLeftHitboxes)
-		renderSprites::Instance().addToRender(i);
-
-	for (const auto &i : leftHitboxes)
-		renderSprites::Instance().addToRender(i);
-
-	for (const auto &i : upLeftHitboxes)
-		renderSprites::Instance().addToRender(i);
-
-	for (const auto &i : upHitboxes)
-		renderSprites::Instance().addToRender(i);
 }
 
 void Collision::setHitbox(std::vector<sf::CircleShape*>& hitbox, const sf::Vector2f & range, const sf::Color & color)

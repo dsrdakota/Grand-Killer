@@ -32,41 +32,41 @@ carPhysics::carPhysics(Car *car)
 		break;
 	}
 
-	turnPhycics = new toTurn(car, std::make_pair(car->getTires()->getTires(0), car->getTires()->getTires(1)), std::make_pair(car->getTires()->getTires(2), car->getTires()->getTires(3)),car->getTires()->getPairTireHitboxFront(), SPEED_ROTATE_TIRE,SPEED_ROTATE_CAR);
-	movePhycics = new Movement(car);
-	collisionPhycics = new Collision(car);
+	turnPhysics = new toTurn(car, std::make_pair(car->getTires()->getTires(0), car->getTires()->getTires(1)), std::make_pair(car->getTires()->getTires(2), car->getTires()->getTires(3)),car->getTires()->getPairTireHitboxFront(), SPEED_ROTATE_TIRE,SPEED_ROTATE_CAR);
+	movePhysics = new Movement(car);
+	collisionPhysics = new Collision(car);
 }
 
 carPhysics::~carPhysics()
 {
-	delete turnPhycics;
+	delete turnPhysics;
 }
 
 void carPhysics::boostSpeed(const sf::Keyboard::Key &key)
 {
-	movePhycics->gas(key);
+	movePhysics->gas(key);
 }
 
 void carPhysics::reduceSpeed(const sf::Keyboard::Key &key)
 {
-	movePhycics->brake(key);
+	movePhysics->brake(key);
 }
 
 void carPhysics::handBrake(const sf::Keyboard::Key & key)
 {
-	movePhycics->handBrake(key);
+	movePhysics->handBrake(key);
 }
 
 void carPhysics::turn(const toTurn::Direction & direction)
 {
-	turnPhycics->turning(direction);
+	turnPhysics->turning(direction);
 }
 
 void carPhysics::updatePosition()
 {
-	turnPhycics->updatePosition();
-	movePhycics->updatePosition();
-	collisionPhycics->checkCollisions();
+	turnPhysics->updatePosition();
+	movePhysics->updatePosition();
+	collisionPhysics->checkCollisions();
 }
 
 void carPhysics::move(const sf::Vector2f &offset)
@@ -76,5 +76,5 @@ void carPhysics::move(const sf::Vector2f &offset)
 
 void carPhysics::draw()
 {
-	//collisionPhycics->draw();
+	
 }

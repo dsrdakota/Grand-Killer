@@ -15,8 +15,8 @@ public:
 	carPhysics(Car *car);
 	~carPhysics();
 
-	inline toTurn* getPhycicsTurn() { return turnPhycics; }
-	inline Movement* getPhycicsMove() { return movePhycics; }
+	inline toTurn* getPhysicsTurn() { return turnPhysics; }
+	inline Movement* getPhysicsMove() { return movePhysics; }
 
 	void boostSpeed(const sf::Keyboard::Key &key);
 	void reduceSpeed(const sf::Keyboard::Key &key);
@@ -31,9 +31,9 @@ private:
 
 	sf::ConvexShape *car;
 	
-	toTurn *turnPhycics;
-	Movement *movePhycics;
-	Collision *collisionPhycics;
+	toTurn *turnPhysics;
+	Movement *movePhysics;
+	Collision *collisionPhysics;
 
 	const double *SPEED_ROTATE_TIRE;
 	const double *SPEED_ROTATE_CAR;

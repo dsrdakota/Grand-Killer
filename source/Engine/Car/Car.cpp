@@ -94,53 +94,53 @@ std::vector<sf::CircleShape*> Car::getAllHitboxes()
 
 double Car::getSpeed()
 {
-	return *physics->getPhycicsMove()->getSpeed();
+	return *physics->getPhysicsMove()->getSpeed();
 }
 
 void Car::setSpeed(const float &speed)
 {
-	physics->getPhycicsMove()->setSpeed(speed);
+	physics->getPhysicsMove()->setSpeed(speed);
 }
 
 sf::Vector2f Car::getMovementVector(const float &rot)
 {
-	if(rot == 361) return physics->getPhycicsMove()->getMovementVector(shape->getShape()->getRotation() - static_cast<float>(*getOverSteerValue()));
-	return physics->getPhycicsMove()->getMovementVector(rot);
+	if(rot == 361) return physics->getPhysicsMove()->getMovementVector(shape->getShape()->getRotation() - static_cast<float>(*getOverSteerValue()));
+	return physics->getPhysicsMove()->getMovementVector(rot);
 }
 
 const double Car::getMaxSpeed()
 {
-	return *physics->getPhycicsMove()->getMaxSpeed();
+	return *physics->getPhysicsMove()->getMaxSpeed();
 }
 
 const double * Car::getOverSteerValue()
 {
-	return physics->getPhycicsTurn()->getOverSteerValue();
+	return physics->getPhysicsTurn()->getOverSteerValue();
 }
 
 const int Car::getOverSteerSide()
 {
-	return physics->getPhycicsTurn()->getSlidePhycics()->getOverSteerSide();
+	return physics->getPhysicsTurn()->getSlidePhycics()->getOverSteerSide();
 }
 
 double * Car::getBreakingForceOfSlide()
 {
-	return physics->getPhycicsTurn()->getSlidePhycics()->getBreakingForceOfSlide();
+	return physics->getPhysicsTurn()->getSlidePhycics()->getBreakingForceOfSlide();
 }
 
 int Car::getTypeOfDrive()
 {
-	return physics->getPhycicsMove()->getTypeOfDrive();
+	return physics->getPhysicsMove()->getTypeOfDrive();
 }
 
 int Car::getStateMoving()
 {
-	return physics->getPhycicsMove()->getStateMoving();
+	return physics->getPhysicsMove()->getStateMoving();
 }
 
 bool Car::isSlide()
 {
-	return physics->getPhycicsTurn()->isSlide();
+	return physics->getPhysicsTurn()->isSlide();
 }
 
 bool & Car::getBoolIsCollision(const collisionSide & side)
@@ -312,7 +312,7 @@ void Car::turnLeft(const sf::Keyboard::Key & key)
 	if (sf::Keyboard::isKeyPressed(key))
 		physics->turn(toTurn::Direction::Left);
 	else
-		*physics->getPhycicsTurn()->getStatusKeyToTurn(toTurn::Direction::Left) = toTurn::keyStatus::Released;
+		*physics->getPhysicsTurn()->getStatusKeyToTurn(toTurn::Direction::Left) = toTurn::keyStatus::Released;
 }
 
 void Car::turnRight(const sf::Keyboard::Key & key)
@@ -320,5 +320,5 @@ void Car::turnRight(const sf::Keyboard::Key & key)
 	if (sf::Keyboard::isKeyPressed(key))
 		physics->turn(toTurn::Direction::Right);
 	else
-		*physics->getPhycicsTurn()->getStatusKeyToTurn(toTurn::Direction::Right) = toTurn::keyStatus::Released;
+		*physics->getPhysicsTurn()->getStatusKeyToTurn(toTurn::Direction::Right) = toTurn::keyStatus::Released;
 }

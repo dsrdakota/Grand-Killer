@@ -73,13 +73,9 @@ bool toTurn::isSlide()
 void toTurn::turning(const Direction & direction)
 {
 	if (direction == Direction::Left)
-	{
 		*keyToLeftTurn = keyStatus::Pressed;
-	}
 	else
-	{
 		*keyToRightTurn = keyStatus::Pressed;
-	}
 
 	if (*keyToLeftTurn == keyStatus::Pressed && *actualValueRotateRightTire <= 0)
 	{
