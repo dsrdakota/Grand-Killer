@@ -250,6 +250,10 @@ bool Movement::isTireOnGrass(sf::CircleShape * hitbox)
 {
 	sf::Image *grassHitbox = Map::Instance().getGrassHitbox();
 
+	if (static_cast<unsigned>(hitbox->getGlobalBounds().left + hitbox->getGlobalBounds().width / 2) < 0 ||
+		static_cast<unsigned>(hitbox->getGlobalBounds().top + hitbox->getGlobalBounds().height / 2))
+		return false;
+
 	if (grassHitbox->getPixel(static_cast<unsigned>(hitbox->getGlobalBounds().left + hitbox->getGlobalBounds().width / 2),
 		static_cast<unsigned>(hitbox->getGlobalBounds().top + hitbox->getGlobalBounds().height / 2)) == sf::Color(133, 91, 0))
 

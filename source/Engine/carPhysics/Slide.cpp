@@ -59,6 +59,12 @@ double * Slide::getBreakingForceOfSlide()
 	return breakingForce;
 }
 
+void Slide::breakSlide()
+{
+	*overSteerLeft = 0;
+	*overSteerRight = 0;
+}
+
 void Slide::setOverSteer(const int & drivingStatus)
 {
 	if (!car->getTypeOfDrive())
@@ -183,12 +189,16 @@ void Slide::reduceSlide(const double & angle, double * overSteer)
 void Slide::isTireOnGrass(sf::CircleShape * hitbox, double &powerDoing, double &powerReduce)
 {
 	const double POWER_DOING_ON_ASPHALT = 0.3;
-	const double POWER_DOING_ON_GRASS = 0.5;
+	const double POWER_DOING_ON_GRASS = 0.4;
 
 	const double POWER_REDUCE_ON_ASPHALT = 0.7;
-	const double POWER_REDUCE_ON_GRASS = 0.5;
+	const double POWER_REDUCE_ON_GRASS = 0.6;
 
 	sf::Image *grassHitbox = Map::Instance().getGrassHitbox();
+
+	if (static_cast<unsigned>(hitbox->getGlobalBounds().left + hitbox->getGlobalBounds().width / 2) < 0 ||
+		static_cast<unsigned>(hitbox->getGlobalBounds().top + hitbox->getGlobalBounds().height / 2) < 0)
+		return;
 
 	if (grassHitbox->getPixel(static_cast<unsigned>(hitbox->getGlobalBounds().left + hitbox->getGlobalBounds().width / 2),
 		static_cast<unsigned>(hitbox->getGlobalBounds().top + hitbox->getGlobalBounds().height / 2)) == sf::Color(133, 91, 0))
@@ -207,6 +217,10 @@ void Slide::isTireOnGrass(sf::CircleShape * hitbox, double &powerDoing, double &
 bool Slide::isTireOnGrass(sf::CircleShape * hitbox)
 {
 	sf::Image *grassHitbox = Map::Instance().getGrassHitbox();
+
+	if (static_cast<unsigned>(hitbox->getGlobalBounds().left + hitbox->getGlobalBounds().width / 2) < 0 ||
+		static_cast<unsigned>(hitbox->getGlobalBounds().top + hitbox->getGlobalBounds().height / 2) < 0)
+		return false;
 
 	if (grassHitbox->getPixel(static_cast<unsigned>(hitbox->getGlobalBounds().left + hitbox->getGlobalBounds().width / 2),
 		static_cast<unsigned>(hitbox->getGlobalBounds().top + hitbox->getGlobalBounds().height / 2)) == sf::Color(133, 91, 0))

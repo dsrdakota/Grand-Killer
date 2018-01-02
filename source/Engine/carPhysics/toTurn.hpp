@@ -31,13 +31,14 @@ public:
 		Straight
 	};
 
-	toTurn(Car *car, std::pair<sf::Sprite*, sf::Sprite*>tiresFront, std::pair<sf::Sprite*, sf::Sprite*>tiresBack, std::pair<std::vector <sf::CircleShape*>, std::vector <sf::CircleShape*>> tiresHitbox, const double *speedRotateTire, const double*speedRotateCar);
+	toTurn(Car *car, std::pair<sf::Sprite*, sf::Sprite*>tiresFront, std::pair<sf::Sprite*, sf::Sprite*>tiresBack, const double *speedRotateTire, const double*speedRotateCar);
 	~toTurn();
 
 	keyStatus* getStatusKeyToTurn(const Direction &direction);
 	const double* getOverSteerValue();
 	Slide *getSlidePhycics();
 	bool isSlide();
+	void breakSlide();
 	void turning(const Direction &direction);
 	void updatePosition();
 
@@ -46,7 +47,6 @@ private:
 	Car *car;
 	sf::ConvexShape *carShape;
 	std::pair<sf::Sprite*, sf::Sprite*>tiresFront;
-	std::pair<std::vector <sf::CircleShape*>, std::vector <sf::CircleShape*>> tiresHitbox;
 	std::pair<sf::Sprite*, sf::Sprite*>tiresBack;
 
 	Slide *slide;

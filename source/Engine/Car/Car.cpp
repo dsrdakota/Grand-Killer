@@ -38,7 +38,7 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 
 		weight = new unsigned(1500);
 
-		origin = sf::Vector2f(105, 102);
+		origin = sf::Vector2f(38, 102);
 
 		pathToShape += "Taxi/taxi.gk";
 		pathToTexture += "Taxi/taxi.png";
@@ -141,6 +141,11 @@ int Car::getStateMoving()
 bool Car::isSlide()
 {
 	return physics->getPhysicsTurn()->isSlide();
+}
+
+void Car::breakSlide()
+{
+	physics->getPhysicsTurn()->breakSlide();
 }
 
 bool & Car::getBoolIsCollision(const collisionSide & side)

@@ -6,7 +6,7 @@ class Car;
 class Traces
 {
 public:
-	Traces(Car *car, const sf::CircleShape *tiresPos, const std::vector<sf::CircleShape*>*tiresHitbox);
+	Traces(Car *car, const sf::CircleShape *tiresPos);
 
 	void setTraces();
 	void draw();
@@ -16,7 +16,6 @@ private:
 	Car *car;
 
 	const sf::CircleShape *tiresPos;
-	const std::vector<sf::CircleShape*>*tiresHitbox;
 
 	std::vector<std::pair<std::pair<sf::Vector2f, float>, int>>tracesGrassPos;
 	std::vector<std::pair<std::pair<sf::Vector2f, float>, int>>tracesAsphaltPos;

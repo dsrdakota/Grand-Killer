@@ -43,8 +43,8 @@ void Menu::play()
 
 	smallerEngine *wsk;
 	Trailer *trailer = new Trailer;
-	wsk = trailer;
-	wsk->play();
+	//wsk = trailer;
+	//wsk->play();
 
 	wsk = nullptr;
 	delete trailer;

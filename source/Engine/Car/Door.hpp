@@ -20,10 +20,8 @@ public:
 	}; 
 
 	sf::ConvexShape* getDoor(const size_t &index) { return doors[index].getShape(); }
-	sf::ConvexShape* getCenter(const size_t &index) { return center[index].getShape(); }
 
 	void setPosition(const sf::ConvexShape *car, const carType::Type &type);
-	void moveOne(const size_t &index, const sf::Vector2f &offset);
 	void move(const sf::Vector2f &offset);
 
 	void rotate(const double &angle);

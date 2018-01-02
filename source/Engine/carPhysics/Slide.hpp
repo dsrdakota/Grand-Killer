@@ -14,6 +14,7 @@ public:
 	const int getOverSteerSide();
 	const bool getSlideBool();
 	double *getBreakingForceOfSlide();
+	void breakSlide();
 	void setOverSteer(const int &drivingStatus);
 	void setPowerOfSlide(std::pair<sf::CircleShape*, sf::CircleShape*>hitbox);
 

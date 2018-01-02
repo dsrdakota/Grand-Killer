@@ -68,10 +68,10 @@ void Mirror::setPosition(const sf::ConvexShape * car, const carType::Type & type
 		break;
 	case carType::Type::Taxi:
 
-		mirrors[0].setOrigin(car->getOrigin().x -58, car->getOrigin().y -62);
+		mirrors[0].setOrigin(car->getOrigin().x + 10, car->getOrigin().y -52);
 		hitboxes[0].setOrigin(mirrors[0].getOrigin().x , mirrors[0].getOrigin().y - 5);
 
-		mirrors[1].setOrigin(car->getOrigin().x - 144, car->getOrigin().y - 62);
+		mirrors[1].setOrigin(car->getOrigin().x - 78, car->getOrigin().y - 52);
 		hitboxes[1].setOrigin(mirrors[1].getOrigin().x - 5, mirrors[1].getOrigin().y - 5);
 
 		break;
@@ -104,8 +104,8 @@ void Mirror::rotate(const double & angle)
 	for (int i = 0;i < 2;++i)
 		if (!isBroken[i])
 		{
-			mirrors[i].rotate(angle);
-			hitboxes[i].rotate(angle);
+			mirrors[i].rotate(static_cast<float>(angle));
+			hitboxes[i].rotate(static_cast<float>(angle));
 		}
 }
 
@@ -127,20 +127,14 @@ void Mirror::drawUnder()
 {
 	for (auto i = 0;i < 2;++i)
 		if (isDrawAble[i] && isBroken[i])
-		{
 			renderSprites::Instance().addToRender(&mirrors[i]);
-			//renderSprites::Instance().addToRender(&hitboxes[i]);
-		}
 }
 
 void Mirror::drawOn()
 {
 	for (auto i = 0;i < 2;++i)
 		if (isDrawAble[i] && !isBroken[i])
-		{
 			renderSprites::Instance().addToRender(&mirrors[i]);
-			//renderSprites::Instance().addToRender(&hitboxes[i]);
-		}
 }
 
 void Mirror::setDefaultVars()
@@ -167,8 +161,8 @@ bool Mirror::isCollision(const size_t &index)
 	auto allSignsHitbox = Map::Instance().getAllTrafficSigns()->getAllSignsHitbox();
 	auto allLightsHitbox = Map::Instance().getAllTrafficLights()->getAllLightsHitbox();
 
-	if (collisionHitbox->getPixel(hitboxes[index].getGlobalBounds().left + hitboxes[index].getGlobalBounds().width / 2,
-		hitboxes[index].getGlobalBounds().top + hitboxes[index].getGlobalBounds().height / 2) == sf::Color(255, 0, 0))
+	if (collisionHitbox->getPixel(static_cast<unsigned>(hitboxes[index].getGlobalBounds().left + hitboxes[index].getGlobalBounds().width / 2),
+		static_cast<unsigned>(hitboxes[index].getGlobalBounds().top + hitboxes[index].getGlobalBounds().height / 2)) == sf::Color(255, 0, 0))
 		return true;
 
 	for (const auto &i : allLightsHitbox)

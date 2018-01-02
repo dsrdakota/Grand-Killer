@@ -32,7 +32,7 @@ carPhysics::carPhysics(Car *car)
 		break;
 	}
 
-	turnPhysics = new toTurn(car, std::make_pair(car->getTires()->getTires(0), car->getTires()->getTires(1)), std::make_pair(car->getTires()->getTires(2), car->getTires()->getTires(3)),car->getTires()->getPairTireHitboxFront(), SPEED_ROTATE_TIRE,SPEED_ROTATE_CAR);
+	turnPhysics = new toTurn(car, std::make_pair(car->getTires()->getTires(0), car->getTires()->getTires(1)), std::make_pair(car->getTires()->getTires(2), car->getTires()->getTires(3)), SPEED_ROTATE_TIRE,SPEED_ROTATE_CAR);
 	movePhysics = new Movement(car);
 	collisionPhysics = new Collision(car);
 }

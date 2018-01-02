@@ -8,11 +8,10 @@
 
 // need to optimise it but LATER
 
-Traces::Traces(Car *car, const sf::CircleShape *tiresPos, const std::vector<sf::CircleShape*>*tiresHitbox)
+Traces::Traces(Car *car, const sf::CircleShape *tiresPos)
 {
 	this->car = car;
 	this->tiresPos = tiresPos;
-	this->tiresHitbox = tiresHitbox;
 	textureManager::load("traceGrassTexture","data/Models/Cars/Taxi/tracesTexture/grass.png");
 	textureManager::load("traceAsphaltTexture", "data/Models/Cars/Taxi/tracesTexture/asphalt.png");
 }
@@ -22,6 +21,10 @@ void Traces::setTraces()
 	sf::Image *grassHitbox = Map::Instance().getGrassHitbox();
 	for (auto i = 0;i < 4;++i)
 	{
+		if (static_cast<unsigned>(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2) < 0 ||
+			static_cast<unsigned>(tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2) < 0)
+			continue;
+
 		if (grassHitbox->getPixel(static_cast<unsigned>(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2),
 			static_cast<unsigned>(tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2)) == sf::Color(133, 91, 0) && // hitbox is on Grass
 			!isSameTraceOnVector(tracesGrassPos,sf::Vector2f(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2, // trace isnt in vector

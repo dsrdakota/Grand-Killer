@@ -85,17 +85,16 @@ void Door::setPosition(const sf::ConvexShape * car, const carType::Type &type)
 		break;
 	case carType::Type::Taxi:
 
-		doors[0].setOrigin(car->getOrigin().x - 68.5f, car->getOrigin().y - 72);
-		center[0].setOrigin(doors[0].getOrigin());
+		doors[0].setOrigin(car->getOrigin().x-3.f, car->getOrigin().y - 60.f);
 
-		doors[1].setOrigin(car->getOrigin().x - 135.5f, car->getOrigin().y - 71);
-		center[1].setOrigin(doors[1].getOrigin());
+		doors[1].setOrigin(car->getOrigin().x - 68.5f, car->getOrigin().y - 60.f);
 
-		doors[2].setOrigin(car->getOrigin().x - 68.5012f, car->getOrigin().y - 114);
-		center[2].setOrigin(doors[2].getOrigin());
+		doors[2].setOrigin(car->getOrigin().x -4.f, car->getOrigin().y - 102.f);
 
-		doors[3].setOrigin(car->getOrigin().x - 136.5f, car->getOrigin().y - 118);
-		center[3].setOrigin(doors[3].getOrigin());
+		doors[3].setOrigin(car->getOrigin().x - 69.5f, car->getOrigin().y - 107.f);
+
+		for(size_t i=0;i<4;++i)
+			center[i].setOrigin(doors[i].getOrigin());
 
 		break;
 	case carType::Type::Truck:
@@ -110,12 +109,6 @@ void Door::setPosition(const sf::ConvexShape * car, const carType::Type &type)
 		doors[i].setRotation(car->getRotation());
 		center[i].setRotation(car->getRotation());
 	}
-}
-
-void Door::moveOne(const size_t & index, const sf::Vector2f & offset)
-{
-	doors[index].move(offset);
-	center[index].move(offset);
 }
 
 void Door::move(const sf::Vector2f & offset)
@@ -211,7 +204,6 @@ void Door::setPath(std::string pathToShape, std::string pathToTexture, const std
 	pathToTexture += string+".png";
 
 	doors[count].setShape(pathToShape, pathToTexture,nameTexture+std::to_string(count));
-	center[count].setShape(doors[count].getShape());
 }
 
 std::pair<sf::Vector2f, size_t> Door::setHinge(const size_t &index)

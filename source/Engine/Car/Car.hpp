@@ -36,6 +36,7 @@ public:
 	int getTypeOfDrive();
 	int getStateMoving();
 	bool isSlide();
+	void breakSlide();
 
 	enum class collisionSide
 	{

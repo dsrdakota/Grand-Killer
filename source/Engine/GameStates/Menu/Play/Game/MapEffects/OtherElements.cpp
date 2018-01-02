@@ -21,7 +21,7 @@ Other::Other()
 	leaves[3].setPosition(5504, 5420);
 
 	roofs[0].setPosition(396, 464);
-	roofs[1].setPosition(736,601);
+	roofs[1].setPosition(731,601);
 }
 
 Other::~Other()

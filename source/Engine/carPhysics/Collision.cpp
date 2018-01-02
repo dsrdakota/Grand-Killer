@@ -14,16 +14,14 @@ Collision::Collision(Car * car)
 
 	lastCollisionSide = Car::collisionSide::None;
 
-	setHitbox(upRightHitboxes, sf::Vector2f(34, 80), sf::Color::Green);
-	setHitbox(rightHitboxes, sf::Vector2f(81, 206), sf::Color::Blue);
-	setHitbox(downRightHitboxes, sf::Vector2f(207, 227), sf::Color::Red);
-	setHitbox(downHitboxes, sf::Vector2f(275, 285), sf::Color::Yellow);
-	setHitbox(downLeftHitboxes, sf::Vector2f(322, 342), sf::Color::Magenta);
-	setHitbox(leftHitboxes, sf::Vector2f(343, 467), sf::Color(83, 47, 40));
-	setHitbox(upLeftHitboxes, sf::Vector2f(468, 514), sf::Color(255, 165, 0));
-
-	setHitbox(upHitboxes, sf::Vector2f(534,540), sf::Color(75, 0, 130));
-	setHitbox(upHitboxes, sf::Vector2f(0, 6), sf::Color(75, 0, 130));
+	setHitbox(upHitboxes, sf::Vector2f(10, 40), sf::Color(75, 0, 130));
+	setHitbox(upRightHitboxes, sf::Vector2f(60, 100), sf::Color::Green);
+	setHitbox(rightHitboxes, sf::Vector2f(101, 171), sf::Color::Blue);
+	setHitbox(downRightHitboxes, sf::Vector2f(171, 240), sf::Color::Red);
+	setHitbox(downHitboxes, sf::Vector2f(258, 300), sf::Color::Yellow);
+	setHitbox(downLeftHitboxes, sf::Vector2f(315, 387), sf::Color::Magenta);
+	setHitbox(leftHitboxes, sf::Vector2f(387, 457), sf::Color(83, 47, 40));
+	setHitbox(upLeftHitboxes, sf::Vector2f(457, 497), sf::Color(255, 165, 0));
 }
 
 Collision::~Collision()
@@ -109,12 +107,6 @@ Car::collisionSide Collision::whereIsCollision()
 	if (checkCollisionWithOneHitbox(downHitboxes, car->getBoolIsCollision(Car::collisionSide::Back)))
 		return Car::collisionSide::Back;
 
-	if (checkCollisionWithOneHitbox(leftHitboxes, car->getBoolIsCollision(Car::collisionSide::Left)))
-		return Car::collisionSide::Left;
-
-	if (checkCollisionWithOneHitbox(rightHitboxes, car->getBoolIsCollision(Car::collisionSide::Right)))
-		return Car::collisionSide::Right;
-
 	if (checkCollisionWithOneHitbox(upRightHitboxes,car->getBoolIsCollision(Car::collisionSide::Right)))
 		return Car::collisionSide::RightUp;
 
@@ -126,6 +118,12 @@ Car::collisionSide Collision::whereIsCollision()
 
 	if (checkCollisionWithOneHitbox(downLeftHitboxes, car->getBoolIsCollision(Car::collisionSide::Left)))
 		return Car::collisionSide::LeftDown;
+
+	if (checkCollisionWithOneHitbox(leftHitboxes, car->getBoolIsCollision(Car::collisionSide::Left)))
+		return Car::collisionSide::Left;
+
+	if (checkCollisionWithOneHitbox(rightHitboxes, car->getBoolIsCollision(Car::collisionSide::Right)))
+		return Car::collisionSide::Right;
 
 	return Car::collisionSide::None;
 }
@@ -158,7 +156,7 @@ void Collision::collisionIs(const std::vector<sf::CircleShape*>& hitbox, const C
 	case Car::collisionSide::Left:
 	case Car::collisionSide::Right:
 
-		car->setSpeed(static_cast<float>(car->getSpeed() / 1.1f));
+		car->setSpeed(static_cast<float>(car->getSpeed() / 1.085f));
 		v = moveFromWall(hitbox, side);
 		moveOneHitbox(hitbox, -v);
 		car->move(v);
@@ -169,6 +167,7 @@ void Collision::collisionIs(const std::vector<sf::CircleShape*>& hitbox, const C
 	case Car::collisionSide::RightUp:
 
 		car->setSpeed(static_cast<float>(car->getSpeed() / 1.085f));
+		car->breakSlide();
 		angleRotate = howManyRotate(hitbox, side);
 		rotateOneHitbox(hitbox, angleRotate * -1.f);
 		car->rotate(angleRotate);
@@ -182,15 +181,18 @@ void Collision::collisionIs(const std::vector<sf::CircleShape*>& hitbox, const C
 
 		if (lastCollisionSide != Car::collisionSide::Back)
 		{
-			car->setSpeed(static_cast<float>(car->getSpeed() / 1.085f));
 			if (car->getStateMoving() == 1) // back
 			{
+				car->setSpeed(static_cast<float>(car->getSpeed() / 1.085f));
 				angleRotate = howManyRotate(hitbox, side);
 				rotateOneHitbox(hitbox, angleRotate * -1.f);
 				car->rotate(angleRotate);
+
 			}
 			else if (car->getStateMoving() == 0) // front
 			{
+				car->setSpeed(static_cast<float>(car->getSpeed() / 1.085f));
+				car->breakSlide();
 				v = moveFromWall(hitbox, side);
 				moveOneHitbox(hitbox, -v);
 				car->move(v);
@@ -217,6 +219,7 @@ float Collision::howManyRotate(const std::vector<sf::CircleShape*> &hitbox, cons
 {
 	float rotate = 0.0f;
 	const float singleRotateValue = 0.05f;
+
 	while (checkCollisionWithOneHitbox(hitbox, car->getBoolIsCollision(side)))
 	{
 		switch (side)
@@ -248,8 +251,8 @@ sf::Vector2f Collision::moveFromWall(const std::vector<sf::CircleShape*> &hitbox
 	{
 		switch (side)
 		{
-		case Car::collisionSide::Right:
 		case Car::collisionSide::RightDown:
+		case Car::collisionSide::Right:
 			w = car->getMovementVector(std::fmod(car->getShape()->getShape()->getRotation() - static_cast<float>(*car->getOverSteerValue()) - 90, 360.f));
 			break;
 		case Car::collisionSide::LeftDown:

@@ -6,7 +6,7 @@
 
 #define M_PI 3.14159265359f
 
-toTurn::toTurn(Car *car, std::pair<sf::Sprite*, sf::Sprite*>tiresFront, std::pair<sf::Sprite*, sf::Sprite*>tiresBack, std::pair<std::vector <sf::CircleShape*>, std::vector <sf::CircleShape*>> tiresHitbox, const double *speedRotateTire, const double*speedRotateCar)
+toTurn::toTurn(Car *car, std::pair<sf::Sprite*, sf::Sprite*>tiresFront, std::pair<sf::Sprite*, sf::Sprite*>tiresBack, const double *speedRotateTire, const double*speedRotateCar)
 {
 	this->car = car;
 	this->carShape = car->getShape()->getShape();
@@ -27,7 +27,6 @@ toTurn::toTurn(Car *car, std::pair<sf::Sprite*, sf::Sprite*>tiresFront, std::pai
 	
 	this->tiresFront = tiresFront;
 	this->tiresBack = tiresBack;
-	this->tiresHitbox = tiresHitbox;
 }
 
 toTurn::~toTurn()
@@ -68,6 +67,11 @@ Slide * toTurn::getSlidePhycics()
 bool toTurn::isSlide()
 {
 	return slide->getSlideBool();
+}
+
+void toTurn::breakSlide()
+{
+	slide->breakSlide();
 }
 
 void toTurn::turning(const Direction & direction)
@@ -113,10 +117,10 @@ void toTurn::updatePosition()
 	else
 		*drivingStatus = Status::Straight;
 
-	if (*actualValueRotateLeftTire && car->getSpeed() > 0.5)
+	if (*actualValueRotateLeftTire && car->getSpeed() > 0.65)
 		rotateCar(static_cast<float>(*actualValueRotateLeftCar), Car::collisionSide::Left, Car::collisionSide::Right);
 
-	else if (*actualValueRotateRightTire && car->getSpeed() > 0.5)
+	else if (*actualValueRotateRightTire && car->getSpeed() > 0.65)
 		rotateCar(static_cast<float>(-*actualValueRotateRightCar), Car::collisionSide::Right, Car::collisionSide::Left);
 
 	slide->setOverSteer(static_cast<int>(*drivingStatus));
@@ -127,12 +131,6 @@ void toTurn::turn(sf::Sprite *tire, sf::Sprite *counterTire, double *actualValue
 	if (*actualValueRotateTire < *MAX_ROTATE_TIRE)
 	{
 		tire->rotate(static_cast<float>(angleTire));
-
-		for (auto i = 0;i < 6;++i)
-		{
-			tiresHitbox.first[i]->setRotation(tire->getRotation());
-			tiresHitbox.second[i]->setRotation(tire->getRotation());
-		}
 
 		counterTire->setRotation(tire->getRotation());
 
@@ -146,12 +144,6 @@ void toTurn::straight(sf::Sprite *tire, sf::Sprite *counterTire, double *actualV
 	if (*actualValueRotateTire > 0)
 	{
 		tire->rotate(static_cast<float>(angleTire));
-
-		for (auto i = 0;i < 6;++i)
-		{
-			tiresHitbox.first[i]->setRotation(tire->getRotation());
-			tiresHitbox.second[i]->setRotation(tire->getRotation());
-		}
 
 		counterTire->setRotation(tire->getRotation());
 
