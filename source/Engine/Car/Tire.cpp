@@ -1,7 +1,6 @@
 #include "Tire.hpp"
 #include "../../Manager/Texture.hpp"
 #include "../../Manager/renderSprites.hpp"
-#include <iostream>
 #include "Car.hpp"
 
 Tire::Tire(Car *car,const carType::Type &type)

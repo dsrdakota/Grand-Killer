@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "playerStates.hpp"
+#include "../../Player/playerStates.hpp"
 
 class playerMechanics : public playerStates
 {

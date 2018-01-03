@@ -1,7 +1,7 @@
 #include "TrafficSigns.hpp"
 
-#include "../../../../../../Manager/texture.hpp"
-#include "../../../../../../Manager/renderSprites.hpp"
+#include "../../../../Manager/Texture.hpp"
+#include "../../../../Manager/renderSprites.hpp"
 
 TrafficSigns::TrafficSigns()
 {

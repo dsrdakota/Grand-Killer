@@ -1,8 +1,7 @@
 #include "Collision.hpp"
 
-#include "../../Manager/renderSprites.hpp"
-#include <cmath>
-#include <iostream>
+#include "../../../../Manager/renderSprites.hpp"
+#include "../../Map/Map.hpp"
 
 Collision::Collision(Car * car)
 {

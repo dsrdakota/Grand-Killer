@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
-#include "../../../../../../Manager/Time.hpp"
+#include "../../../../Manager/Time.hpp"
 
 class SwimmingPool
 {

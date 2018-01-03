@@ -1,8 +1,6 @@
 #include "OtherElements.hpp"
-#include "../../../../../../Manager/Texture.hpp"
-#include "../../../../../../Manager/renderSprites.hpp"
-
-#include "../Map.hpp"
+#include "../../../../Manager/Texture.hpp"
+#include "../../../../Manager/renderSprites.hpp"
 
 Other::Other()
 {
@@ -33,7 +31,7 @@ Other::~Other()
 void Other::draw()
 {
 	for (auto i = 0;i < 4;++i)
-			renderSprites::Instance().addToRender(&leaves[i]);
+		renderSprites::Instance().addToRender(&leaves[i]);
 
 	for (auto i = 0;i < 2;++i)
 		renderSprites::Instance().addToRender(&roofs[i]);

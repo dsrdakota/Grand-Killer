@@ -1,10 +1,8 @@
 #include "Map.hpp"
 
-#include "../../../../../Manager/Texture.hpp"
-#include "../../../../../Manager/renderSprites.hpp"
-#include "../../../../../Game.hpp"
-
-#include <iostream>
+#include "../../../Manager/Texture.hpp"
+#include "../../../Manager/renderSprites.hpp"
+#include "../../../Game.hpp"
 
 Map::Map() : window(Game::Instance().getWindow())
 {

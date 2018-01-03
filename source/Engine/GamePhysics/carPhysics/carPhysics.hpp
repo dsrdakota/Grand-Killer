@@ -2,11 +2,10 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "TurnOrigin.hpp"
-#include "toTurn.hpp"
-#include "../../Manager/renderSprites.hpp"
-#include "Movement.hpp"
-#include "Collision.hpp"
+#include "movementPhysics/toTurn.hpp"
+#include "../../../Manager/renderSprites.hpp"
+#include "movementPhysics/Movement.hpp"
+#include "collisionPhysics/Collision.hpp"
 
 class carPhysics
 {

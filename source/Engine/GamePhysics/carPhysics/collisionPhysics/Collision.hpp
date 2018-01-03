@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "../Car/Car.hpp"
+#include "../../../Car/Car.hpp"
 
 class Collision
 {

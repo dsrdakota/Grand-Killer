@@ -1,9 +1,7 @@
 #include "TrafficLights.hpp"
 
-#include "../../../../../../Manager/texture.hpp"
-#include "../../../../../../Manager/renderSprites.hpp"
-
-#include <iostream>
+#include "../../../../Manager/texture.hpp"
+#include "../../../../Manager/renderSprites.hpp"
 
 TrafficLights::TrafficLights()
 {
@@ -178,7 +176,6 @@ void TrafficLights::draw(const std::vector<Light*>& lights, const int &drawState
 			lights[i]->checkCollision();
 			renderSprites::Instance().addToRender(lights[i]->getStakeSprite());
 			renderSprites::Instance().addToRender(lights[i]->getLightSprite());
-			//renderSprites::Instance().addToRender(lights[i]->getLightHitbox());
 		}
 	}
 }

@@ -8,7 +8,7 @@
 #include "Tire.hpp"
 #include "Mirror.hpp"
 #include "carType.hpp"
-#include "../GameStates/Menu/Play/Game/Map.hpp"
+#include "../GamePhysics/Map/Map.hpp"
 
 #include "../Player/playerStates.hpp"
 

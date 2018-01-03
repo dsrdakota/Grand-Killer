@@ -1,6 +1,6 @@
 #include "SwimmingPool.hpp"
-#include "../../../../../../Manager/Texture.hpp"
-#include "../../../../../../Manager/renderSprites.hpp"
+#include "../../../../Manager/Texture.hpp"
+#include "../../../../Manager/renderSprites.hpp"
 
 SwimmingPool::SwimmingPool()
 {

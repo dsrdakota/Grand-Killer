@@ -2,7 +2,7 @@
 
 #include "../../Manager/Texture.hpp"
 #include "../../Manager/renderSprites.hpp"
-#include "../GameStates/Menu/Play/Game/Map.hpp"
+#include "../GamePhysics/Map/Map.hpp"
 
 Mirror::Mirror(const carType::Type & type)
 {

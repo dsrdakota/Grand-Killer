@@ -2,11 +2,7 @@
 #include "../../Manager/Texture.hpp"
 #include "../../Manager/renderSprites.hpp"
 
-#include "../carPhysics/carPhysics.hpp"
-
-#include <iostream>
-#include <string>
-#include <fstream>
+#include "../GamePhysics/carPhysics/carPhysics.hpp"
 
 Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game::Instance().getWindow())
 {
@@ -292,9 +288,6 @@ void Car::draw()
 	mirror->drawOn();
 
 	physics->draw();
-
-	//tire->draw();
-
 }
 
 void Car::gas(const sf::Keyboard::Key & key)

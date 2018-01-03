@@ -4,7 +4,8 @@
 
 #include "carType.hpp"
 
-#include "../carPhysics/Traces.hpp"
+#include "../GamePhysics/carPhysics/movementPhysics/Traces.hpp"
+
 class Car;
 class Tire
 {

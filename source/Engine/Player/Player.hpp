@@ -2,7 +2,7 @@
 
 #include "playerStates.hpp"
 #include "../Car/Car.hpp"
-#include "playerMechanics.hpp"
+#include "../GamePhysics/playerPhysics/playerMechanics.hpp"
 
 class Player
 {

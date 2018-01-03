@@ -1,9 +1,7 @@
 #include "Sign.hpp"
 
-#include "../../../../../../Manager/Texture.hpp"
-#include "../mGame.hpp"
-
-#include <iostream>
+#include "../../../../Manager/Texture.hpp"
+#include "../../../GameStates/Menu/Play/Game/mGame.hpp"
 
 Sign::Sign(const sf::Vector2f &startPos, const float &rotation)
 {

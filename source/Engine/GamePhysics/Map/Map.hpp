@@ -29,6 +29,7 @@ public:
 	void drawOn();
 
 	static bool isOutsideView(const sf::Vector2f & pos);
+	static bool Map::isPointOnGrass(const sf::Vector2f & pos);
 
 	sf::Image* getGrassHitbox() { return grassHitbox; }
 	sf::Image* getCollisionHitbox() { return collisionHitbox; }
