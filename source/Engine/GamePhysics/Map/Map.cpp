@@ -39,6 +39,11 @@ void Map::setView(const sf::Vector2f & center)
 	window->setView(*view);
 }
 
+void Map::setRotation(const float & angle)
+{
+	//view->setRotation(angle);
+}
+
 void Map::updateView(const sf::Vector2f &newerView)
 {
 	setView(newerView);
@@ -97,10 +102,18 @@ bool Map::isPointOnGrass(const sf::Vector2f & pos)
 	if (pos.x < 0 ||pos.y < 0)
 		return false;
 
-	auto &map = Map::Instance();
-
-	if (map.grassHitbox->getPixel(static_cast<unsigned>(pos.x),static_cast<unsigned>(pos.y)) == sf::Color(133, 91, 0))
+	if (Map::Instance().grassHitbox->getPixel(static_cast<unsigned>(pos.x),static_cast<unsigned>(pos.y)) == sf::Color(133, 91, 0))
 		return true;
 
+	return false;
+}
+
+bool Map::isPointInCollisionArea(const sf::Vector2f & pos)
+{
+	if (pos.x < 0 || pos.y < 0)
+		return false;
+
+	if (Map::Instance().collisionHitbox->getPixel(static_cast<unsigned>(pos.x), static_cast<unsigned>(pos.y)) == sf::Color(255, 0, 0))
+		return true;
 	return false;
 }

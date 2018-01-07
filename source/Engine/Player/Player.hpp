@@ -17,6 +17,8 @@ public:
 		return player;
 	}
 
+	float getRotation();
+
 	void move();
 	void giveMeYourCar(Car *car); // if you drive a car
 	void changeStates(); // if you walk ( get out of car )

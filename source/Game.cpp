@@ -36,6 +36,7 @@ Game::Game() : m_status(status::Initializing)
 		window = new sf::RenderWindow(sf::VideoMode(width, height, colors), "Grand Killer", windowMode, settings);
 		window->setFramerateLimit(fps);
 		window->setVerticalSyncEnabled(true);
+		window->setMouseCursorVisible(false);
 
 	}
 	else

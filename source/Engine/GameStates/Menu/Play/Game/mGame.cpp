@@ -5,8 +5,6 @@
 
 #include "../../../../GamePhysics/carPhysics/collisionPhysics/Collision.hpp"
 
-#include <iostream>
-
 mGame::mGame()
 {
 	cars = new std::vector<Car*>;
@@ -32,6 +30,7 @@ void mGame::play()
 
 		Collision::checkAllCarCollision();
 
+		Map::Instance().setRotation(player->getRotation());
 		player->move();
 
 		draw();

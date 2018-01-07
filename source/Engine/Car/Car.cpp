@@ -1,7 +1,6 @@
 #include "Car.hpp"
 #include "../../Manager/Texture.hpp"
 #include "../../Manager/renderSprites.hpp"
-
 #include "../GamePhysics/carPhysics/carPhysics.hpp"
 #include "../GamePhysics/carPhysics/collisionPhysics/carCollisionHitbox.hpp"
 
@@ -9,6 +8,7 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 {
 	this->type = new carType::Type(type);
 	shape = new Shape;
+	shadow = new Shape;
 
 	std::string pathToShape = "data/Models/Cars/";
 	std::string pathToTexture = pathToShape;
@@ -48,10 +48,14 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	tire = new Tire(this,type);
 	door = new Door(type);
 	mirror = new Mirror(type);
-	shape->setShape(pathToShape, pathToTexture, nameTexture);
 
+	shape->setShape(pathToShape, pathToTexture, nameTexture);
 	shape->setPosition(startPos);
 	shape->setOrigin(origin);
+
+	shadow->setShape(shape->getShape(), sf::Color(0, 0, 0, 120));
+	shadow->setPosition(sf::Vector2f(startPos.x - 10,startPos.y));
+	shadow->setOrigin(origin);
 
 	door->setPosition(shape->getShape(), type);
 	tire->setPosition(shape->getShape(), type);
@@ -203,6 +207,11 @@ void Car::toControl()
 	// -----
 }
 
+float Car::getRotation()
+{
+	return static_cast<float>(shape->getShape()->getRotation() - *getOverSteerValue());
+}
+
 void Car::setCamera()
 {
 	Map::Instance().updateView(shape->getShape()->getPosition());
@@ -228,6 +237,7 @@ void Car::move(const sf::Vector2f & offset)
 void Car::rotate(const double & angle)
 {
 	shape->getShape()->rotate(static_cast<float>(angle));
+	shadow->getShape()->rotate(static_cast<float>(angle));
 	door->rotate(static_cast<float>(angle));
 	tire->rotate(angle, shape->getShape());
 	mirror->rotate(angle);
@@ -240,6 +250,9 @@ void Car::updatePosition()
 {
 	mirror->checkCollision();
 	physics->updatePosition();
+
+	shadow->setPosition(sf::Vector2f(shape->getShape()->getPosition().x + 10, 
+		shape->getShape()->getPosition().y));
 }
 
 void Car::openDoors(const Door::Side &side, const sf::Keyboard::Key &key)
@@ -286,6 +299,8 @@ void Car::closeDoors(const Door::Side & side, const sf::Keyboard::Key &key)
 
 void Car::draw()
 {
+	renderSprites::Instance().addToRender(shadow->getShape());
+
 	mirror->drawUnder();
 
 	tire->draw();

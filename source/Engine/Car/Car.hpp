@@ -4,6 +4,7 @@
 
 #include "../../Game.hpp"
 #include "../../Framework/Shapes.hpp"
+
 #include "Door.hpp"
 #include "Tire.hpp"
 #include "Mirror.hpp"
@@ -25,9 +26,10 @@ public:
 	inline Shape *getShape() { return shape; }
 	inline Door* getDoors() { return door; }
 	inline Tire* getTires() { return tire; }
+
 	std::vector<sf::CircleShape*> getAllHitboxes();
-	double getSpeed();
 	void setSpeed(const float &speed);
+	double getSpeed();
 	sf::Vector2f getMovementVector(const float &rot = 361);
 	const double getMaxSpeed();
 	const double *getOverSteerValue();
@@ -35,6 +37,7 @@ public:
 	double *getBreakingForceOfSlide();
 	int getTypeOfDrive();
 	int getStateMoving();
+
 	bool isSlide();
 	void breakSlide();
 
@@ -68,6 +71,7 @@ public:
 	collisionSide *getLastCollisionSide();
 
 	void toControl() override;
+	float getRotation() override;
 	void setCamera() override;
 	void draw() override; 
 
@@ -85,6 +89,7 @@ private:
 	unsigned *weight;
 
 	Shape *shape;
+	Shape *shadow;
 
 	Door *door;
 

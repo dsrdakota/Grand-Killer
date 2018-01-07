@@ -4,6 +4,11 @@ void playerMechanics::toControl()
 {
 }
 
+float playerMechanics::getRotation()
+{
+	return 0;
+}
+
 void playerMechanics::setCamera()
 {
 	view->setView(sf::Vector2f(0, 0));

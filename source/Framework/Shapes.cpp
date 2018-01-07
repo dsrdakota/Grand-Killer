@@ -45,11 +45,11 @@ void Shape::setShape(const std::string & pathToShape, const std::string & pathTo
 	file.close();
 }
 
-void Shape::setShape(const sf::ConvexShape * shape)
+void Shape::setShape(const sf::ConvexShape * shape, const sf::Color &color)
 {
 	this->shape->setPointCount(shape->getPointCount());
 
 	for (size_t i = 0;i < shape->getPointCount();++i)
 		this->shape->setPoint(i, shape->getPoint(i));
-	this->shape->setFillColor(sf::Color::Black);
+	this->shape->setFillColor(color);
 }

@@ -8,6 +8,7 @@ class playerMechanics : public playerStates
 {
 public:
 	void toControl() override;
+	float getRotation() override;
 	void setCamera() override;
 	void draw() override;
 };

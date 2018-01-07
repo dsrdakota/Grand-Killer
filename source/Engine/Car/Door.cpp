@@ -124,8 +124,8 @@ void Door::rotate(const double & angle)
 {
 	for (int i = 0;i < 4;++i)
 	{
-		doors[i].getShape()->rotate(angle);
-		center[i].getShape()->rotate(angle);
+		doors[i].getShape()->rotate(static_cast<float>(angle));
+		center[i].getShape()->rotate(static_cast<float>(angle));
 	}
 }
 

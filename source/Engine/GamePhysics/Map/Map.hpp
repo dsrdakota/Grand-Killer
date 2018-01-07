@@ -23,6 +23,7 @@ public:
 	}
 
 	void setView(const sf::Vector2f &center);
+	void setRotation(const float &angle);
 	void updateView(const sf::Vector2f &newerView);
 
 	void drawUnder();
@@ -30,6 +31,7 @@ public:
 
 	static bool isOutsideView(const sf::Vector2f & pos);
 	static bool Map::isPointOnGrass(const sf::Vector2f & pos);
+	static bool Map::isPointInCollisionArea(const sf::Vector2f & pos);
 
 	sf::Image* getGrassHitbox() { return grassHitbox; }
 	sf::Image* getCollisionHitbox() { return collisionHitbox; }

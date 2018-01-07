@@ -13,7 +13,7 @@ public:
 	inline virtual float getRotation() { return shape->getRotation(); }
 
 	virtual void setShape(const std::string &pathToShape, const std::string &pathToTexture, const std::string &nameTexture);
-	virtual void setShape(const sf::ConvexShape *shape);
+	virtual void setShape(const sf::ConvexShape *shape,const sf::Color &color = sf::Color::Black);
 	inline virtual void setPosition(const sf::Vector2f &pos) { shape->setPosition(pos); }
 	inline virtual void setRotation(const float &angle) { shape->setRotation(angle); }
 	inline virtual void setOrigin(const sf::Vector2f &origin) { shape->setOrigin(origin); }

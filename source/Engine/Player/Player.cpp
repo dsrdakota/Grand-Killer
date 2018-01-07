@@ -10,6 +10,11 @@ Player::~Player()
 	delete wsk;
 }
 
+float Player::getRotation()
+{
+	return wsk->getRotation();
+}
+
 void Player::move()
 {
 	wsk->toControl();

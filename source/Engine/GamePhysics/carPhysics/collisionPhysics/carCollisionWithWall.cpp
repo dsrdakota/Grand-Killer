@@ -107,10 +107,8 @@ Car::collisionSide carCollisionWithWall::whereIsCollision()
 
 bool carCollisionWithWall::checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>&hitbox, bool &isCollision)
 {
-	auto collisionArea = Map::Instance().getCollisionHitbox();
 	for (const auto &i : hitbox)
-		if (collisionArea->getPixel(i->getGlobalBounds().left + i->getGlobalBounds().width /2,
-			i->getGlobalBounds().top + i->getGlobalBounds().height/2) == sf::Color(255,0,0))
+		if (Map::isPointInCollisionArea(getCenterOfHitbox(*i)))
 			return true;
 
 	isCollision = false;

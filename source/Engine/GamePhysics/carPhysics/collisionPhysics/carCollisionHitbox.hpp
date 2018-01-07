@@ -32,5 +32,4 @@ private:
 	Car::collisionSide lastCollisionSide;
 
 	void setHitbox(std::vector<sf::CircleShape*>&hitbox, const sf::Vector2f &range, const sf::Color &color = sf::Color::White);
-
 };

@@ -20,6 +20,7 @@ public:
 	};
 
 	virtual void toControl() = 0;
+	virtual float getRotation() = 0;
 	virtual void setCamera() = 0;
 	virtual void draw() = 0;
 
