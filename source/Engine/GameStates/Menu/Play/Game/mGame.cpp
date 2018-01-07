@@ -3,6 +3,8 @@
 #include "../../../../../Manager/renderSprites.hpp"
 #include "../../../../../Manager/Time.hpp"
 
+#include "../../../../GamePhysics/carPhysics/collisionPhysics/Collision.hpp"
+
 #include <iostream>
 
 mGame::mGame()
@@ -28,15 +30,11 @@ void mGame::play()
 	{
 		game.events();
 
+		Collision::checkAllCarCollision();
+
 		player->move();
 
-		map->drawUnder();
-
-		player->draw();
-
-		map->drawOn();
-
-		renderSprites::Instance().run();
+		draw();
 
 		TimeManager::getTimeOnClocks();
 	}
@@ -45,4 +43,15 @@ void mGame::play()
 std::vector<Car*> mGame::getAllCars()
 {
 	return *cars;
+}
+
+void mGame::draw()
+{
+	map->drawUnder();
+
+	player->draw();
+
+	map->drawOn();
+
+	renderSprites::Instance().run();
 }

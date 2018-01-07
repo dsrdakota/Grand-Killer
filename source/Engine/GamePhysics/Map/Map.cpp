@@ -100,7 +100,6 @@ bool Map::isPointOnGrass(const sf::Vector2f & pos)
 	auto &map = Map::Instance();
 
 	if (map.grassHitbox->getPixel(static_cast<unsigned>(pos.x),static_cast<unsigned>(pos.y)) == sf::Color(133, 91, 0))
-
 		return true;
 
 	return false;

@@ -18,7 +18,7 @@ class Car : public playerStates
 {
 public: 
 
-	Car(const carType::Type &type,const sf::Vector2f &startPos);
+	Car(const carType::Type &type,const sf::Vector2f &startPos = sf::Vector2f(0,0));
 	~Car();
 
 	inline carType::Type *getType() { return type; }
@@ -51,7 +51,21 @@ public:
 		None
 	};
 
+	enum class hitboxPosition
+	{
+		Front,
+		upRight,
+		Right,
+		downRight,
+		Back,
+		downLeft,
+		Left,
+		upLeft
+	};
+
 	bool &getBoolIsCollision(const collisionSide &side);
+	std::vector<sf::CircleShape*> getCollisionHitbox(const hitboxPosition &pos);
+	collisionSide *getLastCollisionSide();
 
 	void toControl() override;
 	void setCamera() override;
@@ -80,7 +94,7 @@ private:
 
 	carPhysics *physics;
 
-	std::vector<sf::CircleShape*>hitboxes;
+	std::vector<sf::CircleShape*>hitboxes; // hitboxes around of car
 
 	bool isCollision[9];
 

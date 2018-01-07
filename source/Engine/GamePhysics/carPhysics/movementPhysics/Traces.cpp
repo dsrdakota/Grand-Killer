@@ -18,16 +18,16 @@ void Traces::setTraces()
 {
 	for (auto i = 0;i < 4;++i)
 	{
-		if (Map::isPointOnGrass(getMeCenterOfHitbox(tiresPos[i])) && // hitbox is on Grass
-			!isSameTraceOnVector(tracesGrassPos, sf::Vector2f(getMeCenterOfHitbox(tiresPos[i])))) // trace isnt in vector
+		if (Map::isPointOnGrass(getCenterOfHitbox(tiresPos[i])) && // hitbox is on Grass
+			!isSameTraceOnVector(tracesGrassPos, sf::Vector2f(getCenterOfHitbox(tiresPos[i])))) // trace isnt in vector
 
-			tracesGrassPos.push_back(std::make_pair(std::make_pair(getMeCenterOfHitbox(tiresPos[i]), tiresPos[i].getRotation()), 5));
+			tracesGrassPos.push_back(std::make_pair(std::make_pair(getCenterOfHitbox(tiresPos[i]), tiresPos[i].getRotation()), 5));
 
 		else if (fabs(*car->getOverSteerValue()) > 20 && 
-			!isSameTraceOnVector(tracesAsphaltPos, getMeCenterOfHitbox(tiresPos[i])) &&
-			!isSameTraceOnVector(tracesGrassPos, getMeCenterOfHitbox(tiresPos[i])))
+			!isSameTraceOnVector(tracesAsphaltPos, getCenterOfHitbox(tiresPos[i])) &&
+			!isSameTraceOnVector(tracesGrassPos, getCenterOfHitbox(tiresPos[i])))
 
-			tracesAsphaltPos.push_back(std::make_pair(std::make_pair(getMeCenterOfHitbox(tiresPos[i]), tiresPos[i].getRotation()),5));
+			tracesAsphaltPos.push_back(std::make_pair(std::make_pair(getCenterOfHitbox(tiresPos[i]), tiresPos[i].getRotation()),5));
 	}
 	updateTimeInTrace();
 }
@@ -90,7 +90,7 @@ bool Traces::isSameTraceOnVector(std::vector<std::pair<std::pair<sf::Vector2f, f
 	return false;
 }
 
-sf::Vector2f Traces::getMeCenterOfHitbox(const sf::CircleShape & hitbox)
+sf::Vector2f Traces::getCenterOfHitbox(const sf::CircleShape &hitbox)
 {
 	return sf::Vector2f(hitbox.getGlobalBounds().left + hitbox.getGlobalBounds().width / 2,
 		hitbox.getGlobalBounds().top + hitbox.getGlobalBounds().height / 2);

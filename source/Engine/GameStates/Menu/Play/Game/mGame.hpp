@@ -34,4 +34,6 @@ private:
 	Map *map;
 	Player *player;
 	Car *taxi;
+
+	void draw();
 };

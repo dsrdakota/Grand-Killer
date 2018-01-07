@@ -3,6 +3,7 @@
 #include "../../Manager/renderSprites.hpp"
 
 #include "../GamePhysics/carPhysics/carPhysics.hpp"
+#include "../GamePhysics/carPhysics/collisionPhysics/carCollisionHitbox.hpp"
 
 Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game::Instance().getWindow())
 {
@@ -144,9 +145,19 @@ void Car::breakSlide()
 	physics->getPhysicsTurn()->breakSlide();
 }
 
-bool & Car::getBoolIsCollision(const collisionSide & side)
+bool & Car::getBoolIsCollision(const Car::collisionSide &side)
 {	
 	return isCollision[static_cast<int>(side)];
+}
+
+std::vector<sf::CircleShape*> Car::getCollisionHitbox(const hitboxPosition & pos)
+{
+	return physics->getCollisionHitboxes()->getOneCollisionHitbox(pos);
+}
+
+Car::collisionSide *Car::getLastCollisionSide()
+{
+	return physics->getCollisionHitboxes()->getLastCollisionSide();
 }
 
 void Car::toControl()

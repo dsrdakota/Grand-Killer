@@ -5,7 +5,7 @@
 #include "movementPhysics/toTurn.hpp"
 #include "../../../Manager/renderSprites.hpp"
 #include "movementPhysics/Movement.hpp"
-#include "collisionPhysics/Collision.hpp"
+#include "collisionPhysics/carCollisionHitbox.hpp"
 
 class carPhysics
 {
@@ -16,6 +16,7 @@ public:
 
 	inline toTurn* getPhysicsTurn() { return turnPhysics; }
 	inline Movement* getPhysicsMove() { return movePhysics; }
+	inline carCollisionHitbox* getCollisionHitboxes() { return collisionHitboxes; }
 
 	void boostSpeed(const sf::Keyboard::Key &key);
 	void reduceSpeed(const sf::Keyboard::Key &key);
@@ -32,7 +33,7 @@ private:
 	
 	toTurn *turnPhysics;
 	Movement *movePhysics;
-	Collision *collisionPhysics;
+	carCollisionHitbox *collisionHitboxes;
 
 	const double *SPEED_ROTATE_TIRE;
 	const double *SPEED_ROTATE_CAR;

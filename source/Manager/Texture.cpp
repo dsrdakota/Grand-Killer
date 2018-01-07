@@ -15,9 +15,11 @@ sf::Texture * textureManager::load(const std::string & textureName, const std::s
 
 	else
 	{
-		result = new sf::Texture();
+		result = new sf::Texture;
 
 		result->loadFromFile(texturePath);
+
+		result->setSmooth(true);
 
 		Instance().textures[textureName] = result;
 	}
