@@ -1,7 +1,10 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+
+#include "carCollisionWithWall.hpp"
 #include "../../../GameStates/Menu/Play/Game/mGame.hpp"
+
 class Collision
 {
 public:

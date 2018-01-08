@@ -1,9 +1,5 @@
 #include "Collision.hpp"
 
-#include "carCollisionWithWall.hpp"
-
-#include <iostream>
-
 Collision::Collision()
 {
 	

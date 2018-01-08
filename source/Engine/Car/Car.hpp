@@ -24,6 +24,7 @@ public:
 
 	inline carType::Type *getType() { return type; }
 	inline Shape *getShape() { return shape; }
+	inline Shape *getShadow() { return shadow; }
 	inline Door* getDoors() { return door; }
 	inline Tire* getTires() { return tire; }
 
@@ -69,6 +70,8 @@ public:
 	bool &getBoolIsCollision(const collisionSide &side);
 	std::vector<sf::CircleShape*> getCollisionHitbox(const hitboxPosition &pos);
 	collisionSide *getLastCollisionSide();
+
+	std::vector<std::pair<sf::CircleShape*, std::pair<sf::Vector2f, float*>>> getDentHitbox();
 
 	void toControl() override;
 	float getRotation() override;

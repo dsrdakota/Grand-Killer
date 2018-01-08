@@ -4,16 +4,7 @@
 #include "Collision.hpp"
 #include "../../../../Manager/renderSprites.hpp"
 #include "../../Map/Map.hpp"
-
-carCollisionWithWall::carCollisionWithWall()
-{
-	
-}
-
-carCollisionWithWall::~carCollisionWithWall()
-{
-	
-}
+#include"../dentPhysics/Dent.hpp"
 
 void carCollisionWithWall::checkCollisions(Car *car)
 {
@@ -119,6 +110,10 @@ void carCollisionWithWall::collisionIs(const std::vector<sf::CircleShape*>&hitbo
 {
 	float angleRotate = 0;
 	sf::Vector2f v = sf::Vector2f(0, 0);
+
+	if (car->getSpeed() > 6)
+		carDentPhysics::doDents(car);
+
 	switch (side)
 	{
 	case Car::collisionSide::Front:

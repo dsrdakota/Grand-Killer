@@ -35,6 +35,7 @@ carPhysics::carPhysics(Car *car)
 	turnPhysics = new toTurn(car, std::make_pair(car->getTires()->getTires(0), car->getTires()->getTires(1)), std::make_pair(car->getTires()->getTires(2), car->getTires()->getTires(3)), SPEED_ROTATE_TIRE,SPEED_ROTATE_CAR);
 	movePhysics = new Movement(car);
 	collisionHitboxes = new carCollisionHitbox(car);
+	dentHitboxes = new carDentHitbox(car);
 }
 
 carPhysics::~carPhysics()
@@ -75,5 +76,5 @@ void carPhysics::move(const sf::Vector2f &offset)
 
 void carPhysics::draw()
 {
-	
+	//dentHitboxes->draw();
 }

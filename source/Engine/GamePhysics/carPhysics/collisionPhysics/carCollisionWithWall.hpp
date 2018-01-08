@@ -7,8 +7,6 @@ class carCollisionWithWall
 {
 public:
 
-	~carCollisionWithWall();
-
 	carCollisionWithWall(const carCollisionWithWall &) = delete;
 	void operator=(const carCollisionWithWall &) = delete;
 
@@ -22,7 +20,7 @@ public:
 
 private:
 
-	carCollisionWithWall();
+	carCollisionWithWall() {}
 
 	Car *car;
 
