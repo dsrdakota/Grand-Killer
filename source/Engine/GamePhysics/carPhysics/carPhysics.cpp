@@ -76,5 +76,5 @@ void carPhysics::move(const sf::Vector2f &offset)
 
 void carPhysics::draw()
 {
-	//dentHitboxes->draw();
+	
 }

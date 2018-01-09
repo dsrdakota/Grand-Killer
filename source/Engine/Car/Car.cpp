@@ -154,7 +154,7 @@ bool & Car::getBoolIsCollision(const Car::collisionSide &side)
 	return isCollision[static_cast<int>(side)];
 }
 
-std::vector<sf::CircleShape*> Car::getCollisionHitbox(const hitboxPosition & pos)
+const std::vector<sf::CircleShape*> Car::getCollisionHitbox(const hitboxPosition & pos)
 {
 	return physics->getCollisionHitboxes()->getOneCollisionHitbox(pos);
 }

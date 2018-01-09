@@ -2,6 +2,7 @@
 
 #include "../../../../Manager/Texture.hpp"
 #include "../../../GameStates/Menu/Play/Game/mGame.hpp"
+#include "../../../GamePhysics/carPhysics/dentPhysics/Dent.hpp"
 
 Light::Light(const sf::Vector2f & startPos, const float & rotation)
 {

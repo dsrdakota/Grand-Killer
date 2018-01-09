@@ -25,10 +25,10 @@ private:
 	Car *car;
 
 	Car::collisionSide whereIsCollision();
-	bool checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>&hitbox, bool &isCollision);
 	void collisionIs(const std::vector<sf::CircleShape*>&hitbox, const Car::collisionSide &side);
-	void rotateOneHitbox(const std::vector<sf::CircleShape*>&hitbox, const float &angle);
+	bool checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>&hitbox, bool &isCollision);
 	void moveOneHitbox(const std::vector<sf::CircleShape*>&hitbox, const sf::Vector2f &offset);
+	void rotateOneHitbox(const std::vector<sf::CircleShape*>&hitbox, const float &angle);
 	float howManyRotate(const std::vector<sf::CircleShape*> &hitbox, const Car::collisionSide &side);
 	sf::Vector2f moveFromWall(const std::vector<sf::CircleShape*> &hitbox, const Car::collisionSide &side);
 
