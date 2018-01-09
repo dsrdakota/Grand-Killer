@@ -42,18 +42,14 @@ void mGame::play()
 	{
 		game.events();
 
-		Map::Instance().setRotation(player->getRotation());
-		player->move();
-
-		draw();
-
-		/*switch (*gameState)
+		switch (*gameState)
 		{
 		case state::MainGame:
 
-			//Collision::checkAllCarCollision();
+			Collision::checkAllCarCollision();
 
 			Map::Instance().setRotation(player->getRotation());
+
 			player->move();
 
 			draw();
@@ -62,20 +58,24 @@ void mGame::play()
 		case state::Menu:
 
 			draw();
-			menu->draw(Map::getUpLeftCornerPosOfCurrentView());
+			menu->draw();
 
 			break;
 		case state::Map:
 			break;
 		}
 
-		switchState();*/
+		switchState();
+		
+		if (menu->getCooldownValue() > 0)
+			menu->updateCooldown();
+
 		TimeManager::getTimeOnClocks();
 		renderSprites::Instance().run();
 	}
 }
 
-std::vector<Car*> mGame::getAllCars()
+std::vector<Car*> &mGame::getAllCars()
 {
 	return cars;
 }
@@ -97,10 +97,17 @@ void mGame::draw()
 
 void mGame::switchState()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::MainGame)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::MainGame && menu->getCooldownValue() <=0)
+	{
+		menu->setPosition(Map::getUpLeftCornerPosOfCurrentView());
+		menu->restartCooldownValue();
 		*gameState = state::Menu;
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::Menu)
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::Menu && menu->getCooldownValue() <= 0)
+	{
+		menu->restartCooldownValue();
 		*gameState = state::MainGame;
+	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && *gameState == state::MainGame)
 		*gameState = state::Map;

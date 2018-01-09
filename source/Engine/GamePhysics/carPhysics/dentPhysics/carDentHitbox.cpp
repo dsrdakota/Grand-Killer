@@ -8,14 +8,15 @@ carDentHitbox::carDentHitbox(Car * car)
 
 	auto allHitboxes = car->getAllHitboxes();
 
-	setHitbox(sf::Vector2f(0, 50), sf::Vector2f(0, 1), 10.f);
-	setHitbox(sf::Vector2f(50, 80), sf::Vector2f(-1, 1), 5.f);
-	setHitbox(sf::Vector2f(80, 230), sf::Vector2f(-1, 0), 1.f);
-	setHitbox(sf::Vector2f(230, 250), sf::Vector2f(-1, -1), 5.f);
-	setHitbox(sf::Vector2f(250, 310), sf::Vector2f(0, 1), 5.f);
-	setHitbox(sf::Vector2f(310, 330), sf::Vector2f(1, -1), 5.f);
-	setHitbox(sf::Vector2f(330, 485), sf::Vector2f(0, 1), 1.f);
-	setHitbox(sf::Vector2f(485, static_cast<unsigned>(allHitboxes.size())), sf::Vector2f(1, 1), 5.f);
+	setHitbox(sf::Vector2f(1, 4), sf::Vector2f(0, 1), 10.f);
+	setHitbox(sf::Vector2f(4, 6), sf::Vector2f(-1, 1), 5.f);
+	setHitbox(sf::Vector2f(6, 17), sf::Vector2f(-1, 0), 1.f);
+	setHitbox(sf::Vector2f(17, 20), sf::Vector2f(-1, -1), 5.f);
+	setHitbox(sf::Vector2f(20, 24), sf::Vector2f(0, 1), 5.f);
+	setHitbox(sf::Vector2f(24, 27), sf::Vector2f(1, -1), 5.f);
+	setHitbox(sf::Vector2f(27, 36), sf::Vector2f(0, 1), 1.f);
+	setHitbox(sf::Vector2f(36, static_cast<unsigned>(allHitboxes.size())), sf::Vector2f(1, 1), 5.f);
+	setHitbox(sf::Vector2f(0, 1), sf::Vector2f(1, 1), 5.f);
 }
 
 carDentHitbox::~carDentHitbox()

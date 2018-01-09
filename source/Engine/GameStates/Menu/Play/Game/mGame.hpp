@@ -31,7 +31,7 @@ public:
 
 	void play() override;
 
-	std::vector<Car*> getAllCars();
+	std::vector<Car*> &getAllCars();
 
 private:
 

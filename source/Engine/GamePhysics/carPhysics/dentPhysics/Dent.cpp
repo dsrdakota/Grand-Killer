@@ -4,18 +4,16 @@
 
 void carDentPhysics::doDents(Car * car)
 {
-	//checkCollision(car);
+	checkCollision(car);
 }
 
 void carDentPhysics::checkCollision(Car * car)
 {
-	auto allHitboxes = car->getAllHitboxes();
-
 	auto allDentHitboxes = car->getDentHitbox();
 
-	for (size_t i = 0;i < allHitboxes.size();++i)
-		if (Map::isPointInCollisionArea(getCenterOfHitbox(*allHitboxes[i])))
-			doDentInCar(car, allDentHitboxes[i], i);
+	for (size_t i = 0;i < allDentHitboxes.size();++i)
+		if (Map::isPointInCollisionArea(getCenterOfHitbox(*allDentHitboxes[i].first)))
+			doDentInCar(car, allDentHitboxes[i], i*13);
 }
 
 void carDentPhysics::doDentInCar(Car * car,const std::pair<sf::CircleShape*, std::pair<sf::Vector2f, float*>>&dent, const size_t & index)
@@ -25,12 +23,7 @@ void carDentPhysics::doDentInCar(Car * car,const std::pair<sf::CircleShape*, std
 		auto carShape = car->getShape()->getShape();
 		auto carShadow = car->getShadow()->getShape();
 
-		float powerOfDent = car->getSpeed() / 40.f;
-
-		if ((index >= 0 && index < 50) || // front
-			index >= 485 && index < car->getAllHitboxes().size()) // back
-			powerOfDent *= 2;
-
+		float powerOfDent = static_cast<float>(car->getSpeed()) / 40.f;
 
 		carShape->setPoint(index,sf::Vector2f(carShape->getPoint(index).x + dent.second.first.x * powerOfDent,
 			carShape->getPoint(index).y + dent.second.first.y * powerOfDent));
@@ -41,8 +34,8 @@ void carDentPhysics::doDentInCar(Car * car,const std::pair<sf::CircleShape*, std
 		*dent.second.second -= powerOfDent ;
 		
 		auto allHitboxes = car->getAllHitboxes();
-		allHitboxes[index]->setOrigin(carShape->getOrigin() - carShape->getPoint(index));
-		allHitboxes[index]->setPosition(carShape->getPosition());
+		allHitboxes[index/13]->setOrigin(carShape->getOrigin() - carShape->getPoint(index));
+		allHitboxes[index/13]->setPosition(carShape->getPosition());
 	}
 }
 

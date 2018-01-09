@@ -24,14 +24,15 @@ carCollisionHitbox::carCollisionHitbox(Car *car)
 		break;
 	case carType::Type::Taxi:
 
-		setHitbox(frontHitboxes, sf::Vector2f(10, 40), sf::Color(75, 0, 130));
-		setHitbox(upRightHitboxes, sf::Vector2f(60, 100), sf::Color::Green);
-		setHitbox(rightHitboxes, sf::Vector2f(101, 171), sf::Color::Blue);
-		setHitbox(downRightHitboxes, sf::Vector2f(171, 240), sf::Color::Red);
-		setHitbox(backHitboxes, sf::Vector2f(258, 300), sf::Color::Yellow);
-		setHitbox(downLeftHitboxes, sf::Vector2f(315, 387), sf::Color::Magenta);
-		setHitbox(leftHitboxes, sf::Vector2f(387, 457), sf::Color(83, 47, 40));
-		setHitbox(upLeftHitboxes, sf::Vector2f(457, 497), sf::Color(255, 165, 0));
+		setHitbox(frontHitboxes, sf::Vector2f(1, 3), sf::Color(75, 0, 130));
+		setHitbox(upRightHitboxes, sf::Vector2f(4, 9), sf::Color::Green);
+		setHitbox(rightHitboxes, sf::Vector2f(10, 13), sf::Color::Blue);
+		setHitbox(downRightHitboxes, sf::Vector2f(14, 19), sf::Color::Red);
+		setHitbox(backHitboxes, sf::Vector2f(20, 23), sf::Color::Yellow);
+		setHitbox(downLeftHitboxes, sf::Vector2f(24, 28), sf::Color::Magenta);
+		setHitbox(leftHitboxes, sf::Vector2f(29, 33), sf::Color(83, 47, 40));
+		setHitbox(upLeftHitboxes, sf::Vector2f(34, static_cast<float>(car->getAllHitboxes().size()-1)), sf::Color(255, 165, 0));
+		setHitbox(upLeftHitboxes, sf::Vector2f(0,0), sf::Color(255, 165, 0));
 
 		break;
 	case carType::Type::Truck:

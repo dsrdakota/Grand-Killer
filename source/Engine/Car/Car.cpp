@@ -4,6 +4,8 @@
 #include "../GamePhysics/carPhysics/carPhysics.hpp"
 #include "../GamePhysics/carPhysics/collisionPhysics/carCollisionHitbox.hpp"
 
+#include <iostream>
+
 Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game::Instance().getWindow())
 {
 	this->type = new carType::Type(type);
@@ -61,9 +63,9 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	tire->setPosition(shape->getShape(), type);
 	mirror->setPosition(shape->getShape(), type);
 
-	for (size_t i = 0;i < shape->getShape()->getPointCount();i+=15)
+	for (size_t i = 0;i < shape->getShape()->getPointCount();i+=13)
 	{
-		sf::CircleShape *buf = new sf::CircleShape(1);
+		sf::CircleShape *buf = new sf::CircleShape(2);
 		buf->setOrigin(shape->getShape()->getOrigin() - shape->getShape()->getPoint(i));
 		buf->setFillColor(sf::Color::Red);
 
@@ -326,8 +328,8 @@ void Car::draw()
 
 		physics->draw();
 
-		for (auto &i : hitboxes)
-			renderSprites::Instance().addToRender(i);
+		//for (auto &i : hitboxes)
+			//renderSprites::Instance().addToRender(i);
 	}
 }
 
