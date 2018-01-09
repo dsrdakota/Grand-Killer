@@ -4,6 +4,7 @@
 #include "../../../../GamePhysics/Map/Map.hpp"
 #include "../../../../Car/Car.hpp"
 #include "../../../../Player/Player.hpp"
+#include "MenuInGame/MenuInGame.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -21,6 +22,13 @@ public:
 		return game;
 	}
 
+	enum class state
+	{
+		MainGame,
+		Menu,
+		Map
+	};
+
 	void play() override;
 
 	std::vector<Car*> getAllCars();
@@ -29,11 +37,18 @@ private:
 
 	mGame();
 
-	std::vector<Car*> *cars;
+	state *gameState;
+
+	std::vector<Car*> cars;
+
+	MenuInGame *menu;
 
 	Map *map;
 	Player *player;
 	Car *taxi;
+	Car *taxi2;
 
 	void draw();
+
+	void switchState();
 };

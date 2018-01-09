@@ -188,7 +188,7 @@ void Mirror::playAnimation(const size_t & index)
 	}
 
 	if (timeOfDrawUnable[index] <= 0 && 
-		Map::isOutsideView(sf::Vector2f(hitboxes[index].getGlobalBounds().left + hitboxes[index].getGlobalBounds().width/2,
+		!Map::isOutsideView(sf::Vector2f(hitboxes[index].getGlobalBounds().left + hitboxes[index].getGlobalBounds().width/2,
 			hitboxes[index].getGlobalBounds().top + hitboxes[index].getGlobalBounds().height/2)))
 		isDrawAble[index] = false;
 }

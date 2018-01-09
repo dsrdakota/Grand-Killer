@@ -2,6 +2,7 @@
 
 #include "../../../../Manager/texture.hpp"
 #include "../../../../Manager/renderSprites.hpp"
+#include "../Map.hpp"
 
 TrafficLights::TrafficLights()
 {
@@ -144,6 +145,9 @@ void TrafficLights::playAnimation()
 
 void TrafficLights::checkLight(const std::vector<Light*>& lights)
 {
+	for (const auto &i : lights)
+		i->checkCollision();
+
 	if (timeOfAnimation == 6)
 		changeLight(lights, "light2");
 	else if (timeOfAnimation < 6 && timeOfAnimation > 2)
@@ -170,12 +174,15 @@ void TrafficLights::deleteLights(const std::vector<Light*>& lights)
 void TrafficLights::draw(const std::vector<Light*>& lights, const int &drawState)
 {
 	for (size_t i = 0;i<lights.size();++i)
-	{
 		if (lights[i]->getDrawState() == drawState)
 		{
-			lights[i]->checkCollision();
-			renderSprites::Instance().addToRender(lights[i]->getStakeSprite());
-			renderSprites::Instance().addToRender(lights[i]->getLightSprite());
+			if (!Map::isOutsideView(sf::Vector2f(lights[i]->getStakeSprite()->getGlobalBounds().left, lights[i]->getStakeSprite()->getGlobalBounds().top)) ||
+				!Map::isOutsideView(sf::Vector2f(lights[i]->getStakeSprite()->getGlobalBounds().left + lights[i]->getStakeSprite()->getGlobalBounds().width, lights[i]->getStakeSprite()->getGlobalBounds().top)) ||
+				!Map::isOutsideView(sf::Vector2f(lights[i]->getStakeSprite()->getGlobalBounds().left + lights[i]->getStakeSprite()->getGlobalBounds().width, lights[i]->getStakeSprite()->getGlobalBounds().top + lights[i]->getStakeSprite()->getGlobalBounds().height)) ||
+				!Map::isOutsideView(sf::Vector2f(lights[i]->getStakeSprite()->getGlobalBounds().left, lights[i]->getStakeSprite()->getGlobalBounds().top + lights[i]->getStakeSprite()->getGlobalBounds().height)))
+			{
+				renderSprites::Instance().addToRender(lights[i]->getStakeSprite());
+				renderSprites::Instance().addToRender(lights[i]->getLightSprite());
+			}
 		}
-	}
 }

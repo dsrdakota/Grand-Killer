@@ -2,7 +2,6 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "MapEffects/SwimmingPool.hpp"
 #include "MapEffects/OtherElements.hpp"
 #include "MapEffects/TrafficSigns.hpp"
 #include "MapEffects/TrafficLights.hpp"
@@ -30,8 +29,9 @@ public:
 	void drawOn();
 
 	static bool isOutsideView(const sf::Vector2f & pos);
-	static bool Map::isPointOnGrass(const sf::Vector2f & pos);
-	static bool Map::isPointInCollisionArea(const sf::Vector2f & pos);
+	static bool isPointOnGrass(const sf::Vector2f & pos);
+	static bool isPointInCollisionArea(const sf::Vector2f & pos);
+	static sf::Vector2f getUpLeftCornerPosOfCurrentView();
 
 	sf::Image* getGrassHitbox() { return grassHitbox; }
 	sf::Image* getCollisionHitbox() { return collisionHitbox; }
@@ -49,7 +49,6 @@ private:
 
 	sf::View *view;
 
-	SwimmingPool *swimmingPool;
 	Other *otherElements; // leaves & roofs
 	TrafficSigns *trafficSigns;
 	TrafficLights *trafficLights;

@@ -1,6 +1,7 @@
 #include "OtherElements.hpp"
 #include "../../../../Manager/Texture.hpp"
 #include "../../../../Manager/renderSprites.hpp"
+#include "../Map.hpp"
 
 Other::Other()
 {
@@ -31,8 +32,16 @@ Other::~Other()
 void Other::draw()
 {
 	for (auto i = 0;i < 4;++i)
-		renderSprites::Instance().addToRender(&leaves[i]);
+		if (!Map::isOutsideView(sf::Vector2f(leaves[i].getGlobalBounds().left, leaves[i].getGlobalBounds().top)) ||
+			!Map::isOutsideView(sf::Vector2f(leaves[i].getGlobalBounds().left + leaves[i].getGlobalBounds().width, leaves[i].getGlobalBounds().top)) ||
+			!Map::isOutsideView(sf::Vector2f(leaves[i].getGlobalBounds().left + leaves[i].getGlobalBounds().width, leaves[i].getGlobalBounds().top + leaves[i].getGlobalBounds().height)) ||
+			!Map::isOutsideView(sf::Vector2f(leaves[i].getGlobalBounds().left, leaves[i].getGlobalBounds().top + leaves[i].getGlobalBounds().height)))
+			renderSprites::Instance().addToRender(&leaves[i]);
 
 	for (auto i = 0;i < 2;++i)
+		if (!Map::isOutsideView(sf::Vector2f(roofs[i].getGlobalBounds().left, roofs[i].getGlobalBounds().top)) ||
+			!Map::isOutsideView(sf::Vector2f(roofs[i].getGlobalBounds().left + roofs[i].getGlobalBounds().width, roofs[i].getGlobalBounds().top)) ||
+			!Map::isOutsideView(sf::Vector2f(roofs[i].getGlobalBounds().left + roofs[i].getGlobalBounds().width, roofs[i].getGlobalBounds().top + roofs[i].getGlobalBounds().height)) ||
+			!Map::isOutsideView(sf::Vector2f(roofs[i].getGlobalBounds().left, roofs[i].getGlobalBounds().top + roofs[i].getGlobalBounds().height)))
 		renderSprites::Instance().addToRender(&roofs[i]);
 }

@@ -2,7 +2,6 @@
 
 #include "../../../../Manager/Texture.hpp"
 #include "../../../GameStates/Menu/Play/Game/mGame.hpp"
-#include "../../../GamePhysics/carPhysics/dentPhysics/Dent.hpp"
 
 Light::Light(const sf::Vector2f & startPos, const float & rotation)
 {
@@ -88,7 +87,9 @@ void Light::checkCollision()
 
 				moveOffset = i->getMovementVector();
 				speedAnimation = static_cast<float>(i->getSpeed());
-				i->setSpeed(static_cast<float>(i->getSpeed()) - 2.f);
+				
+				if(i->getSpeed() > 5)
+					i->setSpeed(static_cast<float>(i->getSpeed()) - 2.f);
 
 				stake->move(moveOffset.x * speedAnimation, moveOffset.y * speedAnimation);
 				light->move(moveOffset.x * speedAnimation, moveOffset.y * speedAnimation);
@@ -133,11 +134,11 @@ void Light::playAnimation()
 	}
 
 	if (speedAnimation <= 0 && timeOfAnimation <= 0 &&
-		Map::isOutsideView(sf::Vector2f(stake->getGlobalBounds().left, stake->getGlobalBounds().top)) && // left-up corner
+		(Map::isOutsideView(sf::Vector2f(stake->getGlobalBounds().left, stake->getGlobalBounds().top)) && // left-up corner
 		Map::isOutsideView(sf::Vector2f(stake->getGlobalBounds().left + stake->getGlobalBounds().width, stake->getGlobalBounds().top)) && // right-up corner
 		Map::isOutsideView(sf::Vector2f(stake->getGlobalBounds().left + stake->getGlobalBounds().width, stake->getGlobalBounds().top + stake->getGlobalBounds().height)) && // right-down corner
 		Map::isOutsideView(sf::Vector2f(stake->getGlobalBounds().left, stake->getGlobalBounds().top + stake->getGlobalBounds().height)) && // left-down corner
-		Map::isOutsideView(startPosition))
+		Map::isOutsideView(startPosition)))
 	{
 		state = drawState::On;
 		animation = false;

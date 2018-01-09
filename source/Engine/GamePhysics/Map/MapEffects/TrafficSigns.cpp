@@ -2,6 +2,7 @@
 
 #include "../../../../Manager/Texture.hpp"
 #include "../../../../Manager/renderSprites.hpp"
+#include "../Map.hpp"
 
 TrafficSigns::TrafficSigns()
 {
@@ -31,25 +32,28 @@ std::vector<sf::CircleShape*> TrafficSigns::getAllSignsHitbox()
 void TrafficSigns::drawUnder()
 {
 	for (auto i = 0;i < 5;++i)
+	{
 		signs[i].checkCollision();
-
-	for(auto i=0;i<5;++i)
-		if (signs[i].getDrawState() == -1) // -1 Under
+		if (signs[i].getDrawState() == -1)
 		{
-			renderSprites::Instance().addToRender(signs[i].getSignSprite());
-			//renderSprites::Instance().addToRender(signs[i].getSignHitbox());
+			if (!Map::isOutsideView(sf::Vector2f(signs[i].getSignSprite()->getGlobalBounds().left, signs[i].getSignSprite()->getGlobalBounds().top)) ||
+				!Map::isOutsideView(sf::Vector2f(signs[i].getSignSprite()->getGlobalBounds().left + signs[i].getSignSprite()->getGlobalBounds().width, signs[i].getSignSprite()->getGlobalBounds().top)) ||
+				!Map::isOutsideView(sf::Vector2f(signs[i].getSignSprite()->getGlobalBounds().left + signs[i].getSignSprite()->getGlobalBounds().width, signs[i].getSignSprite()->getGlobalBounds().top + signs[i].getSignSprite()->getGlobalBounds().height)) ||
+				!Map::isOutsideView(sf::Vector2f(signs[i].getSignSprite()->getGlobalBounds().left, signs[i].getSignSprite()->getGlobalBounds().top + signs[i].getSignSprite()->getGlobalBounds().height)))
+				renderSprites::Instance().addToRender(signs[i].getSignSprite());
 		}
+	}
 }
 
 void TrafficSigns::drawOn()
 {
-	for (auto i = 0;i < 5;++i)
-		signs[i].checkCollision();
-
 	for (auto i = 0;i<5;++i)
-		if (signs[i].getDrawState() == 1) // 1 On
+		if (signs[i].getDrawState() == 1)
 		{
-			renderSprites::Instance().addToRender(signs[i].getSignSprite());
-			//renderSprites::Instance().addToRender(signs[i].getSignHitbox());
+			if (!Map::isOutsideView(sf::Vector2f(signs[i].getSignSprite()->getGlobalBounds().left, signs[i].getSignSprite()->getGlobalBounds().top)) ||
+				!Map::isOutsideView(sf::Vector2f(signs[i].getSignSprite()->getGlobalBounds().left + signs[i].getSignSprite()->getGlobalBounds().width, signs[i].getSignSprite()->getGlobalBounds().top)) ||
+				!Map::isOutsideView(sf::Vector2f(signs[i].getSignSprite()->getGlobalBounds().left + signs[i].getSignSprite()->getGlobalBounds().width, signs[i].getSignSprite()->getGlobalBounds().top + signs[i].getSignSprite()->getGlobalBounds().height)) ||
+				!Map::isOutsideView(sf::Vector2f(signs[i].getSignSprite()->getGlobalBounds().left, signs[i].getSignSprite()->getGlobalBounds().top + signs[i].getSignSprite()->getGlobalBounds().height)))
+				renderSprites::Instance().addToRender(signs[i].getSignSprite());
 		}
 }

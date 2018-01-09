@@ -11,9 +11,6 @@ public:
 	carDentHitbox(Car *car);
 	~carDentHitbox();
 
-	//std::vector<sf::CircleShape*> getOneCollisionHitbox(const Car::hitboxPosition &pos);
-	//Car::collisionSide *getLastCollisionSide();
-
 	std::vector<std::pair<sf::CircleShape*, std::pair<sf::Vector2f, float*>>> getVector();
 
 	void draw();

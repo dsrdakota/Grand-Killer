@@ -3,6 +3,8 @@
 #include "../../../../Manager/Texture.hpp"
 #include "../../../GameStates/Menu/Play/Game/mGame.hpp"
 
+#include <iostream>
+
 Sign::Sign(const sf::Vector2f &startPos, const float &rotation)
 {
 	state = drawState::On;
@@ -75,7 +77,9 @@ void Sign::checkCollision()
 
 				moveOffset = i->getMovementVector();
 				speedAnimation = static_cast<float>(i->getSpeed());
-				i->setSpeed(static_cast<float>(i->getSpeed()) - 2.f);
+
+				if(i->getSpeed() > 5)
+					i->setSpeed(static_cast<float>(i->getSpeed()) - 2.f);
 
 				sign->move(moveOffset.x * speedAnimation,moveOffset.y * speedAnimation);
 				hitboxSign->move(moveOffset.x * speedAnimation, moveOffset.y * speedAnimation);

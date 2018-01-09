@@ -14,7 +14,6 @@ Map::Map() : window(Game::Instance().getWindow())
 	collisionHitbox = new sf::Image;
 	collisionHitbox->loadFromFile("data/Map/Hitboxes/collisionHitbox.png");
 
-	swimmingPool = new SwimmingPool;
 	otherElements = new Other;
 	trafficSigns = new TrafficSigns;
 	trafficLights = new TrafficLights;
@@ -27,7 +26,6 @@ Map::~Map()
 
 	delete grassHitbox;
 	delete collisionHitbox;
-	delete swimmingPool;
 	delete otherElements;
 	delete trafficSigns;
 	delete trafficLights;
@@ -66,8 +64,6 @@ void Map::drawUnder()
 {
 	renderSprites::Instance().addToRender(map);
 
-	swimmingPool->draw();
-
 	trafficSigns->drawUnder();
 
 	trafficLights->drawUnder();
@@ -87,10 +83,10 @@ bool Map::isOutsideView(const sf::Vector2f & pos)
 	const sf::Vector2f viewSize = Map::Instance().view->getSize();
 	const sf::Vector2f viewPos = Map::Instance().view->getCenter();
 
-	if (pos.x > viewPos.x - viewSize.x / 2 &&
-		pos.x < viewPos.x + viewSize.x / 2 &&
-		pos.y > viewPos.y - viewSize.y / 2 &&
-		pos.y < viewPos.y + viewSize.y / 2)
+	if (pos.x > viewPos.x - viewSize.x / 2 - 10 &&
+		pos.x < viewPos.x + viewSize.x / 2 + 10 &&
+		pos.y > viewPos.y - viewSize.y / 2  - 10 &&
+		pos.y < viewPos.y + viewSize.y / 2 + 10)
 
 		return false;
 
@@ -116,4 +112,11 @@ bool Map::isPointInCollisionArea(const sf::Vector2f & pos)
 	if (Map::Instance().collisionHitbox->getPixel(static_cast<unsigned>(pos.x), static_cast<unsigned>(pos.y)) == sf::Color(255, 0, 0))
 		return true;
 	return false;
+}
+
+sf::Vector2f Map::getUpLeftCornerPosOfCurrentView()
+{
+	auto &map = Instance();
+	return sf::Vector2f(map.view->getCenter().x - map.view->getSize().x / 2,
+		map.view->getCenter().y - map.view->getSize().y / 2);
 }

@@ -4,7 +4,7 @@
 
 void carDentPhysics::doDents(Car * car)
 {
-	checkCollision(car);
+	//checkCollision(car);
 }
 
 void carDentPhysics::checkCollision(Car * car)

@@ -61,7 +61,7 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	tire->setPosition(shape->getShape(), type);
 	mirror->setPosition(shape->getShape(), type);
 
-	for (size_t i = 0;i < shape->getShape()->getPointCount();i++)
+	for (size_t i = 0;i < shape->getShape()->getPointCount();i+=15)
 	{
 		sf::CircleShape *buf = new sf::CircleShape(1);
 		buf->setOrigin(shape->getShape()->getOrigin() - shape->getShape()->getPoint(i));
@@ -304,21 +304,31 @@ void Car::closeDoors(const Door::Side & side, const sf::Keyboard::Key &key)
 
 void Car::draw()
 {
-	renderSprites::Instance().addToRender(shadow->getShape());
+	// float rect shape outside view
+	if (!Map::isOutsideView(sf::Vector2f(shape->getShape()->getGlobalBounds().left, shape->getShape()->getGlobalBounds().top)) ||
+		!Map::isOutsideView(sf::Vector2f(shape->getShape()->getGlobalBounds().left + shape->getShape()->getGlobalBounds().width, shape->getShape()->getGlobalBounds().top)) ||
+		!Map::isOutsideView(sf::Vector2f(shape->getShape()->getGlobalBounds().left + shape->getShape()->getGlobalBounds().width, shape->getShape()->getGlobalBounds().top + shape->getShape()->getGlobalBounds().height)) ||
+		!Map::isOutsideView(sf::Vector2f(shape->getShape()->getGlobalBounds().left, shape->getShape()->getGlobalBounds().top + shape->getShape()->getGlobalBounds().height)))
+	{
+		renderSprites::Instance().addToRender(shadow->getShape());
 
-	mirror->drawUnder();
+		mirror->drawUnder();
 
-	tire->draw();
+		tire->draw();
 
-	door->drawCenter();
+		door->drawCenter();
 
-	renderSprites::Instance().addToRender(shape->getShape());
+		renderSprites::Instance().addToRender(shape->getShape());
 
-	door->drawDoors();
+		door->drawDoors();
 
-	mirror->drawOn();
+		mirror->drawOn();
 
-	physics->draw();
+		physics->draw();
+
+		for (auto &i : hitboxes)
+			renderSprites::Instance().addToRender(i);
+	}
 }
 
 void Car::gas(const sf::Keyboard::Key & key)
