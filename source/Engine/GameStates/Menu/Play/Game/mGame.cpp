@@ -66,9 +66,7 @@ void mGame::play()
 		}
 
 		switchState();
-		
-		if (menu->getCooldownValue() > 0)
-			menu->updateCooldown();
+		menu->updateCooldown();
 
 		TimeManager::getTimeOnClocks();
 		renderSprites::Instance().run();
@@ -86,7 +84,7 @@ void mGame::draw()
 
 	player->draw();
 
-	for (auto i = 1;i < cars.size();++i)
+	for (unsigned i = 1;i < cars.size();++i)
 	{
 		cars[i]->draw();
 		cars[i]->updatePosition();
@@ -101,11 +99,13 @@ void mGame::switchState()
 	{
 		menu->setPosition(Map::getUpLeftCornerPosOfCurrentView());
 		menu->restartCooldownValue();
+		window->setMouseCursorVisible(true);
 		*gameState = state::Menu;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::Menu && menu->getCooldownValue() <= 0)
 	{
 		menu->restartCooldownValue();
+		window->setMouseCursorVisible(false);
 		*gameState = state::MainGame;
 	}
 

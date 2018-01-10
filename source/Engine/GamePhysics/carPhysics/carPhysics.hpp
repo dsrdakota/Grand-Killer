@@ -6,7 +6,6 @@
 #include "../../../Manager/renderSprites.hpp"
 #include "movementPhysics/Movement.hpp"
 #include "collisionPhysics/carCollisionHitbox.hpp"
-#include "dentPhysics/carDentHitbox.hpp"
 
 class carPhysics
 {
@@ -18,7 +17,6 @@ public:
 	inline toTurn* getPhysicsTurn() { return turnPhysics; }
 	inline Movement* getPhysicsMove() { return movePhysics; }
 	inline carCollisionHitbox* getCollisionHitboxes() { return collisionHitboxes; }
-	inline carDentHitbox* getDentHitboxes() { return dentHitboxes; }
 
 	void boostSpeed(const sf::Keyboard::Key &key);
 	void reduceSpeed(const sf::Keyboard::Key &key);
@@ -36,7 +34,6 @@ private:
 	toTurn *turnPhysics;
 	Movement *movePhysics;
 	carCollisionHitbox *collisionHitboxes;
-	carDentHitbox *dentHitboxes;
 
 	const double *SPEED_ROTATE_TIRE;
 	const double *SPEED_ROTATE_CAR;

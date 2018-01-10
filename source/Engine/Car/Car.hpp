@@ -71,8 +71,6 @@ public:
 	const std::vector<sf::CircleShape*> getCollisionHitbox(const hitboxPosition &pos);
 	collisionSide *getLastCollisionSide();
 
-	std::vector<std::pair<sf::CircleShape*, std::pair<sf::Vector2f, float*>>> getDentHitbox();
-
 	void toControl() override;
 	float getRotation() override;
 	void setCamera() override;

@@ -166,11 +166,6 @@ Car::collisionSide *Car::getLastCollisionSide()
 	return physics->getCollisionHitboxes()->getLastCollisionSide();
 }
 
-std::vector<std::pair<sf::CircleShape*, std::pair<sf::Vector2f, float*>>> Car::getDentHitbox()
-{
-	return physics->getDentHitboxes()->getVector();
-}
-
 void Car::toControl()
 {
 	updatePosition();

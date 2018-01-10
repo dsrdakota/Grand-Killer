@@ -39,22 +39,28 @@ void Menu::play()
 		time = clock.getElapsedTime();
 	
 	}
+	smallerEngine *wsk;
+	if(game.getStatus() != Game::status::CleaningUp)
+	{
 	Game::loadingScreen();
 
-	smallerEngine *wsk;
 	Trailer *trailer = new Trailer;
 	//wsk = trailer;
 	//wsk->play();
 
 	wsk = nullptr;
 	delete trailer;
+	}
 
-	Game::loadingScreen();
+	if (game.getStatus() != Game::status::CleaningUp)
+	{
+		Game::loadingScreen();
 
-	mGame *game = &mGame::Instance();
-	wsk = game;
-	wsk->play();
+		mGame *game = &mGame::Instance();
+		wsk = game;
+		wsk->play();
 
-	wsk = nullptr;
-	delete wsk;
+		wsk = nullptr;
+		delete wsk;
+	}
 }

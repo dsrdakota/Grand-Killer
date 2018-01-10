@@ -7,7 +7,7 @@
 Map::Map() : window(Game::Instance().getWindow())
 {
 	map = new sf::Sprite(*textureManager::load("background", "data/Map/map.png"));
-	view = new sf::View(sf::Vector2f(100,100), sf::Vector2f(1366,768));
+	view = new sf::View(sf::Vector2f(100,100), sf::Vector2f(window->getSize()));
 
 	grassHitbox = new sf::Image;
 	grassHitbox->loadFromFile("data/Map/Hitboxes/grassHitbox.png");
