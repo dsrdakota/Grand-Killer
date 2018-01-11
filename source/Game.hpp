@@ -37,11 +37,14 @@ public:
 	void events(sf::RenderWindow &window = *Game::Instance().getWindow());
 
 	static void loadingScreen();
+	static int getScrollValue();
 
 private:
 	
 	Game();
 	status m_status;
+
+	int scrollValue;
 
 	sf::Image icona;
 	void setIco();

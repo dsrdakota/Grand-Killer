@@ -70,6 +70,16 @@ void Game::events(sf::RenderWindow &window)
 	{
 		if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Q))
 			m_status = status::CleaningUp;
+
+		if (event.type == sf::Event::MouseWheelScrolled)
+		{
+			if (event.mouseWheelScroll.delta < 0)
+				scrollValue = -1;
+			else if (event.mouseWheelScroll.delta > 0)
+				scrollValue = 1;
+		}
+		else
+			scrollValue = 0;
 	}
 }
 
@@ -87,6 +97,11 @@ void Game::loadingScreen()
 	window->clear(sf::Color::Black);
 	window->draw(*loading.text);
 	window->display();
+}
+
+int Game::getScrollValue()
+{
+	return Instance().scrollValue;
 }
 
 void Game::run()
