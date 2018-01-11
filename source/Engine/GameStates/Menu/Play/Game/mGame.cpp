@@ -2,6 +2,7 @@
 #include "../../../../../Manager/Texture.hpp"
 #include "../../../../../Manager/renderSprites.hpp"
 #include "../../../../../Manager/Time.hpp"
+#include "../../../../../Manager/Keyboard.hpp"
 
 #include "../../../../GamePhysics/carPhysics/collisionPhysics/Collision.hpp"
 
@@ -15,7 +16,7 @@ mGame::mGame()
 	taxi = new Car(carType::Type::Taxi,sf::Vector2f(4585,4759));
 	cars.push_back(taxi);
 
-	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4759)));
+	/*cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4759)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4885, 4759)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4959)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4885, 4559)));
@@ -24,7 +25,7 @@ mGame::mGame()
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4185, 4959)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4185, 4559)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(3885, 4759)));
-	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(3885, 4759)));
+	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(3885, 4759)));*/
 
 	player = &Player::Instance();
 }
@@ -47,8 +48,8 @@ void mGame::play()
 		case state::MainGame:
 
 			Collision::checkAllCarCollision();
-
-			Map::Instance().setRotation(player->getRotation());
+			
+			Map::Instance().updateView(player->getPosition());
 
 			player->move();
 
@@ -97,12 +98,12 @@ void mGame::switchState()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::MainGame && menu->getCooldownValue() <=0)
 	{
-		menu->setPosition(Map::getUpLeftCornerPosOfCurrentView());
+		menu->setPosition(Map::getUpLeftCornerPosOfCurrentView(), player->getPosition());
 		menu->restartCooldownValue();
 		window->setMouseCursorVisible(true);
 		*gameState = state::Menu;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::Menu && menu->getCooldownValue() <= 0)
+	else if (menu->canExitMenu() &&  sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::Menu && menu->getCooldownValue() <= 0)
 	{
 		menu->restartCooldownValue();
 		window->setMouseCursorVisible(false);

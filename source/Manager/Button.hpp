@@ -26,7 +26,7 @@ public:
 
 	void setPosition(const sf::Vector2f &pos);
 	void setEnabled();
-	bool isHover();
+	void Hover();
 	void setDisabled();
 	void draw();
 
@@ -37,6 +37,8 @@ public:
 	const sf::RectangleShape *getButtonSprite();
 
 private:
+
+	bool mouseIsPressedOnButton;
 
 	sf::RenderWindow *window;
 	Enabled *enabled;

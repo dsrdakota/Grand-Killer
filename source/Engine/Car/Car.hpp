@@ -73,7 +73,7 @@ public:
 
 	void toControl() override;
 	float getRotation() override;
-	void setCamera() override;
+	sf::Vector2f getPosition() override;
 	void draw() override; 
 
 	void setPhycics(Car *car);

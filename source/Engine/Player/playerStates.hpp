@@ -8,10 +8,7 @@ class playerStates
 {
 public:
 	
-	playerStates() : window(Game::Instance().getWindow()), view(&Map::Instance())
-	{
-		;
-	}
+	playerStates() : window(Game::Instance().getWindow()), view(&Map::Instance()){}
 
 	enum class Vechicle
 	{
@@ -21,7 +18,7 @@ public:
 
 	virtual void toControl() = 0;
 	virtual float getRotation() = 0;
-	virtual void setCamera() = 0;
+	virtual sf::Vector2f getPosition() = 0;
 	virtual void draw() = 0;
 
 protected:

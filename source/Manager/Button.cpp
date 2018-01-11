@@ -13,6 +13,8 @@ Button::Button(const sf::Vector2f & size, const unsigned &sizeTag, const std::st
 
 	enabledSign = new sf::RectangleShape(sf::Vector2f(size.x,4.f));
 	enabledSign->setFillColor(sf::Color(71, 233, 83));
+
+	mouseIsPressedOnButton = false;
 }
 
 Button::~Button()
@@ -43,19 +45,15 @@ void Button::setEnabled()
 	text->text->setFillColor(sf::Color(0,0,0));
 }
 
-bool Button::isHover()
+void Button::Hover()
 {
 	if (*enabled == Enabled::False)
 	{
 		if (cursorIsOnButton())
-		{
 			button->setFillColor(sf::Color(128, 128, 128, 180));
-			return true;
-		}
 		else
 			button->setFillColor(sf::Color(0, 0, 0, 150));
 	}
-	return false;
 }
 
 void Button::setDisabled()
@@ -68,7 +66,17 @@ void Button::setDisabled()
 bool Button::mouseOnClick()
 {
 	if (cursorIsOnButton() && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		mouseIsPressedOnButton = true;
+
+	if (mouseIsPressedOnButton && cursorIsOnButton() && !sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		mouseIsPressedOnButton = false;
 		return true;
+	}
+
+	if (!cursorIsOnButton())
+		mouseIsPressedOnButton = false;
+
 	return false;
 }
 

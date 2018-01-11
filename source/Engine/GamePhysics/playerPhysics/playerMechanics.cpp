@@ -9,9 +9,9 @@ float playerMechanics::getRotation()
 	return 0;
 }
 
-void playerMechanics::setCamera()
+sf::Vector2f playerMechanics::getPosition()
 {
-	view->setView(sf::Vector2f(0, 0));
+	return sf::Vector2f(0,0);
 }
 
 

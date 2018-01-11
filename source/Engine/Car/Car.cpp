@@ -214,9 +214,9 @@ float Car::getRotation()
 	return static_cast<float>(shape->getShape()->getRotation() - *getOverSteerValue());
 }
 
-void Car::setCamera()
+sf::Vector2f Car::getPosition()
 {
-	Map::Instance().updateView(shape->getShape()->getPosition());
+	return sf::Vector2f(shape->getShape()->getPosition());
 }
 
 void Car::setPhycics(Car *car)

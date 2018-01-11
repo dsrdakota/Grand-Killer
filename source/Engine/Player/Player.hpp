@@ -18,6 +18,7 @@ public:
 	}
 
 	float getRotation();
+	sf::Vector2f getPosition();
 
 	void move();
 	void giveMeYourCar(Car *car); // if you drive a car

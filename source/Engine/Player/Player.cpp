@@ -15,10 +15,14 @@ float Player::getRotation()
 	return wsk->getRotation();
 }
 
+sf::Vector2f Player::getPosition()
+{
+	return wsk->getPosition();
+}
+
 void Player::move()
 {
 	wsk->toControl();
-	wsk->setCamera();
 }
 
 void Player::giveMeYourCar(Car *car)
