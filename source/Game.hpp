@@ -37,7 +37,7 @@ public:
 	void events(sf::RenderWindow &window = *Game::Instance().getWindow());
 
 	static void loadingScreen();
-	static int getScrollValue();
+	static int* getScrollValue();
 
 private:
 	
