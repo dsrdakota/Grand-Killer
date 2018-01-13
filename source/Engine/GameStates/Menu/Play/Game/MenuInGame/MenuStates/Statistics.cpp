@@ -124,6 +124,12 @@ void Statistics::drawUnactive()
 		i->draw();
 	}
 
+	renderSprites::Instance().addToRender(backgroundRight);
+
+	centerTextOfOption->text->setPosition(backgroundRight->getPosition().x + 25, backgroundRight->getPosition().y + 25);
+
+	renderSprites::Instance().addToRender(centerTextOfOption->text);
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) || (sf::Mouse::isButtonPressed(sf::Mouse::Left) && isMouseClickOnHitbox()))
 	{
 		active = true;

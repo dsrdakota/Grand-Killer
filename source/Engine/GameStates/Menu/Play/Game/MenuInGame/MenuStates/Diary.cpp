@@ -126,6 +126,16 @@ void Diary::drawUnactive()
 		i->draw();
 	}
 
+	renderSprites::Instance().addToRender(backgroundRight);
+
+	centerTextOfOption[0].first->text->setPosition(backgroundRight->getPosition().x + 25, backgroundRight->getPosition().y + 25);
+
+	centerTextOfOption[0].second->text->setPosition(centerTextOfOption[0].first->text->getPosition().x,
+		centerTextOfOption[0].first->text->getPosition().y + /*centerTextOfOption[index].first->text->getGlobalBounds().height*/ 50 + 50);
+
+	renderSprites::Instance().addToRender(centerTextOfOption[0].first->text);
+	renderSprites::Instance().addToRender(centerTextOfOption[0].second->text);
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) || (sf::Mouse::isButtonPressed(sf::Mouse::Left) && isMouseClickOnHitbox()))
 	{
 		active = true;
