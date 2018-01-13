@@ -17,6 +17,11 @@ bool Steerage::exit()
 	return true;
 }
 
+bool Steerage::isActive()
+{
+	return false;
+}
+
 void Steerage::drawActive()
 {
 }

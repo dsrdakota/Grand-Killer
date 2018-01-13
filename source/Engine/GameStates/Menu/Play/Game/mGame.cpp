@@ -101,7 +101,7 @@ void mGame::switchState()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::MainGame && menu->getCooldownValue() <=0)
 	{
-		menu->setPosition(Map::getUpLeftCornerPosOfCurrentView(), player->getPosition());
+		menu->setPosition(Map::getUpLeftCornerPosOfCurrentView(), player->getPosition(), player->getRotation());
 		menu->restartCooldownValue();
 		window->setMouseCursorVisible(true);
 		*gameState = state::Menu;

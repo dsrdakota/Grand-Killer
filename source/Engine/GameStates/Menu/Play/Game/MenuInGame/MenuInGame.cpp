@@ -46,8 +46,7 @@ MenuInGame::MenuInGame(const sf::Vector2u &windowSize) : window(Game::Instance()
 
 	cooldownEscapeButton = 0;
 	cooldownChangeStates = 1;
-	mapActive = false;
-	optionsAreActive = false;
+	optionIsActive = false;
 	escapeWasRelased = true;
 }
 
@@ -92,10 +91,11 @@ void MenuInGame::restartCooldownValue()
 	*timeEscapeButton.time = sf::Time::Zero;
 }
 
-void MenuInGame::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &playerPos)
+void MenuInGame::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &playerPos, const float &playerRot)
 {
 	background->setPosition(menuPos);
 	this->playerPos = playerPos;
+	this->playerRot = playerRot;
 
 	grandKillerText->text->setPosition(menuPos.x + window->getSize().x *0.2f, menuPos.y + window->getSize().y * 0.1f);
 
@@ -146,7 +146,7 @@ void MenuInGame::draw()
 	renderSprites::Instance().addToRender(background);
 	renderSprites::Instance().addToRender(grandKillerText->text);
 
-	if (!(wsk == options[static_cast<int>(States::Mapa)] && mapActive))
+	if (!(wsk == options[static_cast<int>(States::Mapa)] && optionIsActive))
 	{
 		renderSprites::Instance().addToRender(leftArrow);
 		renderSprites::Instance().addToRender(rightArrow);
@@ -154,7 +154,7 @@ void MenuInGame::draw()
 			i->draw();
 	}
 
-	if (optionsAreActive || mapActive)
+	if (optionIsActive)
 		wsk->drawActive();
 	else
 	{
@@ -171,21 +171,20 @@ void MenuInGame::update()
 {
 	auto firstButton = headersButton[0]->getButtonSprite();
 
+	optionIsActive = wsk->isActive();
+
 	wsk->setPosition(background->getPosition(),sf::Vector2f(firstButton->getPosition().x,
 		firstButton->getPosition().x + window->getSize().x * 0.8f - window->getSize().x * 0.2f),
 		sf::Vector2f(firstButton->getPosition().y + firstButton->getGlobalBounds().height + 10,
 			firstButton->getPosition().y + firstButton->getGlobalBounds().height + window->getSize().y * 0.6f));
 
 	if (*state == States::Mapa)
-	{
-		map->setPlayerPosition(playerPos);
-		mapActive = map->isActive();
-	}
+		map->setPlayerPosition(playerPos,playerRot);
 
 	if (!wsk->exit())
 		escapeWasRelased = false;
 
-	if (!mapActive)
+	if (!optionIsActive)
 	{
 		if (!escapeWasRelased && !sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			escapeWasRelased = true;
@@ -213,26 +212,34 @@ void MenuInGame::update()
 void MenuInGame::checkArrowIsPressed(const int &side)
 {
 	States first, last;
-	sf::Keyboard::Key key; // Q or E
+	sf::Keyboard::Key keyQE; // Q or E
+	sf::Keyboard::Key keyAD;
+	sf::Keyboard::Key keyArrow;
 	sf::Sprite *arrowSide;
 
 	if (side == 1) // right
 	{
 		first = States::Gra;
 		last = States::Mapa;
-		key = sf::Keyboard::E;
+		keyQE = sf::Keyboard::E;
+		keyAD = sf::Keyboard::D;
+		keyArrow = sf::Keyboard::Right;
 		arrowSide = rightArrow;
 	}
 	else // left
 	{
 		first = States::Mapa;
 		last = States::Gra;
-		key = sf::Keyboard::Q;
+		keyQE = sf::Keyboard::Q;
+		keyAD = sf::Keyboard::A;
+		keyArrow = sf::Keyboard::Left;
 		arrowSide = leftArrow;
 	}
 
 	if (!cooldownChangeStates && (mouseOnClickArrow(arrowSide) ||
-		sf::Keyboard::isKeyPressed(key)))
+		sf::Keyboard::isKeyPressed(keyQE) ||
+		sf::Keyboard::isKeyPressed(keyAD) ||
+		sf::Keyboard::isKeyPressed(keyArrow)))
 	{
 		headersButton[static_cast<int>(*state)]->setDisabled();
 

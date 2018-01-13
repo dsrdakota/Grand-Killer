@@ -17,6 +17,11 @@ bool gameInMenu::exit()
 	return true;
 }
 
+bool gameInMenu::isActive()
+{
+	return false;
+}
+
 void gameInMenu::drawActive()
 {
 }

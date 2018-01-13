@@ -24,7 +24,7 @@ public:
 
 	void updateCooldown();
 	void restartCooldownValue();
-	void setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &playerPos);
+	void setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &playerPos, const float &playerRot);
 	const int &getCooldownValue();
 	bool canExitMenu();
 	void draw();
@@ -57,13 +57,13 @@ private:
 	sf::Sprite *rightArrow;
 
 	sf::Vector2f playerPos;
+	float playerRot;
 
 	int cooldownEscapeButton;
 	int cooldownChangeStates;
 
 	bool escapeWasRelased;
-	bool optionsAreActive;
-	bool mapActive;
+	bool optionIsActive;
 
 	sf::RectangleShape *background;
 
