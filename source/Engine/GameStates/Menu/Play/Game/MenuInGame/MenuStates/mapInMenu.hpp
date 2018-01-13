@@ -27,8 +27,8 @@ private:
 	sf::RectangleShape *map;
 	sf::CircleShape *player; // to change
 	sf::RectangleShape *target; // to change
-
-	sf::RectangleShape *tag; // to change
+	sf::Sprite *cursor; // to change !!!
+	std::vector<sf::RectangleShape*>tag;
 
 	std::vector<std::pair<Text*, sf::Sprite*>>navigation;
 
@@ -43,5 +43,8 @@ private:
 	void toControl();
 	bool mouseOnMap();
 	void draw();
+
+	void setPlayer();
+	void setTarget();
 
 };

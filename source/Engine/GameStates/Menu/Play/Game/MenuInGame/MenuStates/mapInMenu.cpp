@@ -3,8 +3,6 @@
 #include "../../../../../../../Manager/Texture.hpp"
 #include "../../../../../../../Manager/renderSprites.hpp"
 
-#include <iostream>
-
 mapInMenu::mapInMenu()
 {
 	textureManager::load("mapInMenu", "data/Map/Minimap/minimap.png");
@@ -16,6 +14,20 @@ mapInMenu::mapInMenu()
 	target = new sf::RectangleShape(sf::Vector2f(10,10));
 	target->setOrigin(5,5);
 	target->setFillColor(sf::Color(132,0,255));
+
+	for (int i = 0;i < 4;++i)
+	{
+		sf::RectangleShape *buf = new sf::RectangleShape(sf::Vector2f(1, 10));
+		buf->setFillColor(sf::Color::White);
+		buf->setOutlineThickness(1);
+		buf->setOutlineColor(sf::Color::Black);
+		buf->setOrigin(0.5, 0);
+		tag.push_back(buf);
+	}
+
+	tag[1]->setRotation(90);
+	tag[2]->setRotation(180);
+	tag[3]->setRotation(270);
 
 	targetIsSet = false;
 	canSetTarget = false;
@@ -58,6 +70,9 @@ mapInMenu::~mapInMenu()
 		delete i.first;
 		delete i.second;
 	}
+
+	for (const auto &i : tag)
+		delete i;
 }
 
 void mapInMenu::setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange)
@@ -116,14 +131,14 @@ void mapInMenu::drawActive()
 
 	draw();
 
-	if (targetIsSet)
-		renderSprites::Instance().addToRender(target);
-
 	for (const auto &i : navigation)
 	{
 		renderSprites::Instance().addToRender(i.first->text);
 		renderSprites::Instance().addToRender(i.second);
 	}
+
+	for (const auto &i : tag)
+		renderSprites::Instance().addToRender(i);
 
 	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || (mouseOnMap() && sf::Mouse::isButtonPressed(sf::Mouse::Right) && !sf::Mouse::isButtonPressed(sf::Mouse::Left)))
 	{
@@ -138,7 +153,11 @@ void mapInMenu::drawUnactive()
 	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && sf::Keyboard::isKeyPressed(sf::Keyboard::Return) || (mouseOnMap() && sf::Mouse::isButtonPressed(sf::Mouse::Left) && !sf::Mouse::isButtonPressed(sf::Mouse::Right)))
 	{
 		active = true;
-		mapRect = sf::IntRect(static_cast<int>(playerPosition.x - map->getSize().x), static_cast<int>(playerPosition.y - map->getSize().y), window->getSize().x, window->getSize().y);
+		mapRect = sf::IntRect(static_cast<int>(playerPosition.x - window->getSize().x /2), static_cast<int>(playerPosition.y - window->getSize().y / 2), window->getSize().x, window->getSize().y);
+		canSetTarget = false;
+
+		for(const auto &i:tag)
+			i->setPosition(menuPos.x + window->getSize().x / 2.f, menuPos.y + window->getSize().y / 2.f);
 	}
 
 	draw();
@@ -147,10 +166,10 @@ void mapInMenu::drawUnactive()
 void mapInMenu::setPlayerPosition(const sf::Vector2f & pos)
 {
 	playerPosition = pos;
-	player->setPosition(map->getPosition().x + (pos.x * (map->getSize().x * (6000.f / map->getTextureRect().width) / 6000.f)) - (mapRect.left * (map->getSize().x * (6000.f / map->getTextureRect().width) / 6000.f)),
-		map->getPosition().y + (pos.y * (map->getSize().y * (6000.f / map->getTextureRect().height) / 6000.f)) - (mapRect.top * (map->getSize().y * (6000.f / map->getTextureRect().height) / 6000.f))); 
+	setPlayer();
 	
-	// dont keep me change it
+	if (targetIsSet)
+		setTarget();
 }
 
 bool mapInMenu::isActive()
@@ -160,10 +179,6 @@ bool mapInMenu::isActive()
 
 void mapInMenu::toControl()
 {
-	if(targetIsSet)
-		target->setPosition(targetPosition.x * (map->getSize().x * (6000.f / map->getTextureRect().width) / 6000.f) + map->getPosition().x - (mapRect.left * (map->getSize().x * (6000.f / map->getTextureRect().width) / 6000.f)),
-			targetPosition.y * (map->getSize().y * (6000.f / map->getTextureRect().height) / 6000.f) + map->getPosition().y - (mapRect.top * (map->getSize().y * (6000.f / map->getTextureRect().height) / 6000.f)));
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && mapRect.top > 0)
 		mapRect.top -= 10;
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && mapRect.top + mapRect.height< 6000)
@@ -188,12 +203,12 @@ void mapInMenu::toControl()
 			targetPosition = sf::Vector2f((window->mapPixelToCoords(sf::Mouse::getPosition()).x - map->getPosition().x) * (6000.f / (map->getSize().x * (6000.f / map->getTextureRect().width))) + map->getTextureRect().left,
 				(window->mapPixelToCoords(sf::Mouse::getPosition()).y - map->getPosition().y) * (6000.f / (map->getSize().y * (6000.f / map->getTextureRect().height))) + map->getTextureRect().top);
 			
-			target->setPosition(targetPosition.x * (map->getSize().x * (6000.f / map->getTextureRect().width) / 6000.f) + map->getPosition().x - (mapRect.left * (map->getSize().x * (6000.f / map->getTextureRect().width) / 6000.f)),
-				targetPosition.y * (map->getSize().y * (6000.f / map->getTextureRect().height) / 6000.f) + map->getPosition().y - (mapRect.top * (map->getSize().y * (6000.f / map->getTextureRect().height) / 6000.f)));
+			setTarget();
 		
 		}
 		canSetTarget = false;
 	}
+
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && canSetTarget)
 	{
 		if (targetIsSet)
@@ -201,41 +216,39 @@ void mapInMenu::toControl()
 		else if (!targetIsSet)
 		{
 			targetIsSet = true;
-			targetPosition = sf::Vector2f(window->getSize().x / 2.f,
-				window->getSize().y / 2.f);
+
+			targetPosition = sf::Vector2f((menuPos.x + window->getSize().x / 2 - map->getPosition().x) * (6000.f / (map->getSize().x * (6000.f / map->getTextureRect().width))) + map->getTextureRect().left,
+				(menuPos.y + window->getSize().y / 2 - map->getPosition().y) * (6000.f / (map->getSize().y * (6000.f / map->getTextureRect().height))) + map->getTextureRect().top);
+
+			setTarget();
+
 		}
 		canSetTarget = false;
 	}
 
-	std::cout << targetIsSet << std::endl;
-
 	if ((*Game::getScrollValue() > 0 || sf::Keyboard::isKeyPressed(sf::Keyboard::PageUp)) && mapRect.width > static_cast<int>(window->getSize().x) && mapRect.height > static_cast<int>(window->getSize().y))
 	{
-		mapRect.height -= 20;
-		mapRect.width -= 20;
+		mapRect.height -= 40;
+		mapRect.width -= 40;
 		if (mapRect.top + mapRect.height < 6000)
-			mapRect.top += 10;
+			mapRect.top += 20;
 		if(mapRect.left + mapRect.width < 6000)
-			mapRect.left += 10;
+			mapRect.left += 20;
 	}
 	else if((*Game::getScrollValue() < 0 || sf::Keyboard::isKeyPressed(sf::Keyboard::PageDown)) && mapRect.width < 6000 && mapRect.height < 6000)
 	{
-		mapRect.height += 20;
-		mapRect.width += 20;
+		mapRect.height += 40;
+		mapRect.width += 40;
 
 		if (mapRect.top + mapRect.height < 6000 && mapRect.top > 0)
-			mapRect.top -= 10;
-		else if (mapRect.top < 0)
-			mapRect.top += 20;
-		else
 			mapRect.top -= 20;
+		else if (mapRect.top > 0)
+			mapRect.top -= 40;
 
 		if (mapRect.left + mapRect.width < 6000 && mapRect.left > 0)
-			mapRect.left -= 10;
-		else if (mapRect.left < 0)
-			mapRect.left += 20;
-		else
 			mapRect.left -= 20;
+		else if (mapRect.left > 0)
+			mapRect.left -= 40;
 	}
 	*Game::getScrollValue() = 0;
 	map->setTextureRect(mapRect);
@@ -252,4 +265,19 @@ void mapInMenu::draw()
 {
 	renderSprites::Instance().addToRender(map);
 	renderSprites::Instance().addToRender(player);
+
+	if (targetIsSet)
+		renderSprites::Instance().addToRender(target);
+}
+
+void mapInMenu::setPlayer()
+{
+	player->setPosition(map->getPosition().x + (playerPosition.x * (map->getSize().x * (6000.f / map->getTextureRect().width) / 6000.f)) - (mapRect.left * (map->getSize().x * (6000.f / map->getTextureRect().width) / 6000.f)),
+		map->getPosition().y + (playerPosition.y * (map->getSize().y * (6000.f / map->getTextureRect().height) / 6000.f)) - (mapRect.top * (map->getSize().y * (6000.f / map->getTextureRect().height) / 6000.f)));
+}
+
+void mapInMenu::setTarget()
+{
+	target->setPosition(targetPosition.x * (map->getSize().x * (6000.f / map->getTextureRect().width) / 6000.f) + map->getPosition().x - (mapRect.left * (map->getSize().x * (6000.f / map->getTextureRect().width) / 6000.f)),
+		targetPosition.y * (map->getSize().y * (6000.f / map->getTextureRect().height) / 6000.f) + map->getPosition().y - (mapRect.top * (map->getSize().y * (6000.f / map->getTextureRect().height) / 6000.f)));
 }

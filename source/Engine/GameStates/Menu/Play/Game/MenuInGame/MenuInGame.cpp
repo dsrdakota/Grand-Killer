@@ -220,14 +220,14 @@ void MenuInGame::checkArrowIsPressed(const int &side)
 	{
 		first = States::Gra;
 		last = States::Mapa;
-		key = sf::Keyboard::Q;
+		key = sf::Keyboard::E;
 		arrowSide = rightArrow;
 	}
 	else // left
 	{
 		first = States::Mapa;
 		last = States::Gra;
-		key = sf::Keyboard::E;
+		key = sf::Keyboard::Q;
 		arrowSide = leftArrow;
 	}
 
