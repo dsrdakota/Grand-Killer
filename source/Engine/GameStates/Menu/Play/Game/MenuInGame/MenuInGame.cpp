@@ -32,17 +32,17 @@ MenuInGame::MenuInGame(const sf::Vector2u &windowSize) : window(Game::Instance()
 
 	wsk = options[static_cast<int>(States::Mapa)];
 
-	navigates.push_back(std::make_pair(new Text(sf::Color::White, 10, "WYBIERZ"), Keyboard::Instance().getKeySprite(Keyboard::Keys::Enter)));
-	navigates[0].second->setScale(0.9f, 0.9f);
+	navigation.push_back(std::make_pair(new Text(sf::Color::White, 10, "WYBIERZ"), Keyboard::Instance().getKeySprite(Keyboard::Keys::Enter)));
+	navigation[0].second->setScale(0.9f, 0.9f);
 
-	navigates.push_back(std::make_pair(new Text(sf::Color::White, 10, "WROC"), Keyboard::Instance().getKeySprite(Keyboard::Keys::Esc)));
-	navigates[1].second->setScale(0.9f, 0.9f);
+	navigation.push_back(std::make_pair(new Text(sf::Color::White, 10, "WROC"), Keyboard::Instance().getKeySprite(Keyboard::Keys::Esc)));
+	navigation[1].second->setScale(0.9f, 0.9f);
 
-	navigates.push_back(std::make_pair(new Text(sf::Color::White, 0, ""), Keyboard::Instance().getKeySprite(Keyboard::Keys::E)));
-	navigates[2].second->setScale(0.9f, 0.9f);
+	navigation.push_back(std::make_pair(new Text(sf::Color::White, 0, ""), Keyboard::Instance().getKeySprite(Keyboard::Keys::E)));
+	navigation[2].second->setScale(0.9f, 0.9f);
 
-	navigates.push_back(std::make_pair(new Text(sf::Color::White, 10, "PRZEWIJANIE"), Keyboard::Instance().getKeySprite(Keyboard::Keys::Q)));
-	navigates[3].second->setScale(0.9f, 0.9f);
+	navigation.push_back(std::make_pair(new Text(sf::Color::White, 10, "PRZEWIJANIE"), Keyboard::Instance().getKeySprite(Keyboard::Keys::Q)));
+	navigation[3].second->setScale(0.9f, 0.9f);
 
 	cooldownEscapeButton = 0;
 	cooldownChangeStates = 1;
@@ -61,7 +61,7 @@ MenuInGame::~MenuInGame()
 	for (const auto &i : options)
 		delete i;
 
-	for (const auto &i : navigates)
+	for (const auto &i : navigation)
 	{
 		delete i.first;
 		delete i.second;
@@ -110,23 +110,23 @@ void MenuInGame::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &p
 	rightArrow->setPosition(headersButton[headersButton.size() - 1]->getButtonSprite()->getPosition().x + headersButton[headersButton.size() - 1]->getButtonSprite()->getGlobalBounds().width + 5.f,
 		leftArrow->getPosition().y);
 
-	navigates[0].second->setPosition(menuPos.x + window->getSize().x - navigates[0].second->getGlobalBounds().width - 40,
-		menuPos.y + window->getSize().y - navigates[0].second->getGlobalBounds().height - 15);
-	navigates[0].first->text->setPosition(navigates[0].second->getPosition().x - navigates[0].first->text->getGlobalBounds().width,
-		navigates[0].second->getPosition().y + navigates[0].second->getGlobalBounds().height / 2 - navigates[0].first->text->getGlobalBounds().height);
+	navigation[0].second->setPosition(menuPos.x + window->getSize().x - navigation[0].second->getGlobalBounds().width - 40,
+		menuPos.y + window->getSize().y - navigation[0].second->getGlobalBounds().height - 15);
+	navigation[0].first->text->setPosition(navigation[0].second->getPosition().x - navigation[0].first->text->getGlobalBounds().width,
+		navigation[0].second->getPosition().y + navigation[0].second->getGlobalBounds().height / 2 - navigation[0].first->text->getGlobalBounds().height);
 
-	navigates[1].second->setPosition(navigates[0].first->text->getPosition().x - 40,
-		navigates[0].second->getPosition().y);
-	navigates[1].first->text->setPosition(navigates[1].second->getPosition().x - navigates[1].first->text->getGlobalBounds().width,
-		navigates[1].second->getPosition().y + navigates[1].second->getGlobalBounds().height / 2 - navigates[1].first->text->getGlobalBounds().height);
+	navigation[1].second->setPosition(navigation[0].first->text->getPosition().x - 40,
+		navigation[0].second->getPosition().y);
+	navigation[1].first->text->setPosition(navigation[1].second->getPosition().x - navigation[1].first->text->getGlobalBounds().width,
+		navigation[1].second->getPosition().y + navigation[1].second->getGlobalBounds().height / 2 - navigation[1].first->text->getGlobalBounds().height);
 
-	navigates[2].second->setPosition(navigates[1].first->text->getPosition().x - 40,
-		navigates[1].second->getPosition().y);
+	navigation[2].second->setPosition(navigation[1].first->text->getPosition().x - 40,
+		navigation[1].second->getPosition().y);
 
-	navigates[3].second->setPosition(navigates[2].second->getPosition().x - 33,
-		navigates[2].second->getPosition().y);
-	navigates[3].first->text->setPosition(navigates[3].second->getPosition().x - navigates[3].first->text->getGlobalBounds().width,
-		navigates[3].second->getPosition().y + navigates[3].second->getGlobalBounds().height / 2 - navigates[3].first->text->getGlobalBounds().height);
+	navigation[3].second->setPosition(navigation[2].second->getPosition().x - 33,
+		navigation[2].second->getPosition().y);
+	navigation[3].first->text->setPosition(navigation[3].second->getPosition().x - navigation[3].first->text->getGlobalBounds().width,
+		navigation[3].second->getPosition().y + navigation[3].second->getGlobalBounds().height / 2 - navigation[3].first->text->getGlobalBounds().height);
 }
 
 const int & MenuInGame::getCooldownValue()
@@ -158,13 +158,11 @@ void MenuInGame::draw()
 		wsk->drawActive();
 	else
 	{
-		for (const auto &i : navigates)
+		for (const auto &i : navigation)
 		{
 			renderSprites::Instance().addToRender(i.first->text);
 			renderSprites::Instance().addToRender(i.second);
 		}
-
-
 		wsk->drawUnactive();
 	}
 }
@@ -173,7 +171,7 @@ void MenuInGame::update()
 {
 	auto firstButton = headersButton[0]->getButtonSprite();
 
-	wsk->setPosition(sf::Vector2f(firstButton->getPosition().x,
+	wsk->setPosition(background->getPosition(),sf::Vector2f(firstButton->getPosition().x,
 		firstButton->getPosition().x + window->getSize().x * 0.8f - window->getSize().x * 0.2f),
 		sf::Vector2f(firstButton->getPosition().y + firstButton->getGlobalBounds().height + 10,
 			firstButton->getPosition().y + firstButton->getGlobalBounds().height + window->getSize().y * 0.6f));

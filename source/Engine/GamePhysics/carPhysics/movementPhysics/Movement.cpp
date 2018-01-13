@@ -130,7 +130,7 @@ void Movement::brake(const sf::Keyboard::Key & key)
 {
 	if (sf::Keyboard::isKeyPressed(key) && !car->getBoolIsCollision(Car::collisionSide::Back))
 	{
-		if(*speedf <= 0)
+		if(*speedf <= 0 && !sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 			acceleratingFunction(speedb, speedf, *MAX_SPEED / 2, stateKeyGas);
 		else
 		{
@@ -165,7 +165,7 @@ void Movement::brake(const sf::Keyboard::Key & key)
 
 void Movement::handBrake(const sf::Keyboard::Key & key)
 {
-	if (sf::Keyboard::isKeyPressed(key))
+	if (sf::Keyboard::isKeyPressed(key) && !sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 			brake();
 }
 

@@ -8,7 +8,7 @@ Diary::~Diary()
 {
 }
 
-void Diary::setPosition(const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange)
+void Diary::setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange)
 {
 }
 

@@ -71,7 +71,11 @@ private:
 
 	void turn(sf::Sprite *tire, sf::Sprite *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar);
 	void straight(sf::Sprite *tire, sf::Sprite *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar);
-	void rotateCar(const float & actualValueRotateCar, const Car::collisionSide &sideFirst, const Car::collisionSide &sideSecond);
+	void rotateCar(const float & actualValueRotateCar, const Car::collisionSide &sideFirst, const Car::collisionSide &sideSecond, const std::pair<std::vector<sf::CircleShape*>,std::vector<sf::CircleShape*>>&hitboxLeftRight);
+
+	bool checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>&hitbox, const float & angle);
+	void rotateOneHitbox(const std::vector<sf::CircleShape*>&hitbox, const float &angle);
+	sf::Vector2f getCenterOfHitbox(const sf::CircleShape &hitbox);
 
 	void addValue(double &value, const double &addValue, const double &max);
 	void reduceValue(double &value, const double &reduceValue, const double &min);

@@ -1,5 +1,7 @@
 #include "carCollisionHitbox.hpp"
 
+#include "../../../../Manager/renderSprites.hpp"
+
 carCollisionHitbox::carCollisionHitbox(Car *car)
 {
 	this->car = car;
@@ -58,7 +60,6 @@ Car::collisionSide *carCollisionHitbox::getLastCollisionSide()
 {
 	return &lastCollisionSide;
 }
-
 void carCollisionHitbox::setHitbox(std::vector<sf::CircleShape*>& hitbox, const sf::Vector2f & range, const sf::Color & color)
 {
 	auto allHitboxes = car->getAllHitboxes();

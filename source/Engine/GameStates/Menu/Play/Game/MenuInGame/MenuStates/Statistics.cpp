@@ -8,7 +8,7 @@ Statistics::~Statistics()
 {
 }
 
-void Statistics::setPosition(const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange)
+void Statistics::setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange)
 {
 }
 

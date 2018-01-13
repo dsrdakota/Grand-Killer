@@ -116,10 +116,10 @@ void toTurn::updatePosition()
 		*drivingStatus = Status::Straight;
 
 	if (*actualValueRotateLeftTire && car->getSpeed() > 0.65)
-		rotateCar(static_cast<float>(*actualValueRotateLeftCar), Car::collisionSide::Left, Car::collisionSide::Right);
+		rotateCar(static_cast<float>(*actualValueRotateLeftCar), Car::collisionSide::Left, Car::collisionSide::Right, std::make_pair(car->getCollisionHitbox(Car::hitboxPosition::upLeft),car->getCollisionHitbox(Car::hitboxPosition::downLeft)));
 
 	else if (*actualValueRotateRightTire && car->getSpeed() > 0.65)
-		rotateCar(static_cast<float>(-*actualValueRotateRightCar), Car::collisionSide::Right, Car::collisionSide::Left);
+		rotateCar(static_cast<float>(-*actualValueRotateRightCar), Car::collisionSide::Right, Car::collisionSide::Left, std::make_pair(car->getCollisionHitbox(Car::hitboxPosition::upRight), car->getCollisionHitbox(Car::hitboxPosition::downRight)));
 
 	slide->setOverSteer(static_cast<int>(*drivingStatus));
 }
@@ -150,17 +150,45 @@ void toTurn::straight(sf::Sprite *tire, sf::Sprite *counterTire, double *actualV
 	}
 }
 
-void toTurn::rotateCar(const float & actualValueRotateCar, const Car::collisionSide &sideFirst, const Car::collisionSide &sideSecond)
+void toTurn::rotateCar(const float & actualValueRotateCar, const Car::collisionSide &sideFirst, const Car::collisionSide &sideSecond, const std::pair<std::vector<sf::CircleShape*>, std::vector<sf::CircleShape*>>&hitboxLeftRight)
 {
-	if (!car->getStateMoving() && !car->getBoolIsCollision(sideFirst))
+	if (!car->getStateMoving() && !car->getBoolIsCollision(sideFirst) && !checkCollisionWithOneHitbox(hitboxLeftRight.first, -actualValueRotateCar))
 	{
 		if (car->getOverSteerSide() == 2)
 			car->rotate(-actualValueRotateCar * 0.8);
 		else
 			car->rotate(-actualValueRotateCar);
 	}
-	else if (car->getStateMoving() == 1 && !car->getBoolIsCollision(sideSecond))
+	else if (car->getStateMoving() == 1 && !car->getBoolIsCollision(sideSecond) && !checkCollisionWithOneHitbox(hitboxLeftRight.second, actualValueRotateCar))
 		car->rotate(actualValueRotateCar);
+}
+
+bool toTurn::checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const float & angle)
+{
+	rotateOneHitbox(hitbox, angle);
+	bool toReturn = false;
+	for (const auto &i : hitbox)
+		if (Map::isPointInCollisionArea(getCenterOfHitbox(*i)))
+		{
+			car->setSpeed(static_cast<float>(car->getSpeed() / 1.03f));
+			toReturn = true;
+			break;
+		}
+
+	rotateOneHitbox(hitbox, -angle);
+	return toReturn;
+}
+
+void toTurn::rotateOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const float & angle)
+{
+	for (const auto &i : hitbox)
+		i->rotate(angle);
+}
+
+sf::Vector2f toTurn::getCenterOfHitbox(const sf::CircleShape & hitbox)
+{
+	return sf::Vector2f(hitbox.getGlobalBounds().left + hitbox.getGlobalBounds().width / 2,
+		hitbox.getGlobalBounds().top + hitbox.getGlobalBounds().height / 2);
 }
 
 void toTurn::addValue(double & value, const double & addValue, const double & max)

@@ -68,7 +68,7 @@ private:
 	sf::RectangleShape *background;
 
 	std::vector<Button *>headersButton;
-	std::vector<std::pair<Text*, sf::Sprite*>>navigates;
+	std::vector<std::pair<Text*, sf::Sprite*>>navigation;
 
 	void update();
 	void checkArrowIsPressed(const int &side);
