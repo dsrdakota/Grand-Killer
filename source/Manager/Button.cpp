@@ -30,7 +30,7 @@ void Button::setPosition(const sf::Vector2f & pos)
 	button->setPosition(pos);
 	
 	if (*state == State::normalButton)
-		text->text->setPosition(pos.x + 5, pos.y + button->getGlobalBounds().height - text->text->getGlobalBounds().height / 2);
+		text->text->setPosition(pos.x + 10, pos.y + button->getGlobalBounds().height / 2 - text->text->getGlobalBounds().height / 2 - 3);
 	else if (*state == State::header)
 	{
 		text->text->setPosition(pos.x + button->getGlobalBounds().width / 2 - text->text->getGlobalBounds().width / 2, pos.y + button->getGlobalBounds().height / 2 - 10);
