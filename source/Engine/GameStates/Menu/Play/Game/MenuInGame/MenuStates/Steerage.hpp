@@ -5,6 +5,7 @@
 #include "../menuStates.hpp"
 #include "../../../../../../../Manager/Button.hpp"
 #include "../../../../../../../Manager/Keyboard.hpp"
+#include "../../../../../../../Manager/Time.hpp"
 
 class Steerage : public menuStates
 {
@@ -20,4 +21,35 @@ public:
 	void drawUnactive() override;
 
 private:
+
+	enum class optionState
+	{
+		Screen,
+		Sound,
+		Graphics,
+		Walk,
+		Fight,
+		Weapon,
+		Car
+	};
+
+	optionState *state;
+
+	std::vector<Button*>buttons;
+	std::vector<std::pair<Text*, sf::Sprite*>>navigation;
+	sf::RectangleShape *hitboxClick;
+	sf::RectangleShape *backgroundRight;
+
+	Time timeChangeStates;
+	int cooldownChangeStates;
+
+	Text* centerTextOfOption;
+
+	bool active;
+	bool isMousePressed;
+
+	void toControl();
+
+	bool isMouseClickOnHitbox();
+	void resertCooldown();
 };

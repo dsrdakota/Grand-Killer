@@ -69,7 +69,7 @@ MenuInGame::~MenuInGame()
 
 void MenuInGame::updateCooldown()
 {
-	if (cooldownEscapeButton && timeEscapeButton.time->asSeconds() >= 1.f)
+	if (cooldownEscapeButton && timeEscapeButton.time->asSeconds() >= 0.75f)
 	{
 		cooldownEscapeButton--;
 		timeEscapeButton.clock->restart();
