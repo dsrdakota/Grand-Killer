@@ -13,10 +13,13 @@ public:
 
 	std::vector<sf::CircleShape*> getOneCollisionHitbox(const Car::hitboxPosition &pos);
 	Car::collisionSide *getLastCollisionSide();
+	const std::vector<sf::CircleShape*> getAllHitboxes();
 
 private:
 
 	Car * car;
+
+	std::vector<sf::CircleShape*>allHitboxes;
 
 	std::vector<sf::CircleShape*>frontHitboxes;
 	std::vector<sf::CircleShape*>upRightHitboxes;
@@ -30,6 +33,4 @@ private:
 	std::vector<std::vector<sf::CircleShape*>> allHitboxInOneVector;
 
 	Car::collisionSide lastCollisionSide;
-
-	void setHitbox(std::vector<sf::CircleShape*>&hitbox, const sf::Vector2f &range, const sf::Color &color = sf::Color::White);
 };

@@ -44,7 +44,6 @@ public:
 private:
 
 	Car *car;
-	sf::ConvexShape *carShape;
 	std::pair<sf::Sprite*, sf::Sprite*>tiresFront;
 	std::pair<sf::Sprite*, sf::Sprite*>tiresBack;
 

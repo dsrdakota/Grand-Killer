@@ -24,9 +24,9 @@ public:
 
 	inline sf::Sprite* getTires(const size_t &index) { return &tires[index]; }
 	inline sf::CircleShape* getTiresPos(const size_t &index) { return &tiresPos[index]; }
-	void setPosition(const sf::ConvexShape *car,const carType::Type &type);
+	void setPosition(const sf::Sprite *car,const carType::Type &type);
 	void move(const sf::Vector2f &offset);
-	void rotate(const double &angle, const sf::ConvexShape* car);
+	void rotate(const double &angle);
 
 	void draw();
 

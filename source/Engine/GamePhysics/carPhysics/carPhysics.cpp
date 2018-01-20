@@ -4,8 +4,6 @@
 
 carPhysics::carPhysics(Car *car)
 {
-	this->car = car->getShape()->getShape();
-
 	switch (*car->getType())
 	{
 	case carType::Type::Ambulance:
@@ -40,6 +38,8 @@ carPhysics::carPhysics(Car *car)
 carPhysics::~carPhysics()
 {
 	delete turnPhysics;
+	delete movePhysics;
+	delete collisionHitboxes;
 }
 
 void carPhysics::boostSpeed(const sf::Keyboard::Key &key)

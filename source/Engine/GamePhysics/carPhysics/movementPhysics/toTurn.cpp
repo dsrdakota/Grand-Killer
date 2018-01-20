@@ -7,7 +7,6 @@
 toTurn::toTurn(Car *car, std::pair<sf::Sprite*, sf::Sprite*>tiresFront, std::pair<sf::Sprite*, sf::Sprite*>tiresBack, const double *speedRotateTire, const double*speedRotateCar)
 {
 	this->car = car;
-	this->carShape = car->getShape()->getShape();
 	SPEED_ROTATE_TIRE = speedRotateTire;
 	SPEED_ROTATE_CAR = speedRotateCar;
 	actualValueRotateLeftCar = new double(0);

@@ -234,12 +234,12 @@ sf::Vector2f carCollisionWithWall::moveFromWall(const std::vector<sf::CircleShap
 		case Car::collisionSide::RightUp:
 		case Car::collisionSide::RightDown:
 		case Car::collisionSide::Right:
-			w = car->getMovementVector(std::fmod(car->getShape()->getShape()->getRotation() - static_cast<float>(*car->getOverSteerValue()) - 90, 360.f));
+			w = car->getMovementVector(std::fmod(car->getSprite()->getRotation() - static_cast<float>(*car->getOverSteerValue()) - 90, 360.f));
 			break;
 		case Car::collisionSide::LeftUp:
 		case Car::collisionSide::LeftDown:
 		case Car::collisionSide::Left:
-			w = car->getMovementVector(std::fmod(car->getShape()->getShape()->getRotation() - static_cast<float>(*car->getOverSteerValue()) + 90, 360.f));
+			w = car->getMovementVector(std::fmod(car->getSprite()->getRotation() - static_cast<float>(*car->getOverSteerValue()) + 90, 360.f));
 			break;
 		}
 		v.x += w.x;

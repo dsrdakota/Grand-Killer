@@ -2,47 +2,44 @@
 
 #include <SFML/Graphics.hpp>
 #include "carType.hpp"
-#include "../../Framework/Shapes.hpp"
-#include <unordered_map>
 
 class Door
 {
 public:
-	Door(const carType::Type &type);
+
+	enum class doorSide
+	{
+		leftFront,
+		leftBack,
+		rightFront,
+		rightBack
+	};
+
+	Door(const sf::Sprite *sprite, const carType::Type &type);
 	~Door();
 
-	enum class Side
-	{
-		front_left,
-		front_right,
-		back_left,
-		back_right
-	}; 
-
-	sf::ConvexShape* getDoor(const size_t &index) { return doors[index].getShape(); }
-
-	void setPosition(const sf::ConvexShape *car, const carType::Type &type);
+	void toControl();
 	void move(const sf::Vector2f &offset);
+	void rotate(const float &angle);
+	void setRotation(const float &rotation);
 
-	void rotate(const double &angle);
-
-	void openDoor(sf::ConvexShape *door, float *angle, const size_t &index);
-	void closeDoor(sf::ConvexShape *door, float *angle, const size_t &index);
-
-	void drawDoors();
 	void drawCenter();
+	void drawDoors();
 
 private:
 
-	carType::Type *type;
+	const sf::Sprite *car;
 
-	Shape *doors;
-	Shape *center;
+	sf::RectangleShape *doors;
+	sf::Texture *doorTextures;
+	sf::RectangleShape *underDoors;
+	sf::CircleShape *doorsHitbox;
 
+	const float *MAX_ANGLEN_OPEN;
 	float *angleOpen;
-	float *angleClose;
 
-	void setPath(std::string pathToShape, std::string pathToTexture, const std::string &string, const std::string &nameTexture, const int &count);
-	std::pair<sf::Vector2f,size_t> setHinge(const size_t &index);
-	void rotate(sf::ConvexShape *door, const float *angle,const sf::Vector2f &hinge,const size_t &originIndex);
+	void updatePosition();
+
+	void open(const doorSide &side, const float &angle = 1);
+	void close(const doorSide &side, const float &angle = -1);
 };

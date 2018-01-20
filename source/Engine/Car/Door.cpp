@@ -1,24 +1,19 @@
 #include "Door.hpp"
+
+#include "Car.hpp"
 #include "../../Manager/renderSprites.hpp"
 
-#include <string>
-#include <fstream>
-
-Door::Door(const carType::Type &type)
+Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 {
-	this->type = new carType::Type(type);
-	doors = new Shape[4];
-	center = new Shape[4];
+	car = sprite;
 
-	angleOpen = new float[4];
-	angleClose = new float[4];
+	underDoors = new sf::RectangleShape(sf::Vector2f(78, 120));
+	underDoors->setOrigin(sprite->getOrigin().x - 2, sprite->getOrigin().y - 35);
+	underDoors->setFillColor(sf::Color::Black);
 
-	std::fill(angleOpen, angleOpen + 4, 0.f);
-	std::fill(angleClose, angleClose + 4, 0.f);
+	doorsHitbox = new sf::CircleShape[4];
 
-	std::string pathToShape = "data/Models/Cars/";
-	std::string pathToTexture = pathToShape;
-	std::string nameTexture;
+	std::string pathToTexture = "data/Models/Cars/";
 
 	switch (type)
 	{
@@ -38,239 +33,186 @@ Door::Door(const carType::Type &type)
 		break;
 	case carType::Type::Taxi:
 
-		pathToShape += "Taxi/doors/";
 		pathToTexture += "Taxi/doors/";
-		nameTexture = "TaxiDoor";
+
+		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 3, sprite->getOrigin().y - 62);
+		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 3, sprite->getOrigin().y - 107);
+		doorsHitbox[2].setOrigin(sprite->getOrigin().x - 77, sprite->getOrigin().y - 59);
+		doorsHitbox[3].setOrigin(sprite->getOrigin().x - 77, sprite->getOrigin().y - 108);
 
 		break;
 	case carType::Type::Truck:
 		break;
 	}
 
-	setPath(pathToShape, pathToTexture, "FrontL", nameTexture, 0);
+	doorTextures = new sf::Texture[4];
+	doorTextures[0].loadFromFile(pathToTexture + "leftF.png");
+	doorTextures[1].loadFromFile(pathToTexture + "leftB.png");
+	doorTextures[2].loadFromFile(pathToTexture + "rightF.png");
+	doorTextures[3].loadFromFile(pathToTexture + "rightB.png");
 
-	setPath(pathToShape, pathToTexture, "FrontR", nameTexture, 1);
+	doors = new sf::RectangleShape[4];
 
-	setPath(pathToShape, pathToTexture, "BackL", nameTexture, 2);
+	doors[0].setSize(sf::Vector2f(9, 44));
+	doors[1].setSize(sf::Vector2f(8, 49));
+	doors[2].setSize(sf::Vector2f(8, 49));
+	doors[3].setSize(sf::Vector2f(7, 41));
 
-	setPath(pathToShape, pathToTexture, "BackR", nameTexture, 3);
+	for (size_t i = 0;i < 4;++i)
+	{
+		doorTextures[i].setSmooth(true);
+		doors[i].setTexture(dynamic_cast<const sf::Texture*>(&doorTextures[i]));
+	}
+
+	for (size_t i = 0;i < 4;++i)
+	{
+		doorsHitbox[i].setRadius(1);
+		doorsHitbox[i].setFillColor(sf::Color::Red);
+	}
+
+	doors[0].setOrigin(1, 1);
+	doors[1].setOrigin(1, 1);
+	doors[2].setOrigin(6, 0);
+	doors[3].setOrigin(6, 0);
+
+	angleOpen = new float[4]{ 0 };
+	MAX_ANGLEN_OPEN = new const float(65.f);
+
+	updatePosition();
 }
 
 Door::~Door()
 {
-	delete type;
 	delete[]doors;
-	delete[]angleOpen;
-	delete[]angleClose;
+	delete[]doorTextures;
+	delete[]doorsHitbox;
+	delete underDoors;
 }
 
-void Door::setPosition(const sf::ConvexShape * car, const carType::Type &type)
+void Door::toControl()
 {
-	
-	switch (type)
+	updatePosition();
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::U))
+		open(doorSide::leftFront, 1);
+
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::I))
+		close(doorSide::leftFront, -1);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+		open(doorSide::rightFront, -1);
+
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+		close(doorSide::rightFront, 1);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::H))
+		open(doorSide::leftBack, 1);
+
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::J))
+		close(doorSide::leftBack, -1);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+		open(doorSide::rightBack, -1);
+
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+		close(doorSide::rightBack, 1);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::N))
 	{
-	case carType::Type::Ambulance:
-		break;
-	case carType::Type::Audi:
-		break;
-	case carType::Type::Black_viper:
-		break;
-	case carType::Type::Car:
-		break;
-	case carType::Type::Mini_truck:
-		break;
-	case carType::Type::Mini_van:
-		break;
-	case carType::Type::Police:
-		break;
-	case carType::Type::Taxi:
-
-		doors[0].setOrigin(car->getOrigin().x-3.f, car->getOrigin().y - 60.f);
-
-		doors[1].setOrigin(car->getOrigin().x - 68.5f, car->getOrigin().y - 60.f);
-
-		doors[2].setOrigin(car->getOrigin().x -4.f, car->getOrigin().y - 102.f);
-
-		doors[3].setOrigin(car->getOrigin().x - 69.5f, car->getOrigin().y - 107.f);
-
-		for(size_t i=0;i<4;++i)
-			center[i].setOrigin(doors[i].getOrigin());
-
-		break;
-	case carType::Type::Truck:
-		break;
+		open(doorSide::leftFront, 1);
+		open(doorSide::rightFront, -1);
+		open(doorSide::leftBack, 1);
+		open(doorSide::rightBack, -1);
 	}
 
-	for (auto i = 0;i < 4;++i)
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
 	{
-		doors[i].setPosition(car->getPosition());
-		center[i].setPosition(car->getPosition());
-
-		doors[i].setRotation(car->getRotation());
-		center[i].setRotation(car->getRotation());
+		close(doorSide::leftFront, -1);
+		close(doorSide::rightFront, 1);
+		close(doorSide::leftBack, -1);
+		close(doorSide::rightBack, 1);
 	}
 }
 
 void Door::move(const sf::Vector2f & offset)
 {
-	for (int i = 0;i < 4;++i)
+	underDoors->move(offset);
+
+	for (size_t i = 0;i < 4;++i)
+		doorsHitbox[i].move(offset);
+	updatePosition();
+}
+
+void Door::rotate(const float & angle)
+{
+	underDoors->rotate(angle);
+
+	for (size_t i = 0;i < 4;++i)
 	{
-		doors[i].getShape()->move(offset);
-		center[i].getShape()->move(offset);
+		doorsHitbox[i].rotate(angle);
+		doors[i].rotate(angle);
+	}
+	updatePosition();
+}
+
+void Door::setRotation(const float & rotation)
+{
+	underDoors->setRotation(rotation);
+
+	for (size_t i = 0;i < 4;++i)
+		doorsHitbox[i].setRotation(rotation);
+	updatePosition();
+}
+
+void Door::open(const doorSide & side, const float &angle)
+{
+	if (angleOpen[static_cast<int>(side)] < *MAX_ANGLEN_OPEN)
+	{
+		doors[static_cast<int>(side)].rotate(angle);
+		doors[static_cast<int>(side)].setSize(sf::Vector2f(doors[static_cast<int>(side)].getSize().x - 0.07,
+			doors[static_cast<int>(side)].getSize().y));
+		angleOpen[static_cast<int>(side)] += fabs(angle);
 	}
 }
 
-void Door::rotate(const double & angle)
+void Door::close(const doorSide & side, const float &angle)
 {
-	for (int i = 0;i < 4;++i)
+	if (angleOpen[static_cast<int>(side)] > 0.f)
 	{
-		doors[i].getShape()->rotate(static_cast<float>(angle));
-		center[i].getShape()->rotate(static_cast<float>(angle));
+		doors[static_cast<int>(side)].rotate(angle);
+		doors[static_cast<int>(side)].setSize(sf::Vector2f(doors[static_cast<int>(side)].getSize().x + 0.07,
+			doors[static_cast<int>(side)].getSize().y));
+		angleOpen[static_cast<int>(side)] -= fabs(angle);
 	}
-}
-
-void Door::openDoor(sf::ConvexShape *door, float *angle, const size_t &index)
-{
-	const float *MAX_ANGLE_OPEN = nullptr;
-	switch (index)
-	{
-		// Left Doors
-	case 0: 
-	case 2:
-		MAX_ANGLE_OPEN = new const float(1.25f);
-		break;
-
-		// Right Doors
-	case 1:
-	case 3:
-		MAX_ANGLE_OPEN = new const float(-1.25f);
-		break;
-
-	}
-	if (*MAX_ANGLE_OPEN > 0 ? angleOpen[index] < *MAX_ANGLE_OPEN : angleOpen[index] > *MAX_ANGLE_OPEN) // wow its working
-	{
-		angleOpen[index] += *angle;
-
-		rotate(door,angle,setHinge(index).first,setHinge(index).second);
-
-		if (angleOpen[index] == *MAX_ANGLE_OPEN)angleClose[index] = 0;
-		else angleClose[index] = -(*MAX_ANGLE_OPEN - angleOpen[index]);
-	}
-}
-
-void Door::closeDoor(sf::ConvexShape *door, float *angle, const size_t &index)
-{
-	const float *MAX_ANGLE_CLOSE = nullptr;
-	switch (index)
-	{
-		// Left Doors
-	case 0:
-	case 2:
-		MAX_ANGLE_CLOSE = new const float(-1.25f);
-		break;
-
-		// Right Doors
-	case 1:
-	case 3:
-		MAX_ANGLE_CLOSE = new const float(1.25f);
-		break;
-
-	}
-	if (*MAX_ANGLE_CLOSE < 0 ? angleClose[index] > *MAX_ANGLE_CLOSE && angleOpen[index] > 0 : angleClose[index] < *MAX_ANGLE_CLOSE && angleOpen[index] < 0) // wow its working v2
-	{
-		angleClose[index] -= -(*angle);
-		rotate(door, angle, setHinge(index).first, setHinge(index).second);
-
-		if (angleClose[index] == *MAX_ANGLE_CLOSE) angleOpen[index] = 0;
-		else angleOpen[index] = -(*MAX_ANGLE_CLOSE - angleClose[index]);
-	}
-}
-
-void Door::drawDoors()
-{
-	for (auto i = 0;i < 4;++i)
-		renderSprites::Instance().addToRender(doors[i].getShape());
 }
 
 void Door::drawCenter()
 {
-	for (auto i = 0;i < 4;++i)
-		renderSprites::Instance().addToRender(center[i].getShape());
+	renderSprites::Instance().addToRender(underDoors);
 }
 
-void Door::setPath(std::string pathToShape, std::string pathToTexture, const std::string &string, const std::string &nameTexture, const int &count)
+void Door::drawDoors()
 {
-	pathToShape += string+".gk";
-	pathToTexture += string+".png";
-
-	doors[count].setShape(pathToShape, pathToTexture,nameTexture+std::to_string(count));
+	for (size_t i = 0;i < 4;++i)
+		renderSprites::Instance().addToRender(&doors[i]);
 }
 
-std::pair<sf::Vector2f, size_t> Door::setHinge(const size_t &index)
+void Door::updatePosition()
 {
-	sf::Vector2f hinge= sf::Vector2f(0, 0);
-	size_t originIndex = 0;
+	underDoors->setPosition(car->getPosition());
+	underDoors->setRotation(car->getRotation());
 
-	switch (*type)
+	for (size_t i = 0;i < 4;++i)
 	{
-	case carType::Type::Ambulance:
-		break;
-	case carType::Type::Audi:
-		break;
-	case carType::Type::Black_viper:
-		break;
-	case carType::Type::Car:
-		break;
-	case carType::Type::Mini_truck:
-		break;
-	case carType::Type::Mini_van:
-		break;
-	case carType::Type::Police:
-		break;
-	case carType::Type::Taxi:
-
-		switch (index)
-		{
-		case 0: // front left
-
-			hinge = sf::Vector2f(0, 12);
-			originIndex = 7;
-
-			break;
-		case 1: // front right
-
-			hinge = sf::Vector2f(0, 20);
-			originIndex = 5;
-
-			break;
-		case 2: // back left
-
-			hinge = sf::Vector2f(0, 6);
-			originIndex = 4;
-
-			break;
-		case 3: // back right
-
-			hinge = sf::Vector2f(0, 6);
-			originIndex = 4;
-
-			break;
-		}
-
-		break;
-	case carType::Type::Truck:
-		break;
+		doorsHitbox[i].setPosition(car->getPosition());
+		doorsHitbox[i].setRotation(car->getRotation());
 	}
-	return std::make_pair(hinge, originIndex);
-}
 
-void Door::rotate(sf::ConvexShape *door, const float *angle, const sf::Vector2f &hinge, const size_t &originIndex)
-{
-	for (size_t i = 0;i < door->getPointCount();++i)
+	for (size_t i = 0;i < 4;++i)
 	{
-		if(i >= hinge.x && i <= hinge.y)
-			continue;
-		door->setPoint(i, sf::Vector2f((door->getPoint(i).x - door->getPoint(originIndex).x)*cos(*angle) - (door->getPoint(i).y - door->getPoint(originIndex).y)*sin(*angle) + door->getPoint(originIndex).x,
-			(door->getPoint(i).x - door->getPoint(originIndex).x)*sin(*angle) + (door->getPoint(i).y - door->getPoint(originIndex).y)*cos(*angle) + door->getPoint(originIndex).y));
+		doors[i].setPosition(doorsHitbox[i].getGlobalBounds().left + doorsHitbox[i].getGlobalBounds().width / 2,
+			doorsHitbox[i].getGlobalBounds().top + doorsHitbox[i].getGlobalBounds().height / 2);
+
+		//doors[i].setRotation(doorsHitbox[i].getRotation());
 	}
 }

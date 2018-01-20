@@ -9,11 +9,9 @@
 Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game::Instance().getWindow())
 {
 	this->type = new carType::Type(type);
-	shape = new Shape;
-	shadow = new Shape;
 
-	std::string pathToShape = "data/Models/Cars/";
-	std::string pathToTexture = pathToShape;
+	std::string pathToTexture = "data/Models/Cars/";
+	std::string pathToShadow = "data/Models/Cars/";
 	std::string nameTexture;
 	sf::Vector2f origin;
 
@@ -37,41 +35,28 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 
 		weight = new unsigned(1500);
 
-		origin = sf::Vector2f(38, 102);
+		origin = sf::Vector2f(41,99);
 
-		pathToShape += "Taxi/taxi.gk";
 		pathToTexture += "Taxi/taxi.png";
+		pathToShadow += "Taxi/taxiShadow.png";
 		nameTexture = "Taxi";
 
 		break;
 	case carType::Type::Truck:
 		break;
 	}
-	tire = new Tire(this,type);
-	door = new Door(type);
-	mirror = new Mirror(type);
 
-	shape->setShape(pathToShape, pathToTexture, nameTexture);
-	shape->setPosition(startPos);
-	shape->setOrigin(origin);
+	sprite = new sf::Sprite(*textureManager::load(nameTexture, pathToTexture));
+	sprite->setPosition(startPos);
+	sprite->setOrigin(origin);
 
-	shadow->setShape(shape->getShape(), sf::Color(0, 0, 0, 120));
-	shadow->setPosition(sf::Vector2f(startPos.x - 10,startPos.y));
+	shadow = new sf::Sprite(*textureManager::load(nameTexture + "Shadow", pathToShadow));
 	shadow->setOrigin(origin);
 
-	door->setPosition(shape->getShape(), type);
-	tire->setPosition(shape->getShape(), type);
-	mirror->setPosition(shape->getShape(), type);
+	tire = new Tire(this, type);
+	door = new Door(sprite, type);
 
-	for (size_t i = 0;i < shape->getShape()->getPointCount();i+=13)
-	{
-		sf::CircleShape *buf = new sf::CircleShape(2);
-		buf->setOrigin(shape->getShape()->getOrigin() - shape->getShape()->getPoint(i));
-		buf->setFillColor(sf::Color::Red);
-
-		buf->setPosition(shape->getShape()->getPosition());
-		hitboxes.push_back(buf);
-	}
+	tire->setPosition(sprite, type);
 
 	for (auto &i : isCollision)
 		i = false;
@@ -81,18 +66,13 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 
 Car::~Car()
 {
-	delete shape;
+	delete sprite;
+	delete shadow;
 	delete door;
 	delete tire;
-	delete mirror;
 	delete weight;
 
 	delete physics; // kappa
-}
-
-std::vector<sf::CircleShape*> Car::getAllHitboxes()
-{
-	return hitboxes;
 }
 
 double Car::getSpeed()
@@ -107,7 +87,7 @@ void Car::setSpeed(const float &speed)
 
 sf::Vector2f Car::getMovementVector(const float &rot)
 {
-	if(rot == 361) return physics->getPhysicsMove()->getMovementVector(shape->getShape()->getRotation() - static_cast<float>(*getOverSteerValue()));
+	if(rot == 361) return physics->getPhysicsMove()->getMovementVector(sprite->getRotation() - static_cast<float>(*getOverSteerValue()));
 	return physics->getPhysicsMove()->getMovementVector(rot);
 }
 
@@ -166,6 +146,11 @@ Car::collisionSide *Car::getLastCollisionSide()
 	return physics->getCollisionHitboxes()->getLastCollisionSide();
 }
 
+const std::vector<sf::CircleShape*> Car::getAllHitboxes()
+{
+	return physics->getCollisionHitboxes()->getAllHitboxes();
+}
+
 void Car::toControl()
 {
 	updatePosition();
@@ -180,43 +165,17 @@ void Car::toControl()
 
 	handBrake(sf::Keyboard::Space);
 
-	// ----- Doors control
-
-	openDoors(Door::Side::front_left,sf::Keyboard::U);
-
-	closeDoors(Door::Side::front_left, sf::Keyboard::I);
-
-	openDoors(Door::Side::front_right, sf::Keyboard::P);
-
-	closeDoors(Door::Side::front_right, sf::Keyboard::O);
-
-	openDoors(Door::Side::front_left, sf::Keyboard::U);
-
-	closeDoors(Door::Side::front_left, sf::Keyboard::I);
-
-	openDoors(Door::Side::front_right, sf::Keyboard::P);
-
-	closeDoors(Door::Side::front_right, sf::Keyboard::O);
-
-	openDoors(Door::Side::back_left, sf::Keyboard::H);
-
-	closeDoors(Door::Side::back_left, sf::Keyboard::J);
-
-	openDoors(Door::Side::back_right, sf::Keyboard::L);
-
-	closeDoors(Door::Side::back_right, sf::Keyboard::K);
-
-	// -----
+	door->toControl();
 }
 
 float Car::getRotation()
 {
-	return static_cast<float>(shape->getShape()->getRotation() - *getOverSteerValue());
+	return static_cast<float>(sprite->getRotation() - *getOverSteerValue());
 }
 
 sf::Vector2f Car::getPosition()
 {
-	return sf::Vector2f(shape->getShape()->getPosition());
+	return sf::Vector2f(sprite->getPosition());
 }
 
 void Car::setPhycics(Car *car)
@@ -226,105 +185,48 @@ void Car::setPhycics(Car *car)
 
 void Car::move(const sf::Vector2f & offset)
 {
-	shape->getShape()->move(offset);
+	sprite->move(offset);
+	shadow->move(offset);
 	door->move(offset);
 	tire->move(offset);
-	mirror->move(offset);
 	physics->move(offset);
-
-	for (const auto &i : hitboxes)
-		i->move(offset);
 }
 
 void Car::rotate(const double & angle)
 {
-	shape->getShape()->rotate(static_cast<float>(angle));
-	shadow->getShape()->rotate(static_cast<float>(angle));
+	sprite->rotate(static_cast<float>(angle));
+	shadow->rotate(static_cast<float>(angle));
 	door->rotate(static_cast<float>(angle));
-	tire->rotate(angle, shape->getShape());
-	mirror->rotate(angle);
-
-	for (const auto &i : hitboxes)
-		i->rotate(static_cast<float>(angle));
+	tire->rotate(angle);
 }
 
 void Car::updatePosition()
 {
-	mirror->checkCollision();
 	physics->updatePosition();
 
-	shadow->setPosition(sf::Vector2f(shape->getShape()->getPosition().x + 10, 
-		shape->getShape()->getPosition().y));
-}
-
-void Car::openDoors(const Door::Side &side, const sf::Keyboard::Key &key)
-{
-	if (sf::Keyboard::isKeyPressed(key))
-	{
-		float *angle = nullptr;
-		switch (side)
-		{
-		case Door::Side::front_left:
-		case Door::Side::back_left:
-			angle = new float(0.015f);
-			break;
-
-		case Door::Side::front_right:
-		case Door::Side::back_right:
-			angle = new float(-0.015f);
-			break;
-		}
-		door->openDoor(door->getDoor(static_cast<int>(side)), angle, static_cast<int>(side));
-	}
-}
-
-void Car::closeDoors(const Door::Side & side, const sf::Keyboard::Key &key)
-{
-	if (sf::Keyboard::isKeyPressed(key))
-	{
-		float *angle = nullptr;
-		switch (side)
-		{
-		case Door::Side::front_left:
-		case Door::Side::back_left:
-			angle = new float(-0.015f);
-			break;
-
-		case Door::Side::front_right:
-		case Door::Side::back_right:
-			angle = new float(0.015f);
-			break;
-		}
-		door->closeDoor(door->getDoor(static_cast<int>(side)), angle, static_cast<int>(side));
-	}
+	shadow->setPosition(sf::Vector2f(sprite->getPosition().x + 10, 
+		sprite->getPosition().y));
 }
 
 void Car::draw()
 {
 	// float rect shape outside view
-	if (!Map::isOutsideView(sf::Vector2f(shape->getShape()->getGlobalBounds().left, shape->getShape()->getGlobalBounds().top)) ||
-		!Map::isOutsideView(sf::Vector2f(shape->getShape()->getGlobalBounds().left + shape->getShape()->getGlobalBounds().width, shape->getShape()->getGlobalBounds().top)) ||
-		!Map::isOutsideView(sf::Vector2f(shape->getShape()->getGlobalBounds().left + shape->getShape()->getGlobalBounds().width, shape->getShape()->getGlobalBounds().top + shape->getShape()->getGlobalBounds().height)) ||
-		!Map::isOutsideView(sf::Vector2f(shape->getShape()->getGlobalBounds().left, shape->getShape()->getGlobalBounds().top + shape->getShape()->getGlobalBounds().height)))
+	if (!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top)) ||
+		!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top)) ||
+		!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)) ||
+		!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)))
 	{
-		renderSprites::Instance().addToRender(shadow->getShape());
-
-		mirror->drawUnder();
+		renderSprites::Instance().addToRender(shadow);
 
 		tire->draw();
 
 		door->drawCenter();
 
-		renderSprites::Instance().addToRender(shape->getShape());
+		renderSprites::Instance().addToRender(sprite);
 
 		door->drawDoors();
 
-		mirror->drawOn();
-
 		physics->draw();
-
-		//for (auto &i : hitboxes)
-			//renderSprites::Instance().addToRender(i);
 	}
 }
 

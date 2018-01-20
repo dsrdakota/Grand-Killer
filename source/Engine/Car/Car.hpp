@@ -3,11 +3,9 @@
 #include <SFML/Graphics.hpp>
 
 #include "../../Game.hpp"
-#include "../../Framework/Shapes.hpp"
 
 #include "Door.hpp"
 #include "Tire.hpp"
-#include "Mirror.hpp"
 #include "carType.hpp"
 #include "../GamePhysics/Map/Map.hpp"
 
@@ -23,12 +21,11 @@ public:
 	~Car();
 
 	inline carType::Type *getType() { return type; }
-	inline Shape *getShape() { return shape; }
-	inline Shape *getShadow() { return shadow; }
+	inline sf::Sprite *getSprite() { return sprite; }
+	inline sf::Sprite *getShadow() { return shadow; }
 	inline Door* getDoors() { return door; }
 	inline Tire* getTires() { return tire; }
 
-	std::vector<sf::CircleShape*> getAllHitboxes();
 	void setSpeed(const float &speed);
 	double getSpeed();
 	sf::Vector2f getMovementVector(const float &rot = 361);
@@ -70,6 +67,7 @@ public:
 	bool &getBoolIsCollision(const collisionSide &side);
 	const std::vector<sf::CircleShape*> getCollisionHitbox(const hitboxPosition &pos);
 	collisionSide *getLastCollisionSide();
+	const std::vector<sf::CircleShape*> getAllHitboxes();
 
 	void toControl() override;
 	float getRotation() override;
@@ -80,8 +78,6 @@ public:
 	void move(const sf::Vector2f &offset);
 	void rotate(const double &angle);
 	void updatePosition();
-	void openDoors(const Door::Side &side, const sf::Keyboard::Key &key);
-	void closeDoors(const Door::Side &side, const sf::Keyboard::Key &key);
 
 private:
 	sf::RenderWindow *window;
@@ -89,18 +85,14 @@ private:
 	carType::Type *type;
 	unsigned *weight;
 
-	Shape *shape;
-	Shape *shadow;
+	sf::Sprite *sprite;
+	sf::Sprite *shadow;
 
 	Door *door;
 
 	Tire *tire;
-	
-	Mirror *mirror;
 
 	carPhysics *physics;
-
-	std::vector<sf::CircleShape*>hitboxes; // hitboxes around of car
 
 	bool isCollision[9];
 

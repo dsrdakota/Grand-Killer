@@ -28,8 +28,6 @@ public:
 	void draw();
 
 private:
-
-	sf::ConvexShape *car;
 	
 	toTurn *turnPhysics;
 	Movement *movePhysics;

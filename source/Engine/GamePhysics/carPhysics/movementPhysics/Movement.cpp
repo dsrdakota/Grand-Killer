@@ -182,7 +182,7 @@ void Movement::setStateMoving()
 void Movement::move()
 {
 	sf::Vector2f v;
-	sf::Vector2f w = getMovementVector(car->getShape()->getShape()->getRotation() - static_cast<float>(*car->getOverSteerValue()));
+	sf::Vector2f w = getMovementVector(car->getSprite()->getRotation() - static_cast<float>(*car->getOverSteerValue()));
 
 	double SPEED = 0;
 	switch (*movingState)

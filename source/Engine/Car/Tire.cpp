@@ -14,6 +14,9 @@ Tire::Tire(Car *car,const carType::Type &type)
 
 	std::string pathToTexture = "data/Models/Cars/";
 	std::string nameTexture;
+
+	const sf::Sprite* sprite = car->getSprite();
+
 	switch (type)
 	{
 	case carType::Type::Ambulance:
@@ -55,7 +58,7 @@ Tire::~Tire()
 	delete[]tiresPos;
 }
 
-void Tire::setPosition(const sf::ConvexShape * car, const carType::Type & type)
+void Tire::setPosition(const sf::Sprite* car, const carType::Type & type)
 {
 	switch (type)
 	{
@@ -76,7 +79,7 @@ void Tire::setPosition(const sf::ConvexShape * car, const carType::Type & type)
 	case carType::Type::Taxi:
 
 		tiresPos[0].setOrigin(car->getOrigin().x, car->getOrigin().y - 30);
-		tiresPos[1].setOrigin(car->getOrigin().x - 71.f, car->getOrigin().y - 30);
+		tiresPos[1].setOrigin(car->getOrigin().x - 74.f, car->getOrigin().y - 30);
 
 		tiresPos[2].setOrigin(tiresPos[0].getOrigin().x, car->getOrigin().y - 140);
 		tiresPos[3].setOrigin(tiresPos[1].getOrigin().x, car->getOrigin().y - 140);
@@ -105,7 +108,7 @@ void Tire::move(const sf::Vector2f & offset)
 	}
 }
 
-void Tire::rotate(const double & angle, const sf::ConvexShape *car)
+void Tire::rotate(const double & angle)
 {
 	for (int i = 0;i < 4;++i)
 	{
