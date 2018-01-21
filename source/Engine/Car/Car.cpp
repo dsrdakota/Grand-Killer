@@ -4,8 +4,6 @@
 #include "../GamePhysics/carPhysics/carPhysics.hpp"
 #include "../GamePhysics/carPhysics/collisionPhysics/carCollisionHitbox.hpp"
 
-#include <iostream>
-
 Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game::Instance().getWindow())
 {
 	this->type = new carType::Type(type);
@@ -50,9 +48,6 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	sprite->setPosition(startPos);
 	sprite->setOrigin(origin);
 
-	shadow = new sf::Sprite(*textureManager::load(nameTexture + "Shadow", pathToShadow));
-	shadow->setOrigin(origin);
-
 	tire = new Tire(this, type);
 	door = new Door(sprite, type);
 
@@ -67,7 +62,6 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 Car::~Car()
 {
 	delete sprite;
-	delete shadow;
 	delete door;
 	delete tire;
 	delete weight;
@@ -186,16 +180,13 @@ void Car::setPhycics(Car *car)
 void Car::move(const sf::Vector2f & offset)
 {
 	sprite->move(offset);
-	shadow->move(offset);
 	door->move(offset);
 	tire->move(offset);
-	physics->move(offset);
 }
 
 void Car::rotate(const double & angle)
 {
 	sprite->rotate(static_cast<float>(angle));
-	shadow->rotate(static_cast<float>(angle));
 	door->rotate(static_cast<float>(angle));
 	tire->rotate(angle);
 }
@@ -203,21 +194,16 @@ void Car::rotate(const double & angle)
 void Car::updatePosition()
 {
 	physics->updatePosition();
-
-	shadow->setPosition(sf::Vector2f(sprite->getPosition().x + 10, 
-		sprite->getPosition().y));
 }
 
 void Car::draw()
 {
-	// float rect shape outside view
+	// float rect sprite outside view
 	if (!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top)) ||
 		!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top)) ||
 		!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)) ||
 		!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)))
 	{
-		renderSprites::Instance().addToRender(shadow);
-
 		tire->draw();
 
 		door->drawCenter();
@@ -226,7 +212,7 @@ void Car::draw()
 
 		door->drawDoors();
 
-		physics->draw();
+		//physics->draw();
 	}
 }
 

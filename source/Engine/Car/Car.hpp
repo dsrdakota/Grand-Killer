@@ -22,7 +22,6 @@ public:
 
 	inline carType::Type *getType() { return type; }
 	inline sf::Sprite *getSprite() { return sprite; }
-	inline sf::Sprite *getShadow() { return shadow; }
 	inline Door* getDoors() { return door; }
 	inline Tire* getTires() { return tire; }
 
@@ -86,7 +85,6 @@ private:
 	unsigned *weight;
 
 	sf::Sprite *sprite;
-	sf::Sprite *shadow;
 
 	Door *door;
 

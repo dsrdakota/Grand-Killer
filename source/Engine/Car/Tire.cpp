@@ -79,7 +79,7 @@ void Tire::setPosition(const sf::Sprite* car, const carType::Type & type)
 	case carType::Type::Taxi:
 
 		tiresPos[0].setOrigin(car->getOrigin().x, car->getOrigin().y - 30);
-		tiresPos[1].setOrigin(car->getOrigin().x - 74.f, car->getOrigin().y - 30);
+		tiresPos[1].setOrigin(car->getOrigin().x - 75.f, car->getOrigin().y - 30);
 
 		tiresPos[2].setOrigin(tiresPos[0].getOrigin().x, car->getOrigin().y - 140);
 		tiresPos[3].setOrigin(tiresPos[1].getOrigin().x, car->getOrigin().y - 140);

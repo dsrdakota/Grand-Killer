@@ -42,10 +42,17 @@ private:
 	Map();
 
 	sf::RenderWindow *window;
-	sf::Sprite *map;
 
 	sf::Image *grassHitbox;
 	sf::Image *collisionHitbox;
+
+	std::vector<std::string>FilePath;
+	std::vector<std::vector<int>>Tiles;
+	std::vector<sf::Sprite*>TileSprite;
+
+	const short int *TileSize;
+	const short int *MapWidth;
+	const short int *MapHeight;
 
 	sf::View *view;
 
