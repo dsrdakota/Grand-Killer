@@ -33,8 +33,6 @@ public:
 	static bool isPointInCollisionArea(const sf::Vector2f & pos);
 	static sf::Vector2f getUpLeftCornerPosOfCurrentView();
 
-	sf::Image* getGrassHitbox() { return grassHitbox; }
-	sf::Image* getCollisionHitbox() { return collisionHitbox; }
 	TrafficSigns* getAllTrafficSigns() { return trafficSigns; }
 	TrafficLights* getAllTrafficLights() { return trafficLights; }
 
@@ -42,9 +40,6 @@ private:
 	Map();
 
 	sf::RenderWindow *window;
-
-	sf::Image *grassHitbox;
-	sf::Image *collisionHitbox;
 
 	std::vector<std::string>FilePath;
 	std::vector<std::vector<int>>Tiles;

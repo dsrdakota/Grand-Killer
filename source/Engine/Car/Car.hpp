@@ -85,6 +85,7 @@ private:
 	unsigned *weight;
 
 	sf::Sprite *sprite;
+	sf::Sprite *shadow;
 
 	Door *door;
 

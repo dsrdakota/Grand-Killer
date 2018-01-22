@@ -36,7 +36,7 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 		origin = sf::Vector2f(41,99);
 
 		pathToTexture += "Taxi/taxi.png";
-		pathToShadow += "Taxi/taxiShadow.png";
+		pathToShadow += "Taxi/taxi_shadow.png";
 		nameTexture = "Taxi";
 
 		break;
@@ -47,6 +47,10 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	sprite = new sf::Sprite(*textureManager::load(nameTexture, pathToTexture));
 	sprite->setPosition(startPos);
 	sprite->setOrigin(origin);
+
+	shadow = new sf::Sprite(*textureManager::load(nameTexture + "Shadow", pathToShadow));
+	shadow->setPosition(startPos.x + 10, startPos.y);
+	shadow->setOrigin(origin.x + 50, origin.y + 20);
 
 	tire = new Tire(this, type);
 	door = new Door(sprite, type);
@@ -180,6 +184,7 @@ void Car::setPhycics(Car *car)
 void Car::move(const sf::Vector2f & offset)
 {
 	sprite->move(offset);
+	shadow->move(offset);
 	door->move(offset);
 	tire->move(offset);
 }
@@ -187,6 +192,7 @@ void Car::move(const sf::Vector2f & offset)
 void Car::rotate(const double & angle)
 {
 	sprite->rotate(static_cast<float>(angle));
+	shadow->rotate(static_cast<float>(angle));
 	door->rotate(static_cast<float>(angle));
 	tire->rotate(angle);
 }
@@ -204,6 +210,8 @@ void Car::draw()
 		!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)) ||
 		!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)))
 	{
+		renderSprites::Instance().addToRender(shadow);
+
 		tire->draw();
 
 		door->drawCenter();

@@ -8,7 +8,6 @@
 
 Map::Map() : window(Game::Instance().getWindow())
 {
-	//map = new sf::Sprite(*textureManager::load("background", "data/Map/map.png"));
 	view = new sf::View(sf::Vector2f(100,100), sf::Vector2f(window->getSize()));
 
 	TileSize = new const short int(80);
@@ -122,11 +121,6 @@ Map::Map() : window(Game::Instance().getWindow())
 		}
 	}
 
-	grassHitbox = new sf::Image;
-	grassHitbox->loadFromFile("data/Map/Hitboxes/grassHitbox.png");
-	collisionHitbox = new sf::Image;
-	collisionHitbox->loadFromFile("data/Map/Hitboxes/collisionHitbox.png");
-
 	otherElements = new Other;
 	trafficSigns = new TrafficSigns;
 	trafficLights = new TrafficLights;
@@ -135,14 +129,11 @@ Map::Map() : window(Game::Instance().getWindow())
 Map::~Map()
 {
 	window->setView(window->getDefaultView());
-	//delete map;
 
 	delete TileSize;
 	delete MapHeight;
 	delete MapWidth;
 
-	delete grassHitbox;
-	delete collisionHitbox;
 	delete otherElements;
 	delete trafficSigns;
 	delete trafficLights;
@@ -179,11 +170,14 @@ void Map::updateView(const sf::Vector2f &newerView)
 
 void Map::drawUnder()
 {
-	//renderSprites::Instance().addToRender(map);
-
-
 	for (const auto &i : TileSprite)
-		renderSprites::Instance().addToRender(i);
+	{
+		if(!isOutsideView(sf::Vector2f(i->getGlobalBounds().left, i->getGlobalBounds().top)) ||
+			!isOutsideView(sf::Vector2f(i->getGlobalBounds().left + i->getGlobalBounds().width, i->getGlobalBounds().top)) ||
+			!isOutsideView(sf::Vector2f(i->getGlobalBounds().left + i->getGlobalBounds().width, i->getGlobalBounds().top + i->getGlobalBounds().height)) ||
+			!isOutsideView(sf::Vector2f(i->getGlobalBounds().left, i->getGlobalBounds().top + i->getGlobalBounds().height)))
+			renderSprites::Instance().addToRender(i);
+	}
 
 	//trafficSigns->drawUnder();
 
@@ -219,8 +213,7 @@ bool Map::isPointOnGrass(const sf::Vector2f & pos)
 	if (pos.x < 0 ||pos.y < 0)
 		return false;
 
-	if (Map::Instance().grassHitbox->getPixel(static_cast<unsigned>(pos.x),static_cast<unsigned>(pos.y)) == sf::Color(133, 91, 0))
-		return true;
+	
 
 	return false;
 }
@@ -230,8 +223,7 @@ bool Map::isPointInCollisionArea(const sf::Vector2f & pos)
 	if (pos.x < 0 || pos.y < 0)
 		return false;
 
-	if (Map::Instance().collisionHitbox->getPixel(static_cast<unsigned>(pos.x), static_cast<unsigned>(pos.y)) == sf::Color(255, 0, 0))
-		return true;
+	
 	return false;
 }
 

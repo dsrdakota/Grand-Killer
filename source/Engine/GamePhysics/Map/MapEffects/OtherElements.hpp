@@ -13,6 +13,5 @@ public:
 
 private:
 
-	sf::Sprite *leaves;
-	sf::Sprite *roofs;
+	
 };

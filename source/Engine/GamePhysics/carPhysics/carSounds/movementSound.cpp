@@ -60,7 +60,7 @@ void movementSound::play()
 			if (accelerationSound->getStatus() == sf::Sound::Stopped ||
 				accelerationSound->getStatus() == sf::Sound::Paused)
 				accelerationSound->play();
-			accelerationSound->setPlayingOffset(sf::seconds(car->getSpeed() * 9.f / 18.f));
+			accelerationSound->setPlayingOffset(sf::seconds(car->getSpeed() * 9.f / car->getMaxSpeed()));
 
 			isSetW = true;
 		}
@@ -95,7 +95,7 @@ void movementSound::play()
 	if (time.time->asSeconds() >= 0.5)
 	{
 		if (accelerationSound->getStatus() == sf::Sound::Playing)
-			accelerationSound->setPlayingOffset(sf::seconds(car->getSpeed() * 9.f / 18.f));
+			accelerationSound->setPlayingOffset(sf::seconds(car->getSpeed() * 9.f / car->getMaxSpeed()));
 		else if (brakingSound->getStatus() == sf::Sound::Playing)
 			brakingSound->setPlayingOffset(sf::seconds((18.f - car->getSpeed()) * 9.f / 18.f));
 
