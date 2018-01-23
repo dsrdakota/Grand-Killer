@@ -1,10 +1,7 @@
 #include "Traces.hpp"
 #include "../../../../Manager/Texture.hpp"
 #include "../../../../Manager/renderSprites.hpp"
-#include "../../../GamePhysics/Map/Map.hpp"
 #include "../../../Car/Car.hpp"
-
-// need to optimise it but LATER
 
 Traces::Traces(Car *car, const sf::CircleShape *tiresPos)
 {
@@ -18,46 +15,59 @@ void Traces::setTraces()
 {
 	for (auto i = 0;i < 4;++i)
 	{
-		if (Map::isPointOnGrass(getCenterOfHitbox(tiresPos[i])) && // hitbox is on Grass
-			!isSameTraceOnVector(tracesGrassPos, sf::Vector2f(getCenterOfHitbox(tiresPos[i])))) // trace isnt in vector
+		bool needAdd = false;
+		std::string textureName = "";
 
-			tracesGrassPos.push_back(std::make_pair(std::make_pair(getCenterOfHitbox(tiresPos[i]), tiresPos[i].getRotation()), 5));
+		if (Map::isPointOnGrass(getCenterOfHitbox(tiresPos[i])) && 
+			!isSameTraceOnVector(traces, getCenterOfHitbox(tiresPos[i]))) 
+		{
+			needAdd = true;
+			textureName = "traceGrassTexture";
+		}
+		else if (fabs(*car->getOverSteerValue()) > 20 &&
+			!isSameTraceOnVector(traces, getCenterOfHitbox(tiresPos[i])))
+		{
+			needAdd = true;
+			textureName = "traceAsphaltTexture";
+		}
 
-		else if (fabs(*car->getOverSteerValue()) > 20 && 
-			!isSameTraceOnVector(tracesAsphaltPos, getCenterOfHitbox(tiresPos[i])) &&
-			!isSameTraceOnVector(tracesGrassPos, getCenterOfHitbox(tiresPos[i])))
+		if (needAdd && textureName != "")
+		{
+			sf::Sprite *trace = new sf::Sprite(*textureManager::get(textureName));
+			trace->setOrigin(2.5, 2.5);
+			trace->setPosition(getCenterOfHitbox(tiresPos[i]));
+			trace->setRotation(tiresPos[i].getRotation());
 
-			tracesAsphaltPos.push_back(std::make_pair(std::make_pair(getCenterOfHitbox(tiresPos[i]), tiresPos[i].getRotation()),5));
+			traces.push_back(std::make_pair(trace, 5));
+		}
 	}
 	updateTimeInTrace();
 }
 
 void Traces::draw()
 {
-	drawOneTypeTraces(tracesGrassPos, "traceGrassTexture");
-	drawOneTypeTraces(tracesAsphaltPos, "traceAsphaltTexture");
-}
-
-void Traces::drawOneTypeTraces(std::vector<std::pair<std::pair<sf::Vector2f, float>, int>> &tracesPos, const std::string &nameTexture)
-{
-	if (tracesPos.size() > 400)
-		tracesPos.erase(tracesPos.begin(), tracesPos.begin() + 10);
-
-	for (size_t i = 0;i<tracesPos.size();i++)
+	if (traces.size() > 600)
 	{
-		if (tracesPos[i].second <= 0 && Map::isOutsideView(tracesPos[i].first.first))
+		for (auto i = 0;i < 10;++i)
+			delete traces[i].first;
+
+		traces.erase(traces.begin(), traces.begin() + 10);
+	}
+
+	for (size_t i = 0;i<traces.size();i++)
+	{
+		if (traces[i].second <= 0 &&
+			Map::isOutsideView(sf::Vector2f(traces[i].first->getGlobalBounds().left + traces[i].first->getGlobalBounds().width,
+				traces[i].first->getGlobalBounds().top + traces[i].first->getGlobalBounds().height)))
 		{
-			tracesPos.erase(tracesPos.begin() + i, tracesPos.begin() + i + 1);
+			delete traces[i].first;
+			traces.erase(traces.begin() + i, traces.begin() + i + 1);
 			--i;
 		}
-		else if (!Map::isOutsideView(tracesPos[i].first.first))
-		{
-			sf::Sprite *trace = new sf::Sprite(*textureManager::get(nameTexture));
-			trace->setOrigin(2.5, 2.5);
-			trace->setPosition(tracesPos[i].first.first);
-			trace->setRotation(tracesPos[i].first.second);
-			renderSprites::Instance().addToRender(trace);
-		}
+		else if (!Map::isOutsideView(sf::Vector2f(traces[i].first->getGlobalBounds().left + traces[i].first->getGlobalBounds().width,
+			traces[i].first->getGlobalBounds().top + traces[i].first->getGlobalBounds().height)))
+
+			renderSprites::Instance().addToRender(traces[i].first);
 	}
 }
 
@@ -65,10 +75,7 @@ void Traces::updateTimeInTrace()
 {
 	if (clock.time->asSeconds() > 1)
 	{
-		for (auto &i : tracesAsphaltPos)
-			i.second--;
-
-		for (auto &i : tracesGrassPos)
+		for (auto &i : traces)
 			i.second--;
 
 		clock.clock->restart();
@@ -76,17 +83,11 @@ void Traces::updateTimeInTrace()
 	}
 }
 
-bool Traces::isSameTraceOnVector(std::vector<std::pair<std::pair<sf::Vector2f, float>, int>>tracesPosVector, const sf::Vector2f &pos)
+bool Traces::isSameTraceOnVector(std::vector<std::pair<sf::Sprite*, int>> &tracesVector, const sf::Vector2f &pos)
 {
-	sf::Sprite *trace = new sf::Sprite(*textureManager::get("traceGrassTexture"));
-	for (const auto &i : tracesPosVector)
-	{
-		trace->setOrigin(2.5, 2.5);
-		trace->setPosition(i.first.first);
-		trace->setRotation(i.first.second);
-		if (trace->getGlobalBounds().contains(pos))
+	for (const auto &i : tracesVector)
+		if (i.first->getGlobalBounds().contains(pos))
 			return true;
-	}
 	return false;
 }
 

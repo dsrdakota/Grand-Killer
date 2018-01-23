@@ -6,7 +6,6 @@
 #include "../../../Manager/renderSprites.hpp"
 #include "movementPhysics/Movement.hpp"
 #include "collisionPhysics/carCollisionHitbox.hpp"
-#include "carSounds/movementSound.hpp"
 
 class carPhysics
 {
@@ -32,7 +31,6 @@ private:
 	toTurn *turnPhysics;
 	Movement *movePhysics;
 	carCollisionHitbox *collisionHitboxes;
-	movementSound *soundMovement;
 
 	const double *SPEED_ROTATE_TIRE;
 	const double *SPEED_ROTATE_CAR;

@@ -169,7 +169,7 @@ void Door::open(const doorSide & side, const float &angle)
 	if (angleOpen[static_cast<int>(side)] < *MAX_ANGLEN_OPEN)
 	{
 		doors[static_cast<int>(side)].rotate(angle);
-		doors[static_cast<int>(side)].setSize(sf::Vector2f(doors[static_cast<int>(side)].getSize().x - 0.07,
+		doors[static_cast<int>(side)].setSize(sf::Vector2f(doors[static_cast<int>(side)].getSize().x - 0.07f,
 			doors[static_cast<int>(side)].getSize().y));
 		angleOpen[static_cast<int>(side)] += fabs(angle);
 	}
@@ -180,7 +180,7 @@ void Door::close(const doorSide & side, const float &angle)
 	if (angleOpen[static_cast<int>(side)] > 0.f)
 	{
 		doors[static_cast<int>(side)].rotate(angle);
-		doors[static_cast<int>(side)].setSize(sf::Vector2f(doors[static_cast<int>(side)].getSize().x + 0.07,
+		doors[static_cast<int>(side)].setSize(sf::Vector2f(doors[static_cast<int>(side)].getSize().x + 0.07f,
 			doors[static_cast<int>(side)].getSize().y));
 		angleOpen[static_cast<int>(side)] -= fabs(angle);
 	}
@@ -212,7 +212,5 @@ void Door::updatePosition()
 	{
 		doors[i].setPosition(doorsHitbox[i].getGlobalBounds().left + doorsHitbox[i].getGlobalBounds().width / 2,
 			doorsHitbox[i].getGlobalBounds().top + doorsHitbox[i].getGlobalBounds().height / 2);
-
-		//doors[i].setRotation(doorsHitbox[i].getRotation());
 	}
 }

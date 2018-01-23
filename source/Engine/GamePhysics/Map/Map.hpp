@@ -2,6 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "../../../Manager/Tiles.hpp"
+
+#include "MapEffects/Tile.hpp"
 #include "MapEffects/OtherElements.hpp"
 #include "MapEffects/TrafficSigns.hpp"
 #include "MapEffects/TrafficLights.hpp"
@@ -41,17 +44,15 @@ private:
 
 	sf::RenderWindow *window;
 
-	std::vector<std::string>FilePath;
-	std::vector<std::vector<int>>Tiles;
-	std::vector<sf::Sprite*>TileSprite;
-
 	const short int *TileSize;
 	const short int *MapWidth;
 	const short int *MapHeight;
 
+	std::vector<std::vector<Tile*>>Tiles;
+
 	sf::View *view;
 
-	Other *otherElements; // leaves & roofs
+	Other *otherElements;
 	TrafficSigns *trafficSigns;
 	TrafficLights *trafficLights;
 };

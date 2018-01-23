@@ -113,8 +113,8 @@ void mGame::switchState()
 		*gameState = state::MainGame;
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && *gameState == state::MainGame)
+	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && *gameState == state::MainGame)
 		*gameState = state::Map;
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && *gameState == state::Map)
-		*gameState = state::MainGame;
+		*gameState = state::MainGame;*/
 }

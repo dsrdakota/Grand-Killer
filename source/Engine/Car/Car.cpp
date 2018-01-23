@@ -39,6 +39,10 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 		pathToShadow += "Taxi/taxi_shadow.png";
 		nameTexture = "Taxi";
 
+		shadow = new sf::Sprite(*textureManager::load(nameTexture + "Shadow", pathToShadow));
+		shadow->setPosition(startPos.x + 20, startPos.y);
+		shadow->setOrigin(origin.x + 40, origin.y + 30);
+
 		break;
 	case carType::Type::Truck:
 		break;
@@ -47,10 +51,6 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	sprite = new sf::Sprite(*textureManager::load(nameTexture, pathToTexture));
 	sprite->setPosition(startPos);
 	sprite->setOrigin(origin);
-
-	shadow = new sf::Sprite(*textureManager::load(nameTexture + "Shadow", pathToShadow));
-	shadow->setPosition(startPos.x + 10, startPos.y);
-	shadow->setOrigin(origin.x + 50, origin.y + 20);
 
 	tire = new Tire(this, type);
 	door = new Door(sprite, type);

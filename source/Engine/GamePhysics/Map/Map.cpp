@@ -8,118 +8,30 @@
 
 Map::Map() : window(Game::Instance().getWindow())
 {
+	tilesManager::Instance();
+
 	view = new sf::View(sf::Vector2f(100,100), sf::Vector2f(window->getSize()));
 
 	TileSize = new const short int(80);
 	MapWidth = new const short int(75);
 	MapHeight = new const short int(75);
 
-	FilePath ={ "data/Map/Tileset/asphalt.png",
-		"data/Map/Tileset/asphalt_grass_corner_in_BL.png",
-		"data/Map/Tileset/asphalt_grass_corner_in_BR.png",
-		"data/Map/Tileset/asphalt_grass_corner_in_TL.png",
-		"data/Map/Tileset/asphalt_grass_corner_in_TR.png",
-		"data/Map/Tileset/asphalt_grass_corner_out_BL.png",
-		"data/Map/Tileset/asphalt_grass_corner_out_BR.png",
-		"data/Map/Tileset/asphalt_grass_corner_out_TL.png",
-		"data/Map/Tileset/asphalt_grass_corner_out_TR.png",
-		"data/Map/Tileset/asphalt_grass_hor_border_BOTT.png",
-		"data/Map/Tileset/asphalt_grass_hor_border_LEFT.png",
-		"data/Map/Tileset/asphalt_grass_hor_border_RIGHT.png",
-		"data/Map/Tileset/asphalt_grass_hor_border_TOP.png",
-		"data/Map/Tileset/asphalt_grass_hor_pedlanes_BL.png",
-		"data/Map/Tileset/asphalt_grass_hor_pedlanes_BR.png",
-		"data/Map/Tileset/asphalt_grass_hor_pedlanes_TL.png",
-		"data/Map/Tileset/asphalt_grass_hor_pedlanes_TR.png",
-		"data/Map/Tileset/asphalt_grass_pvmt_hor_border_BL.png",
-		"data/Map/Tileset/asphalt_grass_pvmt_hor_border_BR.png",
-		"data/Map/Tileset/asphalt_grass_pvmt_hor_border_TL.png",
-		"data/Map/Tileset/asphalt_grass_pvmt_hor_border_TR.png",
-		"data/Map/Tileset/asphalt_grass_pvmt_vert_border_BL.png",
-		"data/Map/Tileset/asphalt_grass_pvmt_vert_border_BR.png",
-		"data/Map/Tileset/asphalt_grass_pvmt_vert_border_TL.png",
-		"data/Map/Tileset/asphalt_grass_pvmt_vert_border_TR.png",
-		"data/Map/Tileset/asphalt_grass_vert_pedlanes_BL.png",
-		"data/Map/Tileset/asphalt_grass_vert_pedlanes_BR.png",
-		"data/Map/Tileset/asphalt_grass_vert_pedlanes_TL.png",
-		"data/Map/Tileset/asphalt_grass_vert_pedlanes_TR.png",
-		"data/Map/Tileset/asphalt_hor_lane_LEFT.png",
-		"data/Map/Tileset/asphalt_hor_lane_RIGHT.png",
-		"data/Map/Tileset/asphalt_hor_pedlanes.png",
-		"data/Map/Tileset/asphalt_hor_pedlanes_LEFT.png",
-		"data/Map/Tileset/asphalt_hor_pedlanes_RIGHT.png",
-		"data/Map/Tileset/asphalt_manhole.png",
-		"data/Map/Tileset/asphalt_pavement_corner_in_BL.png",
-		"data/Map/Tileset/asphalt_pavement_corner_in_BR.png",
-		"data/Map/Tileset/asphalt_pavement_corner_in_TL.png",
-		"data/Map/Tileset/asphalt_pavement_corner_in_TR.png",
-		"data/Map/Tileset/asphalt_pavement_corner_out_BL.png",
-		"data/Map/Tileset/asphalt_pavement_corner_out_BR.png",
-		"data/Map/Tileset/asphalt_pavement_corner_out_TL.png",
-		"data/Map/Tileset/asphalt_pavement_corner_out_TR.png",
-		"data/Map/Tileset/asphalt_pavement_hor_border_BOTT.png",
-		"data/Map/Tileset/asphalt_pavement_hor_border_pedlanes_BOTT.png",
-		"data/Map/Tileset/asphalt_pavement_hor_border_pedlanes_TL.png",
-		"data/Map/Tileset/asphalt_pavement_hor_border_pedlanes_TOP.png",
-		"data/Map/Tileset/asphalt_pavement_hor_border_TOP.png",
-		"data/Map/Tileset/asphalt_pavement_hor_pedlanes_BL.png",
-		"data/Map/Tileset/asphalt_pavement_hor_pedlanes_BR.png",
-		"data/Map/Tileset/asphalt_pavement_hor_pedlanes_TR.png",
-		"data/Map/Tileset/asphalt_pavement_vert_border_LEFT.png",
-		"data/Map/Tileset/asphalt_pavement_vert_border_pedlanes_LEFT.png",
-		"data/Map/Tileset/asphalt_pavement_vert_border_pedlanes_RIGHT.png",
-		"data/Map/Tileset/asphalt_pavement_vert_border_RIGHT.png",
-		"data/Map/Tileset/asphalt_pavement_vert_pedlanes_BL.png",
-		"data/Map/Tileset/asphalt_pavement_vert_pedlanes_BR.png",
-		"data/Map/Tileset/asphalt_pavement_vert_pedlanes_TL.png",
-		"data/Map/Tileset/asphalt_pavement_vert_pedlanes_TR.png",
-		"data/Map/Tileset/asphalt_vert_lane_BOTT.png",
-		"data/Map/Tileset/asphalt_vert_lane_TOP.png",
-		"data/Map/Tileset/asphalt_vert_pedlanes.png",
-		"data/Map/Tileset/asphalt_vert_pedlanes_BOTT.png",
-		"data/Map/Tileset/asphalt_vert_pedlanes_TOP.png",
-		"data/Map/Tileset/grass.png",
-		"data/Map/Tileset/grass_pavement_corner_in_BL.png",
-		"data/Map/Tileset/grass_pavement_corner_in_BR.png",
-		"data/Map/Tileset/grass_pavement_corner_in_TL.png",
-		"data/Map/Tileset/grass_pavement_corner_in_TR.png",
-		"data/Map/Tileset/grass_pavement_corner_out_BL.png",
-		"data/Map/Tileset/grass_pavement_corner_out_BR.png",
-		"data/Map/Tileset/grass_pavement_corner_out_TL.png",
-		"data/Map/Tileset/grass_pavement_corner_out_TR.png",
-		"data/Map/Tileset/grass_pavement_hor_border_BOTT.png",
-		"data/Map/Tileset/grass_pavement_hor_border_TOP.png",
-		"data/Map/Tileset/grass_pavement_vert_border_LEFT.png",
-		"data/Map/Tileset/grass_pavement_vert_border_RIGHT.png",
-		"data/Map/Tileset/pavement.png" };
-
-	std::ifstream file("data/Map/Tileset/Tiles.txt");
+	std::ifstream file("data/Map/Tileset/Tiles.txt"); // binary soon
 
 	for (int i = 0; i<*MapHeight; i++)
 	{
-		std::vector<int>buf;
+		std::vector<Tile*>buf;
 		for (int j = 0; j<*MapWidth; j++)
 		{
 			int a;
 			file >> a;
-			buf.push_back(a);
+			buf.push_back(new Tile(a, sf::Vector2f(static_cast<float>(j * *TileSize),static_cast<float>(i * *TileSize))));
 		}
 		Tiles.push_back(buf);
 	}
 
-	for (int i = 0; i < 78; i++)
-		textureManager::load(std::to_string(i), FilePath[i]);
-
-	for (int i = 0; i<*MapHeight; i++)
-	{
-		for (int j = 0; j<*MapWidth; j++)
-		{
-			sf::Sprite *tile = new sf::Sprite;
-			tile->setTexture(*textureManager::get(std::to_string(Tiles[i][j])));
-			tile->setPosition(j * *TileSize, i * *TileSize);
-			TileSprite.push_back(tile);
-		}
-	}
+	file.clear();
+	file.close();
 
 	otherElements = new Other;
 	trafficSigns = new TrafficSigns;
@@ -133,6 +45,10 @@ Map::~Map()
 	delete TileSize;
 	delete MapHeight;
 	delete MapWidth;
+
+	for (const auto &i : Tiles)
+		for (const auto &j : i)
+			delete j;
 
 	delete otherElements;
 	delete trafficSigns;
@@ -170,14 +86,9 @@ void Map::updateView(const sf::Vector2f &newerView)
 
 void Map::drawUnder()
 {
-	for (const auto &i : TileSprite)
-	{
-		if(!isOutsideView(sf::Vector2f(i->getGlobalBounds().left, i->getGlobalBounds().top)) ||
-			!isOutsideView(sf::Vector2f(i->getGlobalBounds().left + i->getGlobalBounds().width, i->getGlobalBounds().top)) ||
-			!isOutsideView(sf::Vector2f(i->getGlobalBounds().left + i->getGlobalBounds().width, i->getGlobalBounds().top + i->getGlobalBounds().height)) ||
-			!isOutsideView(sf::Vector2f(i->getGlobalBounds().left, i->getGlobalBounds().top + i->getGlobalBounds().height)))
-			renderSprites::Instance().addToRender(i);
-	}
+	for (const auto &i : Tiles)
+		for (const auto &j : i)
+			j->draw();
 
 	//trafficSigns->drawUnder();
 
@@ -210,18 +121,24 @@ bool Map::isOutsideView(const sf::Vector2f & pos)
 
 bool Map::isPointOnGrass(const sf::Vector2f & pos)
 {
-	if (pos.x < 0 ||pos.y < 0)
-		return false;
+	auto allTileWithGrass = tilesManager::Instance().getOnlyGrassTiles();
 
-	
+	for (auto &i : allTileWithGrass)
+	{
+		if (i->getTileSprite()->getGlobalBounds().contains(pos))
+		{
+			// sprawdzenie hitboxa
+
+			return true;
+		}
+	}	
 
 	return false;
 }
 
 bool Map::isPointInCollisionArea(const sf::Vector2f & pos)
 {
-	if (pos.x < 0 || pos.y < 0)
-		return false;
+	
 
 	
 	return false;
