@@ -71,5 +71,5 @@ void carPhysics::updatePosition()
 
 void carPhysics::draw()
 {
-	//collisionHitboxes->draw();
+	collisionHitboxes->draw();
 }

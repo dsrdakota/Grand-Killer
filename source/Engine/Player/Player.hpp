@@ -8,6 +8,12 @@ class Player
 {
 public:
 
+	enum class playerState
+	{
+		Walk,
+		Vehicle
+	};
+
 	Player(const Player &) = delete;
 	void operator=(const Player &) = delete;
 
@@ -20,6 +26,8 @@ public:
 	float getRotation();
 	sf::Vector2f getPosition();
 
+	playerState getState();
+
 	void move();
 	void giveMeYourCar(Car *car); // if you drive a car
 	void changeStates(); // if you walk ( get out of car )
@@ -30,6 +38,8 @@ private:
 
 	playerStates *wsk;
 	playerMechanics player;
+
+	playerState *state;
 
 protected:
 

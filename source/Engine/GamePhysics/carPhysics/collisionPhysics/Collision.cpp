@@ -15,11 +15,13 @@ void Collision::checkAllCarCollision()
 	auto &instance = Instance();
 	auto &allCars = mGame::Instance().getAllCars();
 
-	for (const auto &i : allCars)
+	for (size_t i=0;i<allCars.size();++i)
 	{
-		instance.checkCollisionCarWithWall(i);
+		instance.checkCollisionCarWithWall(allCars[i]);
 
-		//checkCollisionCarWithCar(i);
+		for (size_t j = i+1;j<allCars.size();++j)
+			instance.checkCollisionCarWithCar(allCars[i], allCars[j]);
+
 		//checkCollisionCarWithHuman(i);
 	}
 }
@@ -29,9 +31,9 @@ void Collision::checkCollisionCarWithWall(Car *car)
 	carCollisionWithWall::checkCollisions(car);
 }
 
-void Collision::checkCollisionCarWithCar()
+void Collision::checkCollisionCarWithCar(Car *car1, Car *car2)
 {
-
+	carCollisionWithCar::checkCollisions(car1, car2);
 }
 
 void Collision::checkCollisionCarWithHuman()

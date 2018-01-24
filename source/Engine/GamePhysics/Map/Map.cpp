@@ -13,15 +13,17 @@ Map::Map() : window(Game::Instance().getWindow())
 	view = new sf::View(sf::Vector2f(100,100), sf::Vector2f(window->getSize()));
 
 	TileSize = new const short int(80);
-	MapWidth = new const short int(75);
-	MapHeight = new const short int(75);
+	tilesCountWidth = new const short int(75);
+	tilesCountHeigth = new const short int(75);
+
+	mapSize = new sf::Vector2f(*TileSize * *tilesCountWidth, *TileSize * *tilesCountHeigth);
 
 	std::ifstream file("data/Map/Tileset/Tiles.txt"); // binary soon
 
-	for (int i = 0; i<*MapHeight; i++)
+	for (int i = 0; i<*tilesCountHeigth; i++)
 	{
 		std::vector<Tile*>buf;
-		for (int j = 0; j<*MapWidth; j++)
+		for (int j = 0; j<*tilesCountWidth; j++)
 		{
 			int a;
 			file >> a;
@@ -43,8 +45,8 @@ Map::~Map()
 	window->setView(window->getDefaultView());
 
 	delete TileSize;
-	delete MapHeight;
-	delete MapWidth;
+	delete tilesCountHeigth;
+	delete tilesCountWidth;
 
 	for (const auto &i : Tiles)
 		for (const auto &j : i)
@@ -73,14 +75,14 @@ void Map::updateView(const sf::Vector2f &newerView)
 	if (view->getCenter().x - view->getSize().x / 2 < 0)
 		setView(sf::Vector2f(view->getSize().x / 2, view->getCenter().y));
 
-	else if (view->getCenter().x + view->getSize().x / 2 > 6000)
-		setView(sf::Vector2f(6000 - view->getSize().x / 2, view->getCenter().y));
+	else if (view->getCenter().x + view->getSize().x / 2 > mapSize->x)
+		setView(sf::Vector2f(mapSize->x - view->getSize().x / 2, view->getCenter().y));
 
 	if (view->getCenter().y - view->getSize().y / 2 < 0)
 		setView(sf::Vector2f(view->getCenter().x, view->getSize().y / 2));
 
-	else if (view->getCenter().y + view->getSize().y / 2 > 6000)
-		setView(sf::Vector2f(view->getCenter().x, 6000 - view->getSize().y / 2));
+	else if (view->getCenter().y + view->getSize().y / 2 > mapSize->y)
+		setView(sf::Vector2f(view->getCenter().x, mapSize->y - view->getSize().y / 2));
 	
 }
 
@@ -88,7 +90,14 @@ void Map::drawUnder()
 {
 	for (const auto &i : Tiles)
 		for (const auto &j : i)
-			j->draw();
+		{
+			const auto &sprite = j->getTileSprite();
+			if (!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top)) ||
+				!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top)) ||
+				!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)) ||
+				!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)))
+				j->draw();
+		}
 
 	//trafficSigns->drawUnder();
 
@@ -138,8 +147,13 @@ bool Map::isPointOnGrass(const sf::Vector2f & pos)
 
 bool Map::isPointInCollisionArea(const sf::Vector2f & pos)
 {
-	
+	auto &map = Instance();
+	if (pos.x < 0 || pos.x > map.mapSize->x)
+		return true;
+	if (pos.y < 0 || pos.y > map.mapSize->y)
+		return true;
 
+	// other
 	
 	return false;
 }

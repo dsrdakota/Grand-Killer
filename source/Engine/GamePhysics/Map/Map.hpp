@@ -44,9 +44,10 @@ private:
 
 	sf::RenderWindow *window;
 
+	const sf::Vector2f *mapSize;
 	const short int *TileSize;
-	const short int *MapWidth;
-	const short int *MapHeight;
+	const short int *tilesCountWidth;
+	const short int *tilesCountHeigth;
 
 	std::vector<std::vector<Tile*>>Tiles;
 

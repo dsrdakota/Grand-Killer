@@ -151,14 +151,14 @@ void toTurn::straight(sf::Sprite *tire, sf::Sprite *counterTire, double *actualV
 
 void toTurn::rotateCar(const float & actualValueRotateCar, const Car::collisionSide &sideFirst, const Car::collisionSide &sideSecond, const std::pair<std::vector<sf::CircleShape*>, std::vector<sf::CircleShape*>>&hitboxLeftRight)
 {
-	if (!car->getStateMoving() /*&& !car->getBoolIsCollision(sideFirst) && !checkCollisionWithOneHitbox(hitboxLeftRight.first, -actualValueRotateCar)*/)
+	if (!car->getStateMoving() && !car->getBoolIsCollision(sideFirst) && !checkCollisionWithOneHitbox(hitboxLeftRight.first, -actualValueRotateCar))
 	{
 		if (car->getOverSteerSide() == 2)
 			car->rotate(-actualValueRotateCar * 0.8);
 		else
 			car->rotate(-actualValueRotateCar);
 	}
-	else if (car->getStateMoving() == 1 /*&& !car->getBoolIsCollision(sideSecond) && !checkCollisionWithOneHitbox(hitboxLeftRight.second, actualValueRotateCar)*/)
+	else if (car->getStateMoving() == 1 && !car->getBoolIsCollision(sideSecond) && !checkCollisionWithOneHitbox(hitboxLeftRight.second, actualValueRotateCar))
 		car->rotate(actualValueRotateCar);
 }
 

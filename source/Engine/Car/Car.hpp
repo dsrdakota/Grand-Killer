@@ -72,6 +72,7 @@ public:
 	float getRotation() override;
 	sf::Vector2f getPosition() override;
 	void draw() override; 
+	void drawShadow();
 
 	void setPhycics(Car *car);
 	void move(const sf::Vector2f &offset);

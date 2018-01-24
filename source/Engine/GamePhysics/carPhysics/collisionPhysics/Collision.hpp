@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "carCollisionWithWall.hpp"
+#include "carCollisionWithCar.hpp"
 #include "../../../GameStates/Menu/Play/Game/mGame.hpp"
 
 class Collision
@@ -27,7 +28,7 @@ private:
 	Collision();
 
 	void checkCollisionCarWithWall(Car *car);
-	void checkCollisionCarWithCar();
+	void checkCollisionCarWithCar(Car *car1, Car *car2);
 	void checkCollisionCarWithHuman();
 
 	sf::Vector2f getCenterOfHitbox(const sf::CircleShape *hitbox);

@@ -6,6 +6,8 @@
 
 #include "../../../../GamePhysics/carPhysics/collisionPhysics/Collision.hpp"
 
+#include <iostream>
+
 mGame::mGame()
 {
 	gameState = new state(state::MainGame);
@@ -50,7 +52,7 @@ void mGame::play()
 		{
 		case state::MainGame:
 
-			//Collision::checkAllCarCollision();
+			Collision::checkAllCarCollision();
 			
 			Map::Instance().updateView(player->getPosition());
 
@@ -86,12 +88,16 @@ void mGame::draw()
 {
 	map->drawUnder();
 
-	player->draw();
+	for (const auto &i : cars)
+		i->drawShadow();
 
-	for (unsigned i = 1;i < cars.size();++i)
+	if (player->getState() != Player::playerState::Vehicle)
+		player->draw();
+
+	for (const auto &i : cars)
 	{
-		cars[i]->draw();
-		cars[i]->updatePosition();
+		i->draw();
+		i->updatePosition();
 	}
 
 	map->drawOn();

@@ -151,8 +151,6 @@ const std::vector<sf::CircleShape*> Car::getAllHitboxes()
 
 void Car::toControl()
 {
-	updatePosition();
-
 	// ----- Main control
 
 	turnLeft(sf::Keyboard::A);
@@ -205,13 +203,11 @@ void Car::updatePosition()
 void Car::draw()
 {
 	// float rect sprite outside view
-	if (!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top)) ||
-		!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top)) ||
-		!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)) ||
-		!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)))
+	if (!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left, shadow->getGlobalBounds().top)) ||
+		!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left + shadow->getGlobalBounds().width, shadow->getGlobalBounds().top)) ||
+		!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left + shadow->getGlobalBounds().width, shadow->getGlobalBounds().top + shadow->getGlobalBounds().height)) ||
+		!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left, shadow->getGlobalBounds().top + shadow->getGlobalBounds().height)))
 	{
-		renderSprites::Instance().addToRender(shadow);
-
 		tire->draw();
 
 		door->drawCenter();
@@ -222,6 +218,16 @@ void Car::draw()
 
 		//physics->draw();
 	}
+}
+
+void Car::drawShadow()
+{
+	if (!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left, shadow->getGlobalBounds().top)) ||
+		!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left + shadow->getGlobalBounds().width, shadow->getGlobalBounds().top)) ||
+		!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left + shadow->getGlobalBounds().width, shadow->getGlobalBounds().top + shadow->getGlobalBounds().height)) ||
+		!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left, shadow->getGlobalBounds().top + shadow->getGlobalBounds().height)))
+
+		renderSprites::Instance().addToRender(shadow);
 }
 
 void Car::gas(const sf::Keyboard::Key & key)
