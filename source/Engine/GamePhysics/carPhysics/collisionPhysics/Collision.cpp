@@ -19,6 +19,8 @@ void Collision::checkAllCarCollision()
 	{
 		instance.checkCollisionCarWithWall(allCars[i]);
 
+		// check !!!
+
 		for (size_t j = i+1;j<allCars.size();++j)
 			instance.checkCollisionCarWithCar(allCars[i], allCars[j]);
 

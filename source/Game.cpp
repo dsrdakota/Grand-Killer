@@ -34,8 +34,11 @@ Game::Game() : m_status(status::Initializing)
 			windowMode = sf::Style::Fullscreen;
 
 		window = new sf::RenderWindow(sf::VideoMode(width, height, colors), "Grand Killer", windowMode, settings);
+
 		window->setFramerateLimit(fps);
-		window->setVerticalSyncEnabled(true);
+
+		window->setVerticalSyncEnabled(config->giveMeValue("GENERAL","Vertical Sync", Bool));
+
 		window->setMouseCursorVisible(false);
 
 	}

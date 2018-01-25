@@ -7,7 +7,7 @@
 #include "Door.hpp"
 #include "Tire.hpp"
 #include "carType.hpp"
-#include "../GamePhysics/Map/Map.hpp"
+#include "../Map/Map.hpp"
 
 #include "../Player/playerStates.hpp"
 

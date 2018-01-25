@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../Game.hpp"
-#include "../GamePhysics/Map/Map.hpp"
+#include "../Map/Map.hpp"
 #include "../../Manager/Text.hpp"
 
 class playerStates

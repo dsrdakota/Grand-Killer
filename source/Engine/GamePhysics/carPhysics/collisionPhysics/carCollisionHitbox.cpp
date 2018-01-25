@@ -51,7 +51,7 @@ carCollisionHitbox::carCollisionHitbox(Car *car)
 		file.read((char*)&position.y, sizeof(position.y));
 		file.read((char*)&side, sizeof(side));
 
-		sf::CircleShape *hitbox = new sf::CircleShape(1);
+		sf::CircleShape *hitbox = new sf::CircleShape(2.5);
 		hitbox->setOrigin(car->getSprite()->getOrigin() - position);
 		hitbox->setPosition(car->getSprite()->getPosition());
 

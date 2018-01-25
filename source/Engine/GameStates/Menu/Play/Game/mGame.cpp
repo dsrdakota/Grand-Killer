@@ -18,8 +18,8 @@ mGame::mGame()
 	taxi = new Car(carType::Type::Taxi,sf::Vector2f(4585,4759));
 	cars.push_back(taxi);
 
-	/*cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4759)));
-	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4885, 4759)));
+	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4759)));
+	/*cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4885, 4759)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4959)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4885, 4559)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4085, 4759)));

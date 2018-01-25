@@ -216,7 +216,7 @@ void Car::draw()
 
 		door->drawDoors();
 
-		//physics->draw();
+		physics->draw();
 	}
 }
 

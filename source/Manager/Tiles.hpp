@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../Engine/GamePhysics/Map/MapEffects/Tile.hpp"
+#include "../Engine/Map/MapEffects/Tile.hpp"
 
 class tilesManager
 {
@@ -75,6 +75,10 @@ public:
 		asphalt_vert_pedlanes_BOTT,
 		asphalt_vert_pedlanes_TOP,
 		grass,
+		grass_pavement_corner_in_BL,
+		grass_pavement_corner_in_BR,
+		grass_pavement_corner_in_TL,
+		grass_pavement_corner_in_TR,
 		grass_pavement_corner_out_BL,
 		grass_pavement_corner_out_BR,
 		grass_pavement_corner_out_TL,
@@ -98,6 +102,7 @@ public:
 	}
 
 	std::vector<Tile*> getOnlyGrassTiles();
+	const sf::Image *getTileGrassHitbox(const size_t &index);
 
 	void addTileToGrassVector(Tile* tile);
 
@@ -106,6 +111,7 @@ private:
 	std::vector<std::string>TilesPath;
 
 	std::vector<Tile*> allGrassTile;
+	std::vector<std::pair<sf::Image*, size_t*>>grassTitlesHitbox;
 
 	tilesManager();
 };

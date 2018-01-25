@@ -3,7 +3,7 @@
 #include "carCollisionHitbox.hpp"
 #include "Collision.hpp"
 #include "../../../../Manager/renderSprites.hpp"
-#include "../../Map/Map.hpp"
+#include "../../../Map/Map.hpp"
 
 void carCollisionWithWall::checkCollisions(Car *car)
 {
@@ -59,7 +59,7 @@ void carCollisionWithWall::checkCollisions(Car *car)
 
 		instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::downLeft), collisionSide);
 
-			break;
+		break;
 	case Car::collisionSide::None:
 		*car->getLastCollisionSide() = Car::collisionSide::None;
 		break;
@@ -74,7 +74,7 @@ Car::collisionSide carCollisionWithWall::whereIsCollision()
 	if (checkCollisionWithOneHitbox(car->getCollisionHitbox(Car::hitboxPosition::Back), car->getBoolIsCollision(Car::collisionSide::Back)))
 		return Car::collisionSide::Back;
 
-	if (checkCollisionWithOneHitbox(car->getCollisionHitbox(Car::hitboxPosition::upRight),car->getBoolIsCollision(Car::collisionSide::Right)))
+	if (checkCollisionWithOneHitbox(car->getCollisionHitbox(Car::hitboxPosition::upRight), car->getBoolIsCollision(Car::collisionSide::Right)))
 		return Car::collisionSide::RightUp;
 
 	if (checkCollisionWithOneHitbox(car->getCollisionHitbox(Car::hitboxPosition::upLeft), car->getBoolIsCollision(Car::collisionSide::Left)))
@@ -225,9 +225,9 @@ float carCollisionWithWall::howManyRotate(const std::vector<sf::CircleShape*> &h
 
 sf::Vector2f carCollisionWithWall::moveFromWall(const std::vector<sf::CircleShape*> &hitbox, const Car::collisionSide &side)
 {
-	sf::Vector2f v(sf::Vector2f(0,0));
+	sf::Vector2f v(sf::Vector2f(0, 0));
 	sf::Vector2f w;
-	while (checkCollisionWithOneHitbox(hitbox,car->getBoolIsCollision(side)))
+	while (checkCollisionWithOneHitbox(hitbox, car->getBoolIsCollision(side)))
 	{
 		switch (side)
 		{
@@ -244,7 +244,7 @@ sf::Vector2f carCollisionWithWall::moveFromWall(const std::vector<sf::CircleShap
 		}
 		v.x += w.x;
 		v.y += w.y;
-		
+
 		moveOneHitbox(hitbox, sf::Vector2f(w));
 	}
 	return v;

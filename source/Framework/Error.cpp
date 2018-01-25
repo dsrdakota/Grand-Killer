@@ -54,97 +54,23 @@ void Error::checkAllFiles()
 	delete file;
 
 
+
 	// Intro
+
 
 
 	// Menu
 
 
+
+	// Play
+
+
+
 	// Trailer
 
-	std::string path = "data/Trailer/Sound/";
-	sf::Music *music = new sf::Music;
-
-	if (!music->openFromFile(path + "background.wav"))
-	{
-		*errorCommunicate = "Can't open " + path + " background.wav";
-		error = true;
-		delete music;
-		return;
-	}
-	delete music;
 
 
-	path = "data/Trailer/Part1/Textures/";
-	sf::Texture *texture = new sf::Texture;
-
-	if(checkExist(path + "background.png",texture))
-		return;
-	if(checkExist(path + "phone.png",texture))
-		return;
-	if (checkExist(path + "phoneCall.png", texture))
-		return;
-	if (checkExist(path + "playerSite.png", texture))
-		return;
-	if (checkExist(path + "playerStand.png", texture))
-		return;
-	if (checkExist(path + "playerTakingPhone.png", texture))
-		return;
-	if (checkExist(path + "playerTalking.png", texture))
-		return;
-
-	path = "data/Trailer/Part2/Textures/";
-	if (checkExist(path + "background.png", texture))
-		return;
-	if (checkExist(path + "plane.png", texture))
-		return;
-
-	path = "data/Trailer/Part3/Textures/";
-	if (checkExist(path + "background.png", texture))
-		return;
-	if (checkExist(path + "BackL.png", texture))
-		return;
-	if (checkExist(path + "centerBackL.png", texture))
-		return;
-	if (checkExist(path + "playerSite.png", texture))
-		return;
-	if (checkExist(path + "taxi.png", texture))
-		return;
-	if (checkExist(path + "Walk/head.png", texture))
-		return;
-	for (int i = 0;i <= 20;++i)
-	{
-		if (checkExist(path + "Walk/body/" + std::to_string(i) + ".png", texture))
-			return;
-		if (i < 20)
-			if (checkExist(path + "Walk/feet/" + std::to_string(i) + ".png", texture))
-				return;
-	}
-
-	delete texture;
-
-	path = "data/Trailer/Part1/Sound/";
-	sf::SoundBuffer *sound = new sf::SoundBuffer;
-	if (checkExist(path + "talk.wav", sound))
-		return;
-	if (checkExist(path + "phoneRing.wav", sound))
-		return;
-
-	path = "data/Trailer/Part2/Sound/";
-	if (checkExist(path + "bum.wav", sound))
-		return;
-	if (checkExist(path + "plane.wav", sound))
-		return;
-
-	path = "data/Trailer/Part3/Sound/Car/";
-	if (checkExist(path + "accelerating/1.wav",sound))
-		return;
-	if (checkExist(path + "stop/stop.wav", sound))
-		return;
-	if (checkExist(path + "suppressing/1.wav", sound))
-		return;
-
-	delete sound;
 }
 
 template <class T>

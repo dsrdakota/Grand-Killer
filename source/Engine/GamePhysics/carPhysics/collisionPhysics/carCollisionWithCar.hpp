@@ -20,7 +20,11 @@ public:
 
 private:
 
+	Car * car1;
+	Car * car2;
+
 	carCollisionWithCar() {}
 
-	sf::Vector2f getCenterOfHitbox(const sf::CircleShape &hitbox);
+	std::pair<Car::collisionSide, Car::collisionSide> whereIsCollision();
+	bool checkCollisionBetweenTwoCars(std::pair<const std::vector<sf::CircleShape*>, const std::vector<sf::CircleShape*>>hitbox, std::pair<bool*,bool*> isCollision);
 };

@@ -42,11 +42,10 @@ void Menu::play()
 	smallerEngine *wsk;
 	if(game.getStatus() != Game::status::CleaningUp)
 	{
-	Game::loadingScreen();
 
 	Trailer *trailer = new Trailer;
-	//wsk = trailer;
-	//wsk->play();
+	wsk = trailer;
+	wsk->play();
 
 	wsk = nullptr;
 	delete trailer;

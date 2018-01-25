@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../../smallerEngine.hpp"
-#include "../../../../GamePhysics/Map/Map.hpp"
+#include "../../../../Map/Map.hpp"
 #include "../../../../Car/Car.hpp"
 #include "../../../../Player/Player.hpp"
 #include "MenuInGame/MenuInGame.hpp"
