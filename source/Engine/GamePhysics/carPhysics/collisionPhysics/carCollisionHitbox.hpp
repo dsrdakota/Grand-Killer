@@ -15,6 +15,9 @@ public:
 	Car::collisionSide *getLastCollisionSide();
 	const std::vector<sf::CircleShape*> getAllHitboxes();
 
+	void moveHitboxes(const sf::Vector2f &offset);
+	void rorateHitboxes(const double &angle);
+
 	void update();
 	void draw();
 

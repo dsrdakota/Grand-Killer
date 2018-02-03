@@ -16,7 +16,7 @@ public:
 		return carcollision;
 	}
 
-	static void checkCollisions(Car *car1, Car *car2);
+	static Car::collisionSide checkCollisions(Car *car1, Car *car2);
 
 private:
 
@@ -26,5 +26,5 @@ private:
 	carCollisionWithCar() {}
 
 	std::pair<Car::collisionSide, Car::collisionSide> whereIsCollision();
-	bool checkCollisionBetweenTwoCars(std::pair<const std::vector<sf::CircleShape*>, const std::vector<sf::CircleShape*>>hitbox, std::pair<bool*,bool*> isCollision);
+	bool checkCollisionBetweenTwoCars(std::pair<const std::vector<sf::CircleShape*>, const std::vector<sf::CircleShape*>>hitbox, bool &isCollision1, bool &isCollision2);
 };

@@ -51,7 +51,7 @@ carCollisionHitbox::carCollisionHitbox(Car *car)
 		file.read((char*)&position.y, sizeof(position.y));
 		file.read((char*)&side, sizeof(side));
 
-		sf::CircleShape *hitbox = new sf::CircleShape(2.5);
+		sf::CircleShape *hitbox = new sf::CircleShape(3);
 		hitbox->setOrigin(car->getSprite()->getOrigin() - position);
 		hitbox->setPosition(car->getSprite()->getPosition());
 
@@ -109,6 +109,18 @@ Car::collisionSide *carCollisionHitbox::getLastCollisionSide()
 const std::vector<sf::CircleShape*> carCollisionHitbox::getAllHitboxes()
 {
 	return allHitboxes;
+}
+
+void carCollisionHitbox::moveHitboxes(const sf::Vector2f & offset)
+{
+	for (const auto &i : allHitboxes)
+		i->move(offset);
+}
+
+void carCollisionHitbox::rorateHitboxes(const double & angle)
+{
+	for (const auto &i : allHitboxes)
+		i->rotate(static_cast<float>(angle));
 }
 
 void carCollisionHitbox::update()

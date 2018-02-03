@@ -21,14 +21,15 @@ public:
 		return collision;
 	}
 
-	static void checkAllCarCollision();
+	static void checkAllCarsCollision(); // checking all cars
+	static Car::collisionSide checkAllCarCollision(Car *car); // checking one cars
 
 private:
 
 	Collision();
 
-	void checkCollisionCarWithWall(Car *car);
-	void checkCollisionCarWithCar(Car *car1, Car *car2);
+	Car::collisionSide checkCollisionCarWithWall(Car *car);
+	Car::collisionSide checkCollisionCarWithCar(Car *car1, Car *car2);
 	void checkCollisionCarWithHuman();
 
 	sf::Vector2f getCenterOfHitbox(const sf::CircleShape *hitbox);

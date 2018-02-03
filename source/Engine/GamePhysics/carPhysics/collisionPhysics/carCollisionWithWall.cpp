@@ -5,7 +5,7 @@
 #include "../../../../Manager/renderSprites.hpp"
 #include "../../../Map/Map.hpp"
 
-void carCollisionWithWall::checkCollisions(Car *car)
+Car::collisionSide carCollisionWithWall::checkCollisions(Car *car)
 {
 	auto &instance = Instance();
 	instance.car = car;
@@ -64,6 +64,7 @@ void carCollisionWithWall::checkCollisions(Car *car)
 		*car->getLastCollisionSide() = Car::collisionSide::None;
 		break;
 	}
+	return collisionSide;
 }
 
 Car::collisionSide carCollisionWithWall::whereIsCollision()

@@ -1,5 +1,9 @@
 #include "Movement.hpp"
 
+#include "../collisionPhysics/Collision.hpp"
+
+#include <iostream>
+
 #define PI 3.14159265359f
 
 Movement::Movement(Car *car) : car(car)
@@ -181,7 +185,7 @@ void Movement::setStateMoving()
 
 void Movement::move()
 {
-	sf::Vector2f v;
+	sf::Vector2f v(0,0);
 	sf::Vector2f w = getMovementVector(car->getSprite()->getRotation() - static_cast<float>(*car->getOverSteerValue()));
 
 	double SPEED = 0;
@@ -193,14 +197,23 @@ void Movement::move()
 	case stateMoving::back:
 		SPEED = *speedb;
 		w = -w;
-
 		break;
 	}
+	v.x = w.x * static_cast<float>(SPEED/2);
+	v.y = w.y * static_cast<float>(SPEED/2);
 
-	v.x = w.x * static_cast<float>(SPEED);
-	v.y = w.y * static_cast<float>(SPEED);
+	car->moveHitboxes(v);
 
-	car->move(v);
+	if (Collision::checkAllCarCollision(car) != Car::collisionSide::None)
+		car->move(v);
+
+	else
+	{
+		v.x = w.x * static_cast<float>(SPEED);
+		v.y = w.y * static_cast<float>(SPEED);
+
+		car->move(v);
+	}
 }
 
 void Movement::acceleratingFunction(double *speed, double *counterSpeed, const double MAX_SPEED, bool &stateKey)

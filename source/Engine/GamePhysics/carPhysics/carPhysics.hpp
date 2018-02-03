@@ -23,6 +23,9 @@ public:
 	void handBrake(const sf::Keyboard::Key &key);
 	void turn(const toTurn::Direction &direction);
 
+	void moveHitboxes(const sf::Vector2f &offset);
+	void rorateHitboxes(const double &angle);
+
 	void updatePosition();
 	void draw();
 
