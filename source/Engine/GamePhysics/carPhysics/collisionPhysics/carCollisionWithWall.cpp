@@ -5,65 +5,70 @@
 #include "../../../../Manager/renderSprites.hpp"
 #include "../../../Map/Map.hpp"
 
-Car::collisionSide carCollisionWithWall::checkCollisions(Car *car)
+Car::collisionSide carCollisionWithWall::checkCollisions(Car *car, bool react)
 {
 	auto &instance = Instance();
 	instance.car = car;
 	Car::collisionSide collisionSide = instance.whereIsCollision();
-	switch (collisionSide)
+
+	if (react)
 	{
-	case Car::collisionSide::Front:
+		switch (collisionSide)
+		{
+		case Car::collisionSide::Front:
 
-		if (instance.car->getStateMoving() == 0) // front
-			instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::Front), collisionSide);
+			if (instance.car->getStateMoving() == 0) // front
+				instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::Front), collisionSide);
 
-		break;
-	case Car::collisionSide::Back:
+			break;
+		case Car::collisionSide::Back:
 
-		if (instance.car->getStateMoving() == 1) // back
-			instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::Back), collisionSide);
+			if (instance.car->getStateMoving() == 1) // back
+				instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::Back), collisionSide);
 
-		break;
-	case Car::collisionSide::Left:
+			break;
+		case Car::collisionSide::Left:
 
-		instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::Left), collisionSide);
+			instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::Left), collisionSide);
 
-		break;
-	case Car::collisionSide::Right:
+			break;
+		case Car::collisionSide::Right:
 
-		instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::Right), collisionSide);
+			instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::Right), collisionSide);
 
-		break;
-	case Car::collisionSide::RightUp:
+			break;
+		case Car::collisionSide::RightUp:
 
-		instance.car->getBoolIsCollision(Car::collisionSide::Right) = true;
+			instance.car->getBoolIsCollision(Car::collisionSide::Right) = true;
 
-		if (*car->getLastCollisionSide() != Car::collisionSide::Front)
-			instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::upRight), collisionSide);
+			if (*car->getLastCollisionSide() != Car::collisionSide::Front)
+				instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::upRight), collisionSide);
 
-		break;
-	case Car::collisionSide::RightDown:
+			break;
+		case Car::collisionSide::RightDown:
 
-		instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::downRight), collisionSide);
+			instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::downRight), collisionSide);
 
-		break;
-	case Car::collisionSide::LeftUp:
+			break;
+		case Car::collisionSide::LeftUp:
 
-		instance.car->getBoolIsCollision(Car::collisionSide::Left) = true;
+			instance.car->getBoolIsCollision(Car::collisionSide::Left) = true;
 
-		if (*car->getLastCollisionSide() != Car::collisionSide::Front)
-			instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::upLeft), collisionSide);
+			if (*car->getLastCollisionSide() != Car::collisionSide::Front)
+				instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::upLeft), collisionSide);
 
-		break;
-	case Car::collisionSide::LeftDown:
+			break;
+		case Car::collisionSide::LeftDown:
 
-		instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::downLeft), collisionSide);
+			instance.collisionIs(car->getCollisionHitbox(Car::hitboxPosition::downLeft), collisionSide);
 
-		break;
-	case Car::collisionSide::None:
-		*car->getLastCollisionSide() = Car::collisionSide::None;
-		break;
+			break;
+		case Car::collisionSide::None:
+			*car->getLastCollisionSide() = Car::collisionSide::None;
+			break;
+		}
 	}
+
 	return collisionSide;
 }
 

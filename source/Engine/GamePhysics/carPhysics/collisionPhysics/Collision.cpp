@@ -26,29 +26,23 @@ void Collision::checkAllCarsCollision()
 	}
 }
 
-Car::collisionSide Collision::checkAllCarCollision(Car *car)
+bool Collision::onlyCheckCollisionCarWithWall(Car * car)
 {
-	auto &instance = Instance();
-	auto &allCars = mGame::Instance().getAllCars();
-
-	Car::collisionSide side;
-
-	side = instance.checkCollisionCarWithWall(car);
+	Car::collisionSide side = carCollisionWithWall::checkCollisions(car,false);
 
 	if (side == Car::collisionSide::None)
-	{
-		for (size_t i = 0;i < allCars.size();++i)
-		{
-			side = instance.checkCollisionCarWithCar(car, allCars[i]);
-			if (side != Car::collisionSide::None)
-				return side;
-		}
-
-		//checkCollisionCarWithHuman(i);
-	}
-	return side;
+		return false;
+	return true;
 }
 
+bool Collision::onlyCheckCollisionCarWithCar(Car * car1, Car * car2)
+{
+	Car::collisionSide side = carCollisionWithCar::checkCollisions(car1,car2,false);
+
+	if (side == Car::collisionSide::None)
+		return false;
+	return true;
+}
 
 Car::collisionSide Collision::checkCollisionCarWithWall(Car *car)
 {

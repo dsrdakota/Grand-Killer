@@ -22,6 +22,8 @@ public:
 	int getTypeOfDrive() { return static_cast<int>(drive); };
 	int getStateMoving() { return static_cast<int>(*movingState); }
 
+	void setPowerOfCrash(const sf::Vector2f &power) { powerOfCrash = power; }
+
 	void updatePosition();
 
 	void gas(const sf::Keyboard::Key &key);
@@ -36,6 +38,8 @@ private:
 	double *acceleration; // not const cuz can do car tuning ;d
 	double *breakingForce; // can change in options
 	const double *MAX_SPEED;
+
+	sf::Vector2f powerOfCrash;
 
 	std::pair<sf::CircleShape*, sf::CircleShape*>tiresDrive; 
 

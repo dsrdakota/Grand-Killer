@@ -16,7 +16,7 @@ public:
 		return carcollision;
 	}
 
-	static Car::collisionSide checkCollisions(Car *car);
+	static Car::collisionSide checkCollisions(Car *car, bool react = true);
 
 private:
 

@@ -35,19 +35,21 @@ public:
 	int getTypeOfDrive();
 	int getStateMoving();
 
+	void setPowerOfCrash(const sf::Vector2f &power);
+
 	bool isSlide();
 	void breakSlide();
 
 	enum class collisionSide
 	{
 		Front,
-		Back,
-		Left,
-		Right,
 		RightUp,
+		Right,
 		RightDown,
-		LeftUp,
+		Back,
 		LeftDown,
+		Left,
+		LeftUp,
 		None
 	};
 

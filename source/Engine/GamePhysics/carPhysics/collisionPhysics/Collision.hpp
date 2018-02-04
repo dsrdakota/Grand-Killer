@@ -22,7 +22,9 @@ public:
 	}
 
 	static void checkAllCarsCollision(); // checking all cars
-	static Car::collisionSide checkAllCarCollision(Car *car); // checking one cars
+
+	static bool onlyCheckCollisionCarWithWall(Car *car);
+	static bool onlyCheckCollisionCarWithCar(Car *car1, Car *car2);
 
 private:
 

@@ -199,21 +199,12 @@ void Movement::move()
 		w = -w;
 		break;
 	}
-	v.x = w.x * static_cast<float>(SPEED/2);
-	v.y = w.y * static_cast<float>(SPEED/2);
 
-	car->moveHitboxes(v);
+	v = w * static_cast<float>(SPEED);
 
-	if (Collision::checkAllCarCollision(car) != Car::collisionSide::None)
-		car->move(v);
-
-	else
-	{
-		v.x = w.x * static_cast<float>(SPEED);
-		v.y = w.y * static_cast<float>(SPEED);
-
-		car->move(v);
-	}
+	car->move(v);
+	car->move(powerOfCrash);
+	powerOfCrash.x *= 0.90f;
 }
 
 void Movement::acceleratingFunction(double *speed, double *counterSpeed, const double MAX_SPEED, bool &stateKey)

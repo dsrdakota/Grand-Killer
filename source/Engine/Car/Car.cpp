@@ -119,6 +119,11 @@ int Car::getStateMoving()
 	return physics->getPhysicsMove()->getStateMoving();
 }
 
+void Car::setPowerOfCrash(const sf::Vector2f & power)
+{
+	physics->getPhysicsMove()->setPowerOfCrash(power);
+}
+
 bool Car::isSlide()
 {
 	return physics->getPhysicsTurn()->isSlide();
@@ -218,8 +223,6 @@ void Car::draw()
 		!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left + shadow->getGlobalBounds().width, shadow->getGlobalBounds().top + shadow->getGlobalBounds().height)) ||
 		!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left, shadow->getGlobalBounds().top + shadow->getGlobalBounds().height)))
 	{
-		tire->draw();
-
 		door->drawCenter();
 
 		renderSprites::Instance().addToRender(sprite);
@@ -236,8 +239,10 @@ void Car::drawShadow()
 		!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left + shadow->getGlobalBounds().width, shadow->getGlobalBounds().top)) ||
 		!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left + shadow->getGlobalBounds().width, shadow->getGlobalBounds().top + shadow->getGlobalBounds().height)) ||
 		!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left, shadow->getGlobalBounds().top + shadow->getGlobalBounds().height)))
-
+	{
 		renderSprites::Instance().addToRender(shadow);
+		tire->draw();
+	}
 }
 
 void Car::gas(const sf::Keyboard::Key & key)
