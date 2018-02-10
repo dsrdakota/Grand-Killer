@@ -26,6 +26,11 @@ public:
 	static bool onlyCheckCollisionCarWithWall(Car *car);
 	static bool onlyCheckCollisionCarWithCar(Car *car1, Car *car2);
 
+	static sf::Vector2f getCenterOfHitbox(const sf::CircleShape & hitbox);
+
+	static void rotateOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const float & angle);
+	static void moveOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const sf::Vector2f & offset);
+
 private:
 
 	Collision();
@@ -33,6 +38,4 @@ private:
 	Car::collisionSide checkCollisionCarWithWall(Car *car);
 	Car::collisionSide checkCollisionCarWithCar(Car *car1, Car *car2);
 	void checkCollisionCarWithHuman();
-
-	sf::Vector2f getCenterOfHitbox(const sf::CircleShape *hitbox);
 };

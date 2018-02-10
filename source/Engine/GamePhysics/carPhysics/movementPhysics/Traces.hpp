@@ -10,7 +10,6 @@ public:
 	Traces(Car *car, const sf::CircleShape *tiresPos);
 
 	void setTraces();
-	void draw();
 
 private:
 
@@ -18,12 +17,10 @@ private:
 
 	const sf::CircleShape *tiresPos;
 
-	std::vector<std::pair<sf::Sprite*, int>>traces;
-
 	Time clock;
 
 	void updateTimeInTrace();
-	bool isSameTraceOnVector(std::vector<std::pair<sf::Sprite*, int>> &tracesVector, const sf::Vector2f &pos);
+	bool isSameTraceOnVector(const sf::Vector2f &pos, const float &rot);
 
 	sf::Vector2f getCenterOfHitbox(const sf::CircleShape &hitbox);
 };

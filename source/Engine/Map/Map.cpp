@@ -4,6 +4,7 @@
 #include "../../Manager/renderSprites.hpp"
 #include "../../Game.hpp"
 
+#include <iostream>
 #include <fstream>
 
 Map::Map() : window(Game::Instance().getWindow())
@@ -92,12 +93,36 @@ void Map::drawUnder()
 		for (const auto &j : i)
 		{
 			const auto &sprite = j->getTileSprite();
-			if (!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top)) ||
-				!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top)) ||
-				!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)) ||
-				!Map::isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)))
+			if (!isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top)) ||
+				!isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top)) ||
+				!isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)) ||
+				!isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)))
 				j->draw();
 		}
+
+	if (allCarTraces.size() > 600)
+	{
+		for (auto i = 0;i < 10;++i)
+			delete allCarTraces[i].first;
+
+		allCarTraces.erase(allCarTraces.begin(), allCarTraces.begin() + 10);
+	}
+
+	for (size_t i = 0;i<allCarTraces.size();i++)
+	{
+		if (allCarTraces[i].second <= 0 &&
+			Map::isOutsideView(sf::Vector2f(allCarTraces[i].first->getGlobalBounds().left + allCarTraces[i].first->getGlobalBounds().width,
+				allCarTraces[i].first->getGlobalBounds().top + allCarTraces[i].first->getGlobalBounds().height)))
+		{
+			delete allCarTraces[i].first;
+			allCarTraces.erase(allCarTraces.begin() + i, allCarTraces.begin() + i + 1);
+			--i;
+		}
+		else if (!Map::isOutsideView(sf::Vector2f(allCarTraces[i].first->getGlobalBounds().left + allCarTraces[i].first->getGlobalBounds().width,
+			allCarTraces[i].first->getGlobalBounds().top + allCarTraces[i].first->getGlobalBounds().height)))
+
+			renderSprites::Instance().addToRender(allCarTraces[i].first);
+	}
 
 	//trafficSigns->drawUnder();
 

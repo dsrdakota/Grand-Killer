@@ -28,6 +28,7 @@ public:
 	void move(const sf::Vector2f &offset);
 	void rotate(const double &angle);
 
+	void setTraces();
 	void draw();
 
 private:

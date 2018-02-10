@@ -104,7 +104,7 @@ Car::collisionSide carCollisionWithWall::whereIsCollision()
 bool carCollisionWithWall::checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>&hitbox, bool &isCollision)
 {
 	for (const auto &i : hitbox)
-		if (Map::isPointInCollisionArea(getCenterOfHitbox(*i)))
+		if (Map::isPointInCollisionArea(Collision::getCenterOfHitbox(*i)))
 			return true;
 
 	isCollision = false;
@@ -131,7 +131,7 @@ void carCollisionWithWall::collisionIs(const std::vector<sf::CircleShape*>&hitbo
 
 		car->setSpeed(static_cast<float>(car->getSpeed() / 1.1f));
 		v = moveFromWall(hitbox, side);
-		moveOneHitbox(hitbox, -v);
+		Collision::moveOneHitbox(hitbox, -v);
 		car->move(v);
 		car->getBoolIsCollision(side) = true;
 
@@ -146,7 +146,7 @@ void carCollisionWithWall::collisionIs(const std::vector<sf::CircleShape*>&hitbo
 				car->setSpeed(static_cast<float>(car->getSpeed() / 1.1f));
 				car->breakSlide();
 				angleRotate = howManyRotate(hitbox, side);
-				rotateOneHitbox(hitbox, angleRotate * -1.f);
+				Collision::rotateOneHitbox(hitbox, angleRotate * -1.f);
 				car->rotate(angleRotate);
 
 			}
@@ -154,7 +154,7 @@ void carCollisionWithWall::collisionIs(const std::vector<sf::CircleShape*>&hitbo
 			{
 				car->setSpeed(static_cast<float>(car->getSpeed() / 1.1f));
 				v = moveFromWall(hitbox, side);
-				moveOneHitbox(hitbox, -v);
+				Collision::moveOneHitbox(hitbox, -v);
 				car->move(v);
 			}
 		}
@@ -172,7 +172,7 @@ void carCollisionWithWall::collisionIs(const std::vector<sf::CircleShape*>&hitbo
 			{
 				car->setSpeed(static_cast<float>(car->getSpeed() / 1.1f));
 				angleRotate = howManyRotate(hitbox, side);
-				rotateOneHitbox(hitbox, angleRotate * -1.f);
+				Collision::rotateOneHitbox(hitbox, angleRotate * -1.f);
 				car->rotate(angleRotate);
 
 			}
@@ -181,24 +181,12 @@ void carCollisionWithWall::collisionIs(const std::vector<sf::CircleShape*>&hitbo
 				car->setSpeed(static_cast<float>(car->getSpeed() / 1.1f));
 				car->breakSlide();
 				v = moveFromWall(hitbox, side);
-				moveOneHitbox(hitbox, -v);
+				Collision::moveOneHitbox(hitbox, -v);
 				car->move(v);
 			}
 		}
 		break;
 	}
-}
-
-void carCollisionWithWall::rotateOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const float & angle)
-{
-	for (const auto &i : hitbox)
-		i->rotate(angle);
-}
-
-void carCollisionWithWall::moveOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const sf::Vector2f & offset)
-{
-	for (const auto &i : hitbox)
-		i->move(offset);
 }
 
 float carCollisionWithWall::howManyRotate(const std::vector<sf::CircleShape*> &hitbox, const Car::collisionSide & side)
@@ -214,14 +202,14 @@ float carCollisionWithWall::howManyRotate(const std::vector<sf::CircleShape*> &h
 		case Car::collisionSide::RightDown: // +
 
 			rotate += singleRotateValue;
-			rotateOneHitbox(hitbox, singleRotateValue);
+			Collision::rotateOneHitbox(hitbox, singleRotateValue);
 
 			break;
 		case Car::collisionSide::RightUp:
 		case Car::collisionSide::LeftDown: // -
 
 			rotate -= singleRotateValue;
-			rotateOneHitbox(hitbox, -singleRotateValue);
+			Collision::rotateOneHitbox(hitbox, -singleRotateValue);
 
 			break;
 		}
@@ -251,13 +239,7 @@ sf::Vector2f carCollisionWithWall::moveFromWall(const std::vector<sf::CircleShap
 		v.x += w.x;
 		v.y += w.y;
 
-		moveOneHitbox(hitbox, sf::Vector2f(w));
+		Collision::moveOneHitbox(hitbox, sf::Vector2f(w));
 	}
 	return v;
-}
-
-sf::Vector2f carCollisionWithWall::getCenterOfHitbox(const sf::CircleShape & hitbox)
-{
-	return sf::Vector2f(hitbox.getGlobalBounds().left + hitbox.getGlobalBounds().width / 2,
-		hitbox.getGlobalBounds().top + hitbox.getGlobalBounds().height / 2);
 }

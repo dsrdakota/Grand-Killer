@@ -46,7 +46,6 @@ private:
 	Map *map;
 	Player *player;
 	Car *taxi;
-	Car *taxi2;
 
 	void draw();
 

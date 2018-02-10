@@ -2,6 +2,8 @@
 
 #include "../../Car/Car.hpp"
 
+#include <iostream>
+
 carPhysics::carPhysics(Car *car)
 {
 	switch (*car->getType())

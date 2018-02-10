@@ -120,11 +120,13 @@ void Tire::rotate(const double & angle)
 	}
 }
 
-void Tire::draw()
+void Tire::setTraces()
 {
 	traces->setTraces();
-	traces->draw();
+}
 
+void Tire::draw()
+{
 	for (auto i = 0;i < 4;++i)
 		renderSprites::Instance().addToRender(tires + i);
 }

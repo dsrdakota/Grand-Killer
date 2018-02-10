@@ -44,6 +44,24 @@ bool Collision::onlyCheckCollisionCarWithCar(Car * car1, Car * car2)
 	return true;
 }
 
+sf::Vector2f Collision::getCenterOfHitbox(const sf::CircleShape & hitbox)
+{
+	return sf::Vector2f(hitbox.getGlobalBounds().left + hitbox.getGlobalBounds().width / 2,
+		hitbox.getGlobalBounds().top + hitbox.getGlobalBounds().height / 2);
+}
+
+void Collision::rotateOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const float & angle)
+{
+	for (const auto &i : hitbox)
+		i->rotate(angle);
+}
+
+void Collision::moveOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const sf::Vector2f & offset)
+{
+	for (const auto &i : hitbox)
+		i->move(offset);
+}
+
 Car::collisionSide Collision::checkCollisionCarWithWall(Car *car)
 {
 	return carCollisionWithWall::checkCollisions(car);
@@ -57,10 +75,4 @@ Car::collisionSide Collision::checkCollisionCarWithCar(Car *car1, Car *car2)
 void Collision::checkCollisionCarWithHuman()
 {
 
-}
-
-sf::Vector2f Collision::getCenterOfHitbox(const sf::CircleShape *hitbox)
-{
-	return sf::Vector2f(hitbox->getGlobalBounds().left + hitbox->getGlobalBounds().width / 2,
-		hitbox->getGlobalBounds().top + hitbox->getGlobalBounds().height / 2);
 }

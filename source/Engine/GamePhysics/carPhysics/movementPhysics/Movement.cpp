@@ -31,7 +31,7 @@ Movement::Movement(Car *car) : car(car)
 		break;
 	case carType::Type::Taxi:
 
-		MAX_SPEED = new double(17);
+		MAX_SPEED = new double(25);
 
 		acceleration = new double(0.085);
 		breakingForce = new double(0.4);
@@ -160,9 +160,9 @@ void Movement::brake(const sf::Keyboard::Key & key)
 		else 
 		{
 			if (*speedf)
-				breakingFunction(speedf,0.08);
+				breakingFunction(speedf, 0.18);
 			else if (*speedb)
-				breakingFunction(speedb,0.08);
+				breakingFunction(speedb,0.1);
 		}
 	}
 }
@@ -200,11 +200,44 @@ void Movement::move()
 		break;
 	}
 
-	v = w * static_cast<float>(SPEED);
+	auto &allCars = mGame::Instance().getAllCars();
+	bool breakLoop = false;
+
+	for (float i = 1;i < 4;i += 1.f)
+	{
+		v = w * static_cast<float>(SPEED) / 4.f * i;
+		car->moveHitboxes(v);
+
+		for (const auto &i : allCars)
+		{
+			if (carCollisionWithCar::checkCollisions(car, i, false) != Car::collisionSide::None)
+			{
+				breakLoop = true;
+				break;
+			}
+		}
+		
+		if (breakLoop)
+			break;
+
+		car->moveHitboxes(-v);
+	}
 
 	car->move(v);
-	car->move(powerOfCrash);
-	powerOfCrash.x *= 0.90f;
+
+	car->move(powerOfCrashMove);
+	powerOfCrashMove *= 0.90f;
+
+	if (fabs(powerOfCrashRotate.second) > fabs(powerOfCrashRotate.first))
+	{
+		float powerSingleRotate = 2.f;
+
+		if (powerOfCrashRotate.second < 0)
+			powerSingleRotate = -powerSingleRotate;
+
+		car->rotate(powerSingleRotate);
+		powerOfCrashRotate.first += powerSingleRotate/3.f;
+	}
 }
 
 void Movement::acceleratingFunction(double *speed, double *counterSpeed, const double MAX_SPEED, bool &stateKey)

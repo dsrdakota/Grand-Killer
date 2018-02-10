@@ -27,6 +27,7 @@ public:
 
 	void setSpeed(const float &speed);
 	double getSpeed();
+	unsigned getWeight();
 	sf::Vector2f getMovementVector(const float &rot = 361);
 	const double getMaxSpeed();
 	const double *getOverSteerValue();
@@ -35,7 +36,10 @@ public:
 	int getTypeOfDrive();
 	int getStateMoving();
 
-	void setPowerOfCrash(const sf::Vector2f &power);
+	sf::FloatRect getGlobalBounds();
+
+	void setPowerOfCrashMove(const sf::Vector2f &power);
+	void setPowerOfCrashRotate(const std::pair<float, float>&power);
 
 	bool isSlide();
 	void breakSlide();

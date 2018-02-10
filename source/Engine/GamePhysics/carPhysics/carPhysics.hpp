@@ -7,6 +7,8 @@
 #include "movementPhysics/Movement.hpp"
 #include "collisionPhysics/carCollisionHitbox.hpp"
 
+#include <thread>
+
 class carPhysics
 {
 public:

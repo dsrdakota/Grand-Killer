@@ -22,7 +22,8 @@ public:
 	int getTypeOfDrive() { return static_cast<int>(drive); };
 	int getStateMoving() { return static_cast<int>(*movingState); }
 
-	void setPowerOfCrash(const sf::Vector2f &power) { powerOfCrash = power; }
+	void setPowerOfCrashMove(const sf::Vector2f &power) { powerOfCrashMove = power; }
+	void setPowerOfCrashRotate(const std::pair<float,float>&power) { powerOfCrashRotate = power; }
 
 	void updatePosition();
 
@@ -39,7 +40,8 @@ private:
 	double *breakingForce; // can change in options
 	const double *MAX_SPEED;
 
-	sf::Vector2f powerOfCrash;
+	sf::Vector2f powerOfCrashMove;
+	std::pair<float, float> powerOfCrashRotate;
 
 	std::pair<sf::CircleShape*, sf::CircleShape*>tiresDrive; 
 
@@ -56,9 +58,8 @@ private:
 
 	bool stateKeyGas; // true - pressed , false - realsed
 	bool stateKeyBrake; // -||-
-
-	void setStateMoving();
 	void move();
+	void setStateMoving();
 	void acceleratingFunction(double *speed, double *counterSpeed, const double MAX_SPEED,bool &stateKey); // example speedf & speedb < - counter
 	void breakingFunction(double * speed, double breakValue = 0, double minSpeed = 0);
 	sf::Vector2f giveMeCenterOfHitbox(sf::CircleShape * hitbox);
