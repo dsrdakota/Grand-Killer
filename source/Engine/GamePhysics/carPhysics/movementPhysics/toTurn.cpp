@@ -2,6 +2,9 @@
 
 #include "Slide.hpp"
 
+#include "../../../GameStates/Menu/Play/Game/mGame.hpp"
+#include "../collisionPhysics/carCollisionWithCar.hpp"
+
 #define M_PI 3.14159265359f
 
 toTurn::toTurn(Car *car, std::pair<sf::Sprite*, sf::Sprite*>tiresFront, std::pair<sf::Sprite*, sf::Sprite*>tiresBack, const double *speedRotateTire, const double*speedRotateCar)
@@ -168,6 +171,16 @@ bool toTurn::checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>& hi
 	bool toReturn = false;
 	for (const auto &i : hitbox)
 		if (Map::isPointInCollisionArea(getCenterOfHitbox(*i)))
+		{
+			car->setSpeed(static_cast<float>(car->getSpeed() / 1.03f));
+			toReturn = true;
+			break;
+		}
+
+	const auto &cars = mGame::Instance().getAllCars();
+
+	for (const auto &i : cars)
+		if (carCollisionWithCar::checkCollisions(car, i, false) != Car::collisionSide::None)
 		{
 			car->setSpeed(static_cast<float>(car->getSpeed() / 1.03f));
 			toReturn = true;

@@ -11,7 +11,7 @@ Map::Map() : window(Game::Instance().getWindow())
 {
 	tilesManager::Instance();
 
-	view = new sf::View(sf::Vector2f(100,100), sf::Vector2f(window->getSize()));
+	view = new sf::View(sf::Vector2f(100, 100), sf::Vector2f(window->getSize()));
 
 	TileSize = new const short int(80);
 	tilesCountWidth = new const short int(75);
@@ -28,7 +28,7 @@ Map::Map() : window(Game::Instance().getWindow())
 		{
 			int a;
 			file >> a;
-			buf.push_back(new Tile(a, sf::Vector2f(static_cast<float>(j * *TileSize),static_cast<float>(i * *TileSize))));
+			buf.push_back(new Tile(a, sf::Vector2f(static_cast<float>(j * *TileSize), static_cast<float>(i * *TileSize))));
 		}
 		Tiles.push_back(buf);
 	}
@@ -84,7 +84,7 @@ void Map::updateView(const sf::Vector2f &newerView)
 
 	else if (view->getCenter().y + view->getSize().y / 2 > mapSize->y)
 		setView(sf::Vector2f(view->getCenter().x, mapSize->y - view->getSize().y / 2));
-	
+
 }
 
 void Map::drawUnder()
@@ -100,7 +100,7 @@ void Map::drawUnder()
 				j->draw();
 		}
 
-	if (allCarTraces.size() > 600)
+	if (allCarTraces.size() > 600 * allCarTraces.size())
 	{
 		for (auto i = 0;i < 10;++i)
 			delete allCarTraces[i].first;
@@ -145,7 +145,7 @@ bool Map::isOutsideView(const sf::Vector2f & pos)
 
 	if (pos.x > viewPos.x - viewSize.x / 2 - 10 &&
 		pos.x < viewPos.x + viewSize.x / 2 + 10 &&
-		pos.y > viewPos.y - viewSize.y / 2  - 10 &&
+		pos.y > viewPos.y - viewSize.y / 2 - 10 &&
 		pos.y < viewPos.y + viewSize.y / 2 + 10)
 
 		return false;
@@ -174,7 +174,7 @@ bool Map::isPointOnGrass(const sf::Vector2f & pos)
 				hitbox->getPixel(static_cast<unsigned>(lengthFromTile.x), static_cast<unsigned>(lengthFromTile.y)) == sf::Color::White)
 				return true;
 		}
-	}	
+	}
 	return false;
 }
 
@@ -187,7 +187,7 @@ bool Map::isPointInCollisionArea(const sf::Vector2f & pos)
 		return true;
 
 	// other
-	
+
 	return false;
 }
 

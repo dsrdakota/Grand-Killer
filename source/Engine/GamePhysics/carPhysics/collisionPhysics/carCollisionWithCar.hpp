@@ -33,5 +33,5 @@ private:
 	float howManyRotate(Car *car1, Car *car2, const std::pair<Car::collisionSide, Car::collisionSide>&side);
 	sf::Vector2f moveFromCar(Car *car1, Car *car2, const std::pair<Car::collisionSide, Car::collisionSide>&side);
 
-	bool checkCollisionWithOneHitbox(const std::pair<std::vector<sf::CircleShape*>, std::vector<sf::CircleShape*>>&hitbox, const std::pair<bool*, bool*>&isCollision);
+	void collisionIs(Car *car1, Car *car2, const std::pair<Car::collisionSide, Car::collisionSide>&side);
 };

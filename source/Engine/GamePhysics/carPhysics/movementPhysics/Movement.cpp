@@ -31,7 +31,7 @@ Movement::Movement(Car *car) : car(car)
 		break;
 	case carType::Type::Taxi:
 
-		MAX_SPEED = new double(25);
+		MAX_SPEED = new double(17);
 
 		acceleration = new double(0.085);
 		breakingForce = new double(0.4);
@@ -203,24 +203,34 @@ void Movement::move()
 	auto &allCars = mGame::Instance().getAllCars();
 	bool breakLoop = false;
 
-	for (float i = 1;i < 4;i += 1.f)
+	v = w * static_cast<float>(SPEED);
+	if (SPEED > *MAX_SPEED / 2.f)
 	{
-		v = w * static_cast<float>(SPEED) / 4.f * i;
-		car->moveHitboxes(v);
-
-		for (const auto &i : allCars)
+		for (float i = 1;i <= 4;i += 1.f)
 		{
-			if (carCollisionWithCar::checkCollisions(car, i, false) != Car::collisionSide::None)
-			{
-				breakLoop = true;
-				break;
-			}
-		}
-		
-		if (breakLoop)
-			break;
+			v = w * static_cast<float>(SPEED) / 4.f * i;
+			car->moveHitboxes(v);
 
-		car->moveHitboxes(-v);
+			for (const auto &j : allCars)
+			{
+				if (carCollisionWithCar::checkCollisions(car, j, false) != Car::collisionSide::None)
+				{
+					breakLoop = true;
+
+					if (*movingState == stateMoving::front)
+						*speedf = SPEED / 4.f *i;
+					else
+						*speedb = SPEED / 4.f *i;
+
+					break;
+				}
+			}
+
+			if (breakLoop)
+				break;
+
+			car->moveHitboxes(-v);
+		}
 	}
 
 	car->move(v);
@@ -230,13 +240,13 @@ void Movement::move()
 
 	if (fabs(powerOfCrashRotate.second) > fabs(powerOfCrashRotate.first))
 	{
-		float powerSingleRotate = 2.f;
+		float powerSingleRotate = 3.f; // dont know what happend here
 
 		if (powerOfCrashRotate.second < 0)
 			powerSingleRotate = -powerSingleRotate;
 
 		car->rotate(powerSingleRotate);
-		powerOfCrashRotate.first += powerSingleRotate/3.f;
+		powerOfCrashRotate.first += powerSingleRotate /3.f;
 	}
 }
 

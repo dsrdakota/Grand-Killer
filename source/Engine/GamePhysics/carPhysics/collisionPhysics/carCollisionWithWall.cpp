@@ -141,9 +141,10 @@ void carCollisionWithWall::collisionIs(const std::vector<sf::CircleShape*>&hitbo
 
 		if (*car->getLastCollisionSide() != Car::collisionSide::Front)
 		{
+			car->setSpeed(static_cast<float>(car->getSpeed() / 1.1f));
+
 			if (car->getStateMoving() == 0) // front
 			{
-				car->setSpeed(static_cast<float>(car->getSpeed() / 1.1f));
 				car->breakSlide();
 				angleRotate = howManyRotate(hitbox, side);
 				Collision::rotateOneHitbox(hitbox, angleRotate * -1.f);
@@ -152,7 +153,6 @@ void carCollisionWithWall::collisionIs(const std::vector<sf::CircleShape*>&hitbo
 			}
 			else if (car->getStateMoving() == 1) // back
 			{
-				car->setSpeed(static_cast<float>(car->getSpeed() / 1.1f));
 				v = moveFromWall(hitbox, side);
 				Collision::moveOneHitbox(hitbox, -v);
 				car->move(v);
@@ -168,9 +168,10 @@ void carCollisionWithWall::collisionIs(const std::vector<sf::CircleShape*>&hitbo
 
 		if (*car->getLastCollisionSide() != Car::collisionSide::Back)
 		{
+			car->setSpeed(static_cast<float>(car->getSpeed() / 1.1f));
+
 			if (car->getStateMoving() == 1) // back
 			{
-				car->setSpeed(static_cast<float>(car->getSpeed() / 1.1f));
 				angleRotate = howManyRotate(hitbox, side);
 				Collision::rotateOneHitbox(hitbox, angleRotate * -1.f);
 				car->rotate(angleRotate);
@@ -178,7 +179,6 @@ void carCollisionWithWall::collisionIs(const std::vector<sf::CircleShape*>&hitbo
 			}
 			else if (car->getStateMoving() == 0) // front
 			{
-				car->setSpeed(static_cast<float>(car->getSpeed() / 1.1f));
 				car->breakSlide();
 				v = moveFromWall(hitbox, side);
 				Collision::moveOneHitbox(hitbox, -v);
