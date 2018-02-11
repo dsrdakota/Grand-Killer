@@ -1,3 +1,4 @@
+// Wszelkie prawa zastrzeżone! © 2018 10kw10
 #include "Game.hpp"
 #include "Framework/Error.hpp"
 
