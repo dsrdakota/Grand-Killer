@@ -4,6 +4,4 @@
 
 #### Link to download ( this version may be different from code ) SOON
 
-
-
 ###### Wszelkie prawa zastrzeżone! © 2018 10kw10
