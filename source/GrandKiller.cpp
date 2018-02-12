@@ -1,4 +1,4 @@
-// Wszelkie prawa zastrzeÅ¼one! Â© 2018 10kw10
+// Wszelkie prawa zastrze¿one! © 2018 10kw10 
 #include "Game.hpp"
 #include "Framework/Error.hpp"
 

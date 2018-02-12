@@ -10,7 +10,7 @@ class Collision
 {
 public:
 
-	~Collision();
+	~Collision() { ; }
 
 	Collision(const Collision &) = delete;
 	void operator=(const Collision &) = delete;
@@ -21,10 +21,7 @@ public:
 		return collision;
 	}
 
-	static void checkAllCarsCollision(); // checking all cars
-
-	static bool onlyCheckCollisionCarWithWall(Car *car);
-	static bool onlyCheckCollisionCarWithCar(Car *car1, Car *car2);
+	static void checkAllCarsCollision();
 
 	static sf::Vector2f getCenterOfHitbox(const sf::CircleShape & hitbox);
 
@@ -33,7 +30,7 @@ public:
 
 private:
 
-	Collision();
+	Collision() { ; }
 
 	Car::collisionSide checkCollisionCarWithWall(Car *car);
 	Car::collisionSide checkCollisionCarWithCar(Car *car1, Car *car2);

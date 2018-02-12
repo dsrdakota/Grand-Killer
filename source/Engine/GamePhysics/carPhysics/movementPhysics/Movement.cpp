@@ -236,11 +236,15 @@ void Movement::move()
 	car->move(v);
 
 	car->move(powerOfCrashMove);
-	powerOfCrashMove *= 0.90f;
+	powerOfCrashMove *= 0.95f;
+
+	if (fabs(powerOfCrashMove.x) < 0.021f &&
+		fabs(powerOfCrashMove.y) < 0.021f)
+		powerOfCrashMove = sf::Vector2f(0, 0);
 
 	if (fabs(powerOfCrashRotate.second) > fabs(powerOfCrashRotate.first))
 	{
-		float powerSingleRotate = 3.f; // dont know what happend here
+		float powerSingleRotate = 3.f;
 
 		if (powerOfCrashRotate.second < 0)
 			powerSingleRotate = -powerSingleRotate;

@@ -141,6 +141,16 @@ void Car::setPowerOfCrashRotate(const std::pair<float, float>&power)
 	physics->getPhysicsMove()->setPowerOfCrashRotate(power);
 }
 
+sf::Vector2f Car::getPowerOfCrashMove()
+{
+	return physics->getPhysicsMove()->getPowerOfCrashMove();
+}
+
+float Car::getPowerOfCrashRotate()
+{
+	return physics->getPhysicsMove()->getPowerOfCrashRotate();
+}
+
 bool Car::isSlide()
 {
 	return physics->getPhysicsTurn()->isSlide();

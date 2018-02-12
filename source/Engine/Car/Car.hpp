@@ -41,6 +41,9 @@ public:
 	void setPowerOfCrashMove(const sf::Vector2f &power);
 	void setPowerOfCrashRotate(const std::pair<float, float>&power);
 
+	sf::Vector2f getPowerOfCrashMove();
+	float getPowerOfCrashRotate();
+
 	bool isSlide();
 	void breakSlide();
 

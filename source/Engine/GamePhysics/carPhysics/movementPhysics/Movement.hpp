@@ -25,6 +25,9 @@ public:
 	void setPowerOfCrashMove(const sf::Vector2f &power) { powerOfCrashMove = power; }
 	void setPowerOfCrashRotate(const std::pair<float,float>&power) { powerOfCrashRotate = power; }
 
+	sf::Vector2f getPowerOfCrashMove() { return powerOfCrashMove; }
+	float getPowerOfCrashRotate() { return powerOfCrashRotate.second; }
+
 	void updatePosition();
 
 	void gas(const sf::Keyboard::Key &key);

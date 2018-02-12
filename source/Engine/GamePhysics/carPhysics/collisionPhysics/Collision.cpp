@@ -1,15 +1,5 @@
 #include "Collision.hpp"
 
-Collision::Collision()
-{
-	
-}
-
-Collision::~Collision()
-{
-	
-}
-
 void Collision::checkAllCarsCollision()
 {
 	auto &instance = Instance();
@@ -24,24 +14,6 @@ void Collision::checkAllCarsCollision()
 
 		//checkCollisionCarWithHuman(i);
 	}
-}
-
-bool Collision::onlyCheckCollisionCarWithWall(Car * car)
-{
-	Car::collisionSide side = carCollisionWithWall::checkCollisions(car,false);
-
-	if (side == Car::collisionSide::None)
-		return false;
-	return true;
-}
-
-bool Collision::onlyCheckCollisionCarWithCar(Car * car1, Car * car2)
-{
-	Car::collisionSide side = carCollisionWithCar::checkCollisions(car1,car2,false);
-
-	if (side == Car::collisionSide::None)
-		return false;
-	return true;
 }
 
 sf::Vector2f Collision::getCenterOfHitbox(const sf::CircleShape & hitbox)
