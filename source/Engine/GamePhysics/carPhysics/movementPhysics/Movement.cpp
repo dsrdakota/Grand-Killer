@@ -203,55 +203,105 @@ void Movement::move()
 	auto &allCars = mGame::Instance().getAllCars();
 	bool breakLoop = false;
 
-	v = w * static_cast<float>(SPEED);
-	if (SPEED > *MAX_SPEED / 2.f)
-	{
-		for (float i = 1;i <= 4;i += 1.f)
-		{
-			v = w * static_cast<float>(SPEED) / 4.f * i;
-			car->moveHitboxes(v);
+	bool rotateAble = true;
 
-			for (const auto &j : allCars)
+	Car::collisionSide firstCheckingSide = Car::collisionSide::None;
+	Car::collisionSide secondCheckingSide = Car::collisionSide::None;
+
+	if (powerOfCrashRotate.second > 0) // right rotate
+	{
+		firstCheckingSide = Car::collisionSide::RightUp;
+		secondCheckingSide = Car::collisionSide::LeftDown;
+	}
+	else if (powerOfCrashRotate.second < 0) // left rotate
+	{
+		firstCheckingSide = Car::collisionSide::LeftUp;
+		secondCheckingSide = Car::collisionSide::RightDown;
+	}
+
+	// some car simulation like in Box2d ;d
+
+	const float simulationStep = 0.75f;
+
+	for (float i = 1;i <= 4;i += simulationStep)
+	{
+		v = w * static_cast<float>(SPEED) / 4.f * simulationStep;
+		car->moveHitboxes(v);
+
+		auto resultWithWall = carCollisionWithWall::checkCollisions(car, false);
+
+		if (resultWithWall != Car::collisionSide::None)
+			powerOfCrashMove = std::make_pair(sf::Vector2f(0, 0), 0.f);
+
+		if (powerOfCrashRotate.second != 0)
+		{
+			if (resultWithWall == firstCheckingSide ||
+				resultWithWall == secondCheckingSide)
+				rotateAble = false;
+		}
+
+		for (const auto &j : allCars)
+		{
+			auto resultWithCars = carCollisionWithCar::checkCollisions(car, j);
+			if (resultWithCars != Car::collisionSide::None)
 			{
-				if (carCollisionWithCar::checkCollisions(car, j, false) != Car::collisionSide::None)
-				{
+				if((resultWithCars == Car::collisionSide::Front ||
+					resultWithCars == Car::collisionSide::LeftUp ||
+					resultWithCars == Car::collisionSide::RightUp) && 
+					*movingState == stateMoving::front)
 					breakLoop = true;
 
-					if (*movingState == stateMoving::front)
-						*speedf = SPEED / 4.f *i;
-					else
-						*speedb = SPEED / 4.f *i;
+				else if ((resultWithCars == Car::collisionSide::Back ||
+					resultWithCars == Car::collisionSide::LeftDown ||
+					resultWithCars == Car::collisionSide::RightDown) &&
+					*movingState == stateMoving::back)
+					breakLoop = true;
 
-					break;
+				if (powerOfCrashRotate.second != 0 && rotateAble)
+				{
+					if (resultWithCars == firstCheckingSide ||
+						resultWithCars == secondCheckingSide)
+						rotateAble = false;
 				}
-			}
 
-			if (breakLoop)
+				powerOfCrashMove = std::make_pair(sf::Vector2f(0, 0), 0.f);
+
 				break;
-
-			car->moveHitboxes(-v);
+			}
 		}
+
+		if (rotateAble && fabs(powerOfCrashRotate.second) > fabs(powerOfCrashRotate.first))
+		{
+			float powerSingleRotate = 3.f * simulationStep;
+
+			if (powerOfCrashRotate.second < 0)
+				powerSingleRotate = -powerSingleRotate;
+
+			car->rotate(powerSingleRotate);
+			powerOfCrashRotate.first += powerSingleRotate / 3.f * simulationStep;
+		}
+
+		if (breakLoop)
+			break;
+
+		car->move(v);
+
+		if (powerOfCrashMove.second > 0)
+			car->move(powerOfCrashMove.first / 4.f * simulationStep);
+
+		car->getTires()->setTraces();
 	}
 
-	car->move(v);
+	powerOfCrashMove.second *= 0.4f;
+	powerOfCrashMove.first *= 0.4f;
 
-	car->move(powerOfCrashMove);
-	powerOfCrashMove *= 0.95f;
-
-	if (fabs(powerOfCrashMove.x) < 0.021f &&
-		fabs(powerOfCrashMove.y) < 0.021f)
-		powerOfCrashMove = sf::Vector2f(0, 0);
-
-	if (fabs(powerOfCrashRotate.second) > fabs(powerOfCrashRotate.first))
+	if (fabs(powerOfCrashMove.second) < 0.021f)
 	{
-		float powerSingleRotate = 3.f;
-
-		if (powerOfCrashRotate.second < 0)
-			powerSingleRotate = -powerSingleRotate;
-
-		car->rotate(powerSingleRotate);
-		powerOfCrashRotate.first += powerSingleRotate /3.f;
+		powerOfCrashMove.first = sf::Vector2f(0, 0);
+		powerOfCrashMove.second = 0;
 	}
+
+	carCollisionWithWall::checkCollisions(car);
 }
 
 void Movement::acceleratingFunction(double *speed, double *counterSpeed, const double MAX_SPEED, bool &stateKey)

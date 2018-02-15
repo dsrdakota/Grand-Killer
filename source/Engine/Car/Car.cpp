@@ -2,7 +2,6 @@
 #include "../../Manager/Texture.hpp"
 #include "../../Manager/renderSprites.hpp"
 #include "../GamePhysics/carPhysics/carPhysics.hpp"
-#include "../GamePhysics/carPhysics/collisionPhysics/carCollisionHitbox.hpp"
 
 Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game::Instance().getWindow())
 {
@@ -131,7 +130,7 @@ sf::FloatRect Car::getGlobalBounds()
 		sf::Vector2f(boundingBox.width + 10.f, boundingBox.height + 10.f));
 }
 
-void Car::setPowerOfCrashMove(const sf::Vector2f & power)
+void Car::setPowerOfCrashMove(const std::pair<sf::Vector2f, float> &power)
 {
 	physics->getPhysicsMove()->setPowerOfCrashMove(power);
 }
@@ -139,16 +138,6 @@ void Car::setPowerOfCrashMove(const sf::Vector2f & power)
 void Car::setPowerOfCrashRotate(const std::pair<float, float>&power)
 {
 	physics->getPhysicsMove()->setPowerOfCrashRotate(power);
-}
-
-sf::Vector2f Car::getPowerOfCrashMove()
-{
-	return physics->getPhysicsMove()->getPowerOfCrashMove();
-}
-
-float Car::getPowerOfCrashRotate()
-{
-	return physics->getPhysicsMove()->getPowerOfCrashRotate();
 }
 
 bool Car::isSlide()
@@ -262,8 +251,6 @@ void Car::draw()
 
 void Car::drawShadow()
 {
-	tire->setTraces();
-
 	if (!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left, shadow->getGlobalBounds().top)) ||
 		!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left + shadow->getGlobalBounds().width, shadow->getGlobalBounds().top)) ||
 		!Map::isOutsideView(sf::Vector2f(shadow->getGlobalBounds().left + shadow->getGlobalBounds().width, shadow->getGlobalBounds().top + shadow->getGlobalBounds().height)) ||

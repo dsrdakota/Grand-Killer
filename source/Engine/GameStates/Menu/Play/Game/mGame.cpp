@@ -51,8 +51,6 @@ void mGame::play()
 		switch (*gameState)
 		{
 		case state::MainGame:
-
-			Collision::checkAllCarsCollision();
 			
 			Map::Instance().updateView(player->getPosition());
 

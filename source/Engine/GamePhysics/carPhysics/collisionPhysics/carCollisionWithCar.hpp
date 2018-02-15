@@ -25,6 +25,9 @@ private:
 
 	float speed;
 
+	float powerFirst;
+	float powerSecond;
+
 	carCollisionWithCar() {}
 
 	std::pair<Car::collisionSide, Car::collisionSide> whereIsCollision();

@@ -38,12 +38,6 @@ public:
 
 	sf::FloatRect getGlobalBounds();
 
-	void setPowerOfCrashMove(const sf::Vector2f &power);
-	void setPowerOfCrashRotate(const std::pair<float, float>&power);
-
-	sf::Vector2f getPowerOfCrashMove();
-	float getPowerOfCrashRotate();
-
 	bool isSlide();
 	void breakSlide();
 
@@ -76,6 +70,9 @@ public:
 	const std::vector<sf::CircleShape*> getCollisionHitbox(const hitboxPosition &pos);
 	collisionSide *getLastCollisionSide();
 	const std::vector<sf::CircleShape*> getAllHitboxes();
+
+	void setPowerOfCrashMove(const std::pair<sf::Vector2f, float> &power);
+	void setPowerOfCrashRotate(const std::pair<float, float>&power);
 
 	void toControl() override;
 	float getRotation() override;

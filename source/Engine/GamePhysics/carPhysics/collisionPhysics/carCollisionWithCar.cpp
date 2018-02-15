@@ -14,12 +14,11 @@ Car::collisionSide carCollisionWithCar::checkCollisions(Car * car1, Car * car2, 
 		auto &instance = Instance();
 		instance.car1 = car1;
 		instance.car2 = car2;
-		instance.speed = static_cast<float>(std::max(car1->getSpeed(), car2->getSpeed()));
 
-		float powerFirst = static_cast<float>(pow(car1->getSpeed(), 2.f) / car1->getWeight());
-		float powerSecond = static_cast<float>(pow(car2->getSpeed(), 2.f) / car2->getWeight());
+		instance.powerFirst = static_cast<float>(car1->getSpeed() * car1->getWeight());
+		instance.powerSecond = static_cast<float>(car2->getSpeed() * car2->getWeight());
 
-		if (powerSecond > powerFirst)
+		if (instance.powerSecond > instance.powerFirst)
 			std::swap(car1, car2);
 
 		std::pair<Car::collisionSide, Car::collisionSide> carSidesOfCollision = instance.whereIsCollision();
@@ -451,7 +450,13 @@ sf::Vector2f carCollisionWithCar::moveFromCar(Car *car1,Car *car2,const std::pai
 
 	float multiplier = fabs(static_cast<float>(car2->getSpeed() - car1->getSpeed())) * 5.f / (static_cast<float>(car1->getMaxSpeed() + car2->getMaxSpeed()) / 2.f) * static_cast<float>(car2->getWeight()) / static_cast<float>(car1->getWeight());
 
-	multiplier = fmod(multiplier, 2.5f);
+	switch (side.second)
+	{
+	case Car::collisionSide::Front:
+	case Car::collisionSide::Back:
+		multiplier *= 1.5f;
+		break;
+	}
 
 	return v * multiplier;
 }
@@ -462,6 +467,9 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 
 	float angle = 0, angle2 = 0;
 	sf::Vector2f v = sf::Vector2f(0, 0);
+
+	car1->breakSlide();
+	car2->breakSlide();
 
 	switch (side.first)
 	{
@@ -480,18 +488,18 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 			if (car1->getSpeed() > 2)
 			{
 				v = instance.moveFromCar(car2, car1, std::make_pair(side.second, side.first));
-				car2->setPowerOfCrashMove(v);
+				car2->setPowerOfCrashMove(std::make_pair(v, fabs(powerFirst - powerSecond)));
 
 				if (v != sf::Vector2f(0, 0))
 				{
-					if (car1->getSpeed() > 3.f)
-						car1->setSpeed(static_cast<float>(car1->getSpeed()) / 1.2f);
+					if (car1->getSpeed() > 5.f)
+						car1->setSpeed(static_cast<float>(car1->getSpeed()) / 5.f);
 					else
 						car1->setSpeed(1.8f);
 				}
+				else
+					car1->setSpeed(0.f);
 			}
-			else
-				car1->setSpeed(0);
 
 			break;
 		case Car::collisionSide::RightUp:
@@ -499,21 +507,16 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 		case Car::collisionSide::LeftDown:
 		case Car::collisionSide::RightDown:
 
-			if (car1->getSpeed() > 1)
-			{
-				angle = instance.howManyRotate(car2, car1, std::make_pair(side.second, side.first));
-				car2->setPowerOfCrashRotate(std::make_pair(0.f, angle * static_cast<float>(car1->getSpeed()) / 2.f));
+			angle = instance.howManyRotate(car2, car1, std::make_pair(side.second, side.first));
+			car2->setPowerOfCrashRotate(std::make_pair(0.f, angle * static_cast<float>(car1->getSpeed()) / 2.f));
 
-				if (angle != 0)
-				{
-					if (car1->getSpeed() > 2.f)
-						car1->setSpeed(static_cast<float>(car1->getSpeed()) / 1.2f);
-					else
-						car1->setSpeed(1.f);
-				}
+			if (angle != 0)
+			{
+				if (car1->getSpeed() > 2.f)
+					car1->setSpeed(static_cast<float>(car1->getSpeed()) / 2.f);
+				else
+					car1->setSpeed(1.f);
 			}
-			else
-				car1->setSpeed(0);
 
 			break;
 		}
@@ -521,6 +524,58 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 		break;
 	case Car::collisionSide::RightUp:
 	case Car::collisionSide::LeftUp:
+
+		switch (side.second)
+		{
+		case Car::collisionSide::Front:
+		case Car::collisionSide::Right:
+		case Car::collisionSide::Back:
+		case Car::collisionSide::Left:
+
+			if (car1->getStateMoving() == 0) // front
+			{
+				angle2 = instance.howManyRotate(car1, car2, std::make_pair(side.first, side.second));
+				car1->rotate(angle2);
+
+			}
+			else if (car1->getStateMoving() == 1) // back
+			{
+				v = instance.moveFromCar(car1, car2, std::make_pair(side.first, side.second));
+				car1->move(v);
+			}
+
+			v = instance.moveFromCar(car2, car1, std::make_pair(side.second, side.first));
+			car2->setPowerOfCrashMove(std::make_pair(v, fabs(powerFirst - powerSecond)));
+
+			car1->setSpeed(static_cast<float>(car1->getSpeed()) / 1.1f);
+
+			break;
+		case Car::collisionSide::RightUp:
+		case Car::collisionSide::LeftUp:
+		case Car::collisionSide::LeftDown:
+		case Car::collisionSide::RightDown:
+
+			if (car1->getStateMoving() == 0) // front
+			{
+				angle2 = instance.howManyRotate(car1, car2, std::make_pair(side.first, side.second));
+				car1->rotate(angle2);
+
+			}
+			else if (car1->getStateMoving() == 1) // back
+			{
+				v = instance.moveFromCar(car1, car2, std::make_pair(side.first, side.second));
+				car1->move(v);
+			}
+
+			angle = instance.howManyRotate(car2, car1, std::make_pair(side.second, side.first));
+			car2->setPowerOfCrashRotate(std::make_pair(0.f, angle * static_cast<float>(car1->getSpeed()) / 2.f));
+
+			car1->setSpeed(static_cast<float>(car1->getSpeed() / 1.1f));
+
+			break;
+		}
+		break;
+
 	case Car::collisionSide::LeftDown:
 	case Car::collisionSide::RightDown:
 
@@ -531,11 +586,20 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 		case Car::collisionSide::Back:
 		case Car::collisionSide::Left:
 
-			v = instance.moveFromCar(car2, car1, std::make_pair(side.second, side.first));
-			car2->setPowerOfCrashMove(v);
+			if (car1->getStateMoving() == 1) // front
+			{
+				angle2 = instance.howManyRotate(car1, car2, std::make_pair(side.first, side.second));
+				car1->rotate(angle2);
 
-			angle = instance.howManyRotate(car1, car2, std::make_pair(side.first, side.second));
-			car1->setPowerOfCrashRotate(std::make_pair(0.f, angle));
+			}
+			else if (car1->getStateMoving() == 0) // back
+			{
+				v = instance.moveFromCar(car1, car2, std::make_pair(side.first, side.second));
+				car1->move(v);
+			}
+
+			v = instance.moveFromCar(car2, car1, std::make_pair(side.second, side.first));
+			car2->setPowerOfCrashMove(std::make_pair(v, fabs(powerFirst - powerSecond)));
 
 			car1->setSpeed(static_cast<float>(car1->getSpeed()) / 1.1f);
 
@@ -545,9 +609,19 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 		case Car::collisionSide::LeftDown:
 		case Car::collisionSide::RightDown:
 
+			if (car1->getStateMoving() == 1) // front
+			{
+				angle2 = instance.howManyRotate(car1, car2, std::make_pair(side.first, side.second));
+				car1->rotate(angle2);
+
+			}
+			else if (car1->getStateMoving() == 0) // back
+			{
+				v = instance.moveFromCar(car1, car2, std::make_pair(side.first, side.second));
+				car1->move(v);
+			}
+
 			angle = instance.howManyRotate(car2, car1, std::make_pair(side.second, side.first));
-			angle2 = instance.howManyRotate(car1, car2, std::make_pair(side.first, side.second));
-			car1->setPowerOfCrashRotate(std::make_pair(0.f, angle2));
 			car2->setPowerOfCrashRotate(std::make_pair(0.f, angle * static_cast<float>(car1->getSpeed()) / 2.f));
 
 			car1->setSpeed(static_cast<float>(car1->getSpeed() / 1.1f));

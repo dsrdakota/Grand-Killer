@@ -65,9 +65,11 @@ bool Traces::isSameTraceOnVector(const sf::Vector2f &pos, const float &rot)
 	auto &traces = Map::Instance().getAllCarTraces();
 
 	for (const auto &i : traces)
+	{
 		if (i.first->getGlobalBounds().contains(pos) &&
 			i.first->getRotation() == rot)
 			return true;
+	}
 	return false;
 }
 

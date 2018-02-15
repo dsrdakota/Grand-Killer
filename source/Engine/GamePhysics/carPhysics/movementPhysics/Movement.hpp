@@ -22,11 +22,8 @@ public:
 	int getTypeOfDrive() { return static_cast<int>(drive); };
 	int getStateMoving() { return static_cast<int>(*movingState); }
 
-	void setPowerOfCrashMove(const sf::Vector2f &power) { powerOfCrashMove = power; }
+	void setPowerOfCrashMove(const std::pair<sf::Vector2f, float> &power) { powerOfCrashMove = power; }
 	void setPowerOfCrashRotate(const std::pair<float,float>&power) { powerOfCrashRotate = power; }
-
-	sf::Vector2f getPowerOfCrashMove() { return powerOfCrashMove; }
-	float getPowerOfCrashRotate() { return powerOfCrashRotate.second; }
 
 	void updatePosition();
 
@@ -43,7 +40,7 @@ private:
 	double *breakingForce; // can change in options
 	const double *MAX_SPEED;
 
-	sf::Vector2f powerOfCrashMove;
+	std::pair<sf::Vector2f,float> powerOfCrashMove;
 	std::pair<float, float> powerOfCrashRotate;
 
 	std::pair<sf::CircleShape*, sf::CircleShape*>tiresDrive; 

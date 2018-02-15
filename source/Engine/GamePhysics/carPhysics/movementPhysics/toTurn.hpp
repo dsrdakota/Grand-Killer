@@ -49,8 +49,6 @@ private:
 
 	Slide *slide;
 
-	double *speed;
-
 	const double *SPEED_ROTATE_TIRE;
 	const double *SPEED_ROTATE_CAR;
 	const double *MAX_ROTATE_TIRE;
