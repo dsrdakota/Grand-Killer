@@ -64,16 +64,6 @@ void carPhysics::turn(const toTurn::Direction & direction)
 	turnPhysics->turning(direction);
 }
 
-void carPhysics::moveHitboxes(const sf::Vector2f & offset)
-{
-	collisionHitboxes->moveHitboxes(offset);
-}
-
-void carPhysics::rorateHitboxes(const double & angle)
-{
-	collisionHitboxes->rorateHitboxes(angle);
-}
-
 void carPhysics::updatePosition()
 {
 	turnPhysics->updatePosition();

@@ -208,16 +208,6 @@ void Car::move(const sf::Vector2f & offset)
 	tire->move(offset);
 }
 
-void Car::moveHitboxes(const sf::Vector2f & offset)
-{
-	physics->moveHitboxes(offset);
-}
-
-void Car::rorateHitboxes(const double & angle)
-{
-	physics->rorateHitboxes(angle);
-}
-
 void Car::rotate(const double & angle)
 {
 	sprite->rotate(static_cast<float>(angle));

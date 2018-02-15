@@ -1,6 +1,9 @@
 #include "Movement.hpp"
 
-#include "../collisionPhysics/Collision.hpp"
+#include "../collisionPhysics/carCollisionHitbox.hpp"
+#include "../collisionPhysics/carCollisionWithCar.hpp"
+#include "../collisionPhysics/carCollisionWithWall.hpp"
+#include "../../../GameStates/Menu/Play/Game/mGame.hpp"
 
 #include <iostream>
 
@@ -226,7 +229,7 @@ void Movement::move()
 	for (float i = 1;i <= 4;i += simulationStep)
 	{
 		v = w * static_cast<float>(SPEED) / 4.f * simulationStep;
-		car->moveHitboxes(v);
+		carCollisionHitbox::moveHitboxes(car, v);
 
 		auto resultWithWall = carCollisionWithWall::checkCollisions(car, false);
 

@@ -111,16 +111,34 @@ const std::vector<sf::CircleShape*> carCollisionHitbox::getAllHitboxes()
 	return allHitboxes;
 }
 
-void carCollisionHitbox::moveHitboxes(const sf::Vector2f & offset)
+void carCollisionHitbox::moveHitboxes(Car *car, const sf::Vector2f & offset)
 {
-	for (const auto &i : allHitboxes)
+	for (const auto &i : car->getAllHitboxes())
 		i->move(offset);
 }
 
-void carCollisionHitbox::rorateHitboxes(const double & angle)
+void carCollisionHitbox::rorateHitboxes(Car *car, const double & angle)
 {
-	for (const auto &i : allHitboxes)
+	for (const auto &i : car->getAllHitboxes())
 		i->rotate(static_cast<float>(angle));
+}
+
+void carCollisionHitbox::rotateOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const float & angle)
+{
+	for (const auto &i : hitbox)
+		i->rotate(angle);
+}
+
+void carCollisionHitbox::moveOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const sf::Vector2f & offset)
+{
+	for (const auto &i : hitbox)
+		i->move(offset);
+}
+
+sf::Vector2f carCollisionHitbox::getCenterOfHitbox(const sf::CircleShape & hitbox)
+{
+	return sf::Vector2f(hitbox.getGlobalBounds().left + hitbox.getGlobalBounds().width / 2,
+		hitbox.getGlobalBounds().top + hitbox.getGlobalBounds().height / 2);
 }
 
 void carCollisionHitbox::update()

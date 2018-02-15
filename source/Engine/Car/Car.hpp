@@ -82,8 +82,6 @@ public:
 
 	void setPhycics(Car *car);
 	void move(const sf::Vector2f &offset);
-	void moveHitboxes(const sf::Vector2f &offset);
-	void rorateHitboxes(const double &angle);
 	void rotate(const double &angle);
 	void updatePosition();
 

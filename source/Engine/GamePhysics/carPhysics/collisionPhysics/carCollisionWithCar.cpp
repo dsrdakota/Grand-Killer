@@ -1,7 +1,5 @@
 #include "carCollisionWithCar.hpp"
-
-#include "Collision.hpp"
-
+#include "carCollisionHitbox.hpp"
 #include <iostream>
 
 Car::collisionSide carCollisionWithCar::checkCollisions(Car * car1, Car * car2, bool react)
@@ -373,7 +371,7 @@ bool carCollisionWithCar::checkCollisionBetweenTwoCars(std::pair<const std::vect
 	for (const auto &i : hitbox.first)
 		for (const auto &j : hitbox.second)
 		{
-			sf::Vector2f vector = Collision::getCenterOfHitbox(*j) - Collision::getCenterOfHitbox(*i);
+			sf::Vector2f vector = carCollisionHitbox::getCenterOfHitbox(*j) - carCollisionHitbox::getCenterOfHitbox(*i);
 			float length = sqrt(vector.x*vector.x + vector.y * vector.y);
 
 			if (length < 4)
@@ -399,19 +397,19 @@ float carCollisionWithCar::howManyRotate(Car *car1, Car *car2, const std::pair<C
 		case Car::collisionSide::RightDown: // +
 
 			rotate += singleRotateValue;
-			Collision::rotateOneHitbox(car1->getCollisionHitbox(static_cast<Car::hitboxPosition>(side.first)), singleRotateValue);
+			carCollisionHitbox::rotateOneHitbox(car1->getCollisionHitbox(static_cast<Car::hitboxPosition>(side.first)), singleRotateValue);
 
 			break;
 		case Car::collisionSide::RightUp:
 		case Car::collisionSide::LeftDown: // -
 
 			rotate -= singleRotateValue;
-			Collision::rotateOneHitbox(car1->getCollisionHitbox(static_cast<Car::hitboxPosition>(side.first)), -singleRotateValue);
+			carCollisionHitbox::rotateOneHitbox(car1->getCollisionHitbox(static_cast<Car::hitboxPosition>(side.first)), -singleRotateValue);
 
 			break;
 		}
 	}
-	Collision::rotateOneHitbox(car1->getCollisionHitbox(static_cast<Car::hitboxPosition>(side.first)), -rotate);
+	carCollisionHitbox::rotateOneHitbox(car1->getCollisionHitbox(static_cast<Car::hitboxPosition>(side.first)), -rotate);
 	return rotate;
 }
 
@@ -444,9 +442,9 @@ sf::Vector2f carCollisionWithCar::moveFromCar(Car *car1,Car *car2,const std::pai
 		v.x += w.x;
 		v.y += w.y;
 
-		Collision::moveOneHitbox(car1->getCollisionHitbox(static_cast<Car::hitboxPosition>(side.first)), w);
+		carCollisionHitbox::moveOneHitbox(car1->getCollisionHitbox(static_cast<Car::hitboxPosition>(side.first)), w);
 	}
-	Collision::moveOneHitbox(car1->getCollisionHitbox(static_cast<Car::hitboxPosition>(side.first)), -v);
+	carCollisionHitbox::moveOneHitbox(car1->getCollisionHitbox(static_cast<Car::hitboxPosition>(side.first)), -v);
 
 	float multiplier = fabs(static_cast<float>(car2->getSpeed() - car1->getSpeed())) * 5.f / (static_cast<float>(car1->getMaxSpeed() + car2->getMaxSpeed()) / 2.f) * static_cast<float>(car2->getWeight()) / static_cast<float>(car1->getWeight());
 
