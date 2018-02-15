@@ -10,10 +10,7 @@ int main()
 	if (error.getErrorBool())
 		error.showCommunicate();
 	else
-	{
-		auto &game = Game::Instance();
-		game.run();
-	}
+		Game::Instance().run();
 
 	return 0;
 }
