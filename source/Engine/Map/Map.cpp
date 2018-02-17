@@ -97,7 +97,7 @@ void Map::drawUnder()
 				!isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top)) ||
 				!isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)) ||
 				!isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)))
-				j->draw();
+				renderSprites::Instance().addToRender(sprite);
 		}
 
 	if (allCarTraces.size() > 600 * allCarTraces.size())

@@ -33,6 +33,8 @@ public:
 	void drawUnder();
 	void drawOn();
 
+	static const short int getTileSize() { return *Instance().TileSize; }
+	static const sf::Vector2f getCountTile() { return sf::Vector2f(*Instance().tilesCountWidth, *Instance().tilesCountHeigth); }
 	static bool isOutsideView(const sf::Vector2f & pos);
 	static bool isPointOnGrass(const sf::Vector2f & pos);
 	static bool isPointInCollisionArea(const sf::Vector2f & pos);
@@ -40,6 +42,8 @@ public:
 
 	TrafficSigns* getAllTrafficSigns() { return trafficSigns; }
 	TrafficLights* getAllTrafficLights() { return trafficLights; }
+
+	static std::vector<std::vector<Tile*>> &getTilesVector() { return Instance().Tiles; }
 
 private:
 	Map();

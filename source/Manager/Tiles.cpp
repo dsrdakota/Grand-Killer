@@ -18,6 +18,10 @@ tilesManager::tilesManager()
 	{
 		textureManager::load(std::to_string(i), TilesPath[i]);
 
+		std::string pathToTileMinimap = "data/Map/Minimap/" + TilesPath[i].substr(TilesPath[i].find_last_of('/')+1);
+
+		textureManager::load(std::to_string(i) + "_Minimap", pathToTileMinimap);
+
 		if (TilesPath[i].find("grass") != std::string::npos)
 		{
 			sf::Image *image = new sf::Image;

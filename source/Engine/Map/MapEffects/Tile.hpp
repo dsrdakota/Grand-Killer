@@ -10,12 +10,12 @@ public:
 	~Tile();
 
 	sf::Sprite *getTileSprite();
+	sf::Sprite *getTileMapSprite();
 	const size_t getIndex();
-
-	void draw();
 
 private:
 
 	sf::Sprite *sprite;
+	sf::Sprite *mapSprite;
 	size_t index;
 };

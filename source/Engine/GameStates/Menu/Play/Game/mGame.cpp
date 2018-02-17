@@ -17,7 +17,7 @@ mGame::mGame()
 	cars.push_back(taxi);
 
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4759)));
-	/*cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4885, 4759)));
+	/*cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(5900, 5800)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4959)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4885, 4559)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4085, 4759)));
@@ -93,7 +93,9 @@ void mGame::draw()
 	for (const auto &i : cars)
 	{
 		i->draw();
-		i->updatePosition();
+
+		if(*gameState == state::MainGame)
+			i->updatePosition();
 	}
 
 	map->drawOn();

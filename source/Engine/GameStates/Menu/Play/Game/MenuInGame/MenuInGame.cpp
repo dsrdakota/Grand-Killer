@@ -8,6 +8,7 @@ MenuInGame::MenuInGame(const sf::Vector2u &windowSize) : window(Game::Instance()
 	state = new States(States::Mapa);
 
 	background = new sf::RectangleShape(static_cast<sf::Vector2f>(window->getSize()));
+
 	background->setFillColor(sf::Color(1, 36, 3, 220));
 
 	grandKillerText = new Text(sf::Color::White, 50, "Grand Killer", "data/Font/italic.ttf");
@@ -94,6 +95,7 @@ void MenuInGame::restartCooldownValue()
 void MenuInGame::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &playerPos, const float &playerRot)
 {
 	background->setPosition(menuPos);
+
 	this->playerPos = playerPos;
 	this->playerRot = playerRot;
 
@@ -127,6 +129,21 @@ void MenuInGame::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &p
 		navigation[2].second->getPosition().y);
 	navigation[3].first->text->setPosition(navigation[3].second->getPosition().x - navigation[3].first->text->getGlobalBounds().width,
 		navigation[3].second->getPosition().y + navigation[3].second->getGlobalBounds().height / 2 - navigation[3].first->text->getGlobalBounds().height);
+
+	auto firstButton = headersButton[0]->getButtonSprite();
+
+	const auto &allTiles = Map::getTilesVector();
+	Tile *tile = allTiles[static_cast<size_t>(playerPos.x / Map::getTileSize())][static_cast<size_t>(playerPos.y / Map::getTileSize())];
+
+	sf::Vector2f lenght = playerPos - tile->getTileSprite()->getPosition();
+
+	map->setPlayerPosition(tile, lenght, playerRot);
+
+	for(const auto &i:options)
+		i->setPosition(background->getPosition(), sf::Vector2f(firstButton->getPosition().x,
+			firstButton->getPosition().x + window->getSize().x * 0.8f - window->getSize().x * 0.2f + 10),
+			sf::Vector2f(firstButton->getPosition().y + firstButton->getGlobalBounds().height + 10,
+				firstButton->getPosition().y + firstButton->getGlobalBounds().height + window->getSize().y * 0.6f));
 }
 
 const int & MenuInGame::getCooldownValue()
@@ -142,12 +159,12 @@ bool MenuInGame::canExitMenu()
 void MenuInGame::draw()
 {
 	update();
-	
+
 	renderSprites::Instance().addToRender(background);
-	renderSprites::Instance().addToRender(grandKillerText->text);
 
 	if (!(wsk == options[static_cast<int>(States::Mapa)] && optionIsActive))
 	{
+		renderSprites::Instance().addToRender(grandKillerText->text);
 		renderSprites::Instance().addToRender(leftArrow);
 		renderSprites::Instance().addToRender(rightArrow);
 		for (const auto &i : headersButton)
@@ -169,17 +186,7 @@ void MenuInGame::draw()
 
 void MenuInGame::update()
 {
-	auto firstButton = headersButton[0]->getButtonSprite();
-
 	optionIsActive = wsk->isActive();
-
-	wsk->setPosition(background->getPosition(),sf::Vector2f(firstButton->getPosition().x,
-		firstButton->getPosition().x + window->getSize().x * 0.8f - window->getSize().x * 0.2f),
-		sf::Vector2f(firstButton->getPosition().y + firstButton->getGlobalBounds().height + 10,
-			firstButton->getPosition().y + firstButton->getGlobalBounds().height + window->getSize().y * 0.6f));
-
-	if (*state == States::Mapa)
-		map->setPlayerPosition(playerPos,playerRot);
 
 	if (!wsk->exit())
 		escapeWasRelased = false;

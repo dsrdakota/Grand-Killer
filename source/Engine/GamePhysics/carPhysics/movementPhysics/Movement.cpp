@@ -295,8 +295,8 @@ void Movement::move()
 		car->getTires()->setTraces();
 	}
 
-	powerOfCrashMove.second *= 0.4f;
-	powerOfCrashMove.first *= 0.4f;
+	powerOfCrashMove.second *= 0.6f;
+	powerOfCrashMove.first *= 0.6f;
 
 	if (fabs(powerOfCrashMove.second) < 0.021f)
 	{
