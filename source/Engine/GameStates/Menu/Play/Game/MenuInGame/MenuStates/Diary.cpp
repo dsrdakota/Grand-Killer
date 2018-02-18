@@ -78,6 +78,8 @@ void Diary::setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &borderX
 		navigation[1].second->getPosition().y);
 	navigation[2].first->text->setPosition(navigation[2].second->getPosition().x - navigation[2].first->text->getGlobalBounds().width,
 		navigation[2].second->getPosition().y + navigation[2].second->getGlobalBounds().height / 2 - navigation[2].first->text->getGlobalBounds().height);
+	
+	*state = optionState::Mission;
 }
 
 bool Diary::exit()
@@ -110,11 +112,11 @@ void Diary::drawActive()
 		renderSprites::Instance().addToRender(i.second);
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || 
+		sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
 	{
 		cooldownChangeStates = 0;
 		active = false;
-		*state = optionState::Mission;
 	}
 }
 
@@ -133,8 +135,8 @@ void Diary::drawUnactive()
 	centerTextOfOption[0].second->text->setPosition(centerTextOfOption[0].first->text->getPosition().x,
 		centerTextOfOption[0].first->text->getPosition().y + /*centerTextOfOption[index].first->text->getGlobalBounds().height*/ 50 + 50);
 
-	renderSprites::Instance().addToRender(centerTextOfOption[0].first->text);
-	renderSprites::Instance().addToRender(centerTextOfOption[0].second->text);
+	renderSprites::Instance().addToRender(centerTextOfOption[static_cast<int>(*state)].first->text);
+	renderSprites::Instance().addToRender(centerTextOfOption[static_cast<int>(*state)].second->text);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) || (sf::Mouse::isButtonPressed(sf::Mouse::Left) && isMouseClickOnHitbox()))
 	{

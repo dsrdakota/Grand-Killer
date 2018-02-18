@@ -22,7 +22,7 @@ public:
 	void drawActive() override;
 	void drawUnactive() override;
 
-	void setPlayerPosition(Tile *playerTile, const sf::Vector2f &lengthFromTileOrigin, const float &rot);
+	void setPlayerPosition(Tile *playerTile, const sf::Vector2f &lengthPlayerFromTileOrigin, const float &rot);
 
 private:
 
@@ -38,9 +38,12 @@ private:
 	std::vector<std::pair<Text*, sf::Sprite*>>navigation;
 
 	Tile *playerTile;
-	sf::Vector2f lengthFromTileOrigin;
+	sf::Vector2f lengthPlayerFromTileOrigin;
 	float playerRotation;
-	sf::Vector2f targetPosition;
+	
+	Tile *targetTile;
+	sf::Vector2f lengthTargetFromTileOrigin;
+
 	sf::Vector2f menuPos;
 
 	sf::Vector2f scale;
@@ -59,6 +62,8 @@ private:
 	void toControl();
 	bool mouseOnMap();
 	Tile *getCenterTileOnWindow();
+	Tile *getTileUnderMouse();
+	Tile *getTileUnderPosition(const sf::Vector2f &position);
 	void centerMapOnTile(sf::Sprite *tileSprite,const sf::Vector2f &lengthFromTile);
 	void centerMapOnPlayer();
 	void moveAllTiles(const sf::Vector2f &offset);

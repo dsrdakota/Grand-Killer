@@ -11,11 +11,13 @@ public:
 
 	sf::Sprite *getTileSprite();
 	sf::Sprite *getTileMapSprite();
+	sf::Sprite *getTileRadarSprite();
 	const size_t getIndex();
 
 private:
 
 	sf::Sprite *sprite;
 	sf::Sprite *mapSprite;
+	sf::Sprite *radarSprite;
 	size_t index;
 };

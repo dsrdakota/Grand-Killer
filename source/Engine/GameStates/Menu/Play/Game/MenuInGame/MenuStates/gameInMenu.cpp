@@ -106,7 +106,8 @@ void gameInMenu::drawActive()
 		renderSprites::Instance().addToRender(i.second);
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) ||
+		sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
 	{
 		cooldownChangeStates = 0;
 		active = false;

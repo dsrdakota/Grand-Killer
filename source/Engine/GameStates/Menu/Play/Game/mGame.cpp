@@ -3,8 +3,7 @@
 #include "../../../../../Manager/renderSprites.hpp"
 #include "../../../../../Manager/Time.hpp"
 #include "../../../../../Manager/Keyboard.hpp"
-
-#include <iostream>
+#include "Radar.hpp"
 
 mGame::mGame()
 {
@@ -98,6 +97,20 @@ void mGame::draw()
 			i->updatePosition();
 	}
 
+	if (*gameState == state::MainGame)
+	{
+		const auto &allTiles = Map::getTilesVector();
+		Tile *tile = allTiles[static_cast<size_t>(player->getPosition().x / Map::getTileSize())][static_cast<size_t>(player->getPosition().y / Map::getTileSize())];
+
+		sf::Vector2f lenght = player->getPosition() - tile->getTileSprite()->getPosition();
+
+		Radar::Instance().setPlayerPosition(tile, lenght, player->getRotation());
+
+		Radar::Instance().update();
+
+		Radar::Instance().draw();
+	}
+
 	map->drawOn();
 }
 
@@ -110,7 +123,7 @@ void mGame::switchState()
 		window->setMouseCursorVisible(true);
 		*gameState = state::Menu;
 	}
-	else if (menu->canExitMenu() &&  sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::Menu && menu->getCooldownValue() <= 0)
+	else if (menu->canExitMenu() &&  (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || sf::Mouse::isButtonPressed(sf::Mouse::Right)) && *gameState == state::Menu && menu->getCooldownValue() <= 0)
 	{
 		menu->restartCooldownValue();
 		window->setMouseCursorVisible(false);

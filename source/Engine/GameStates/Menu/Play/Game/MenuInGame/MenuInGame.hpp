@@ -56,6 +56,10 @@ private:
 	sf::Sprite *leftArrow;
 	sf::Sprite *rightArrow;
 
+	Text *name;
+	Text *time;
+	Text *cash;
+
 	sf::Vector2f playerPos;
 	float playerRot;
 
@@ -71,6 +75,7 @@ private:
 	std::vector<std::pair<Text*, sf::Sprite*>>navigation;
 
 	void update();
+	std::string updateTime();
 	void checkArrowIsPressed(const int &side);
 	bool mouseOnClickArrow(sf::Sprite *arrow);
 	bool mouseOnArrow(sf::Sprite *arrow);

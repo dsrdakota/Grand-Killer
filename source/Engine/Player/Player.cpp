@@ -1,9 +1,13 @@
 #include "Player.hpp"
 
+#include "../GameStates/Menu/Play/Game/Radar.hpp"
+
 Player::Player()
 {
 	wsk = &player;
 	state = new playerState(playerState::Walk);
+
+	Radar::Instance();
 }
 
 Player::~Player()

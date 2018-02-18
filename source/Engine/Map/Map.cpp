@@ -4,7 +4,6 @@
 #include "../../Manager/renderSprites.hpp"
 #include "../../Game.hpp"
 
-#include <iostream>
 #include <fstream>
 
 Map::Map() : window(Game::Instance().getWindow())
@@ -186,7 +185,7 @@ bool Map::isPointInCollisionArea(const sf::Vector2f & pos)
 	if (pos.y < 0 || pos.y > map.mapSize->y)
 		return true;
 
-	// other
+	// buildings
 
 	return false;
 }

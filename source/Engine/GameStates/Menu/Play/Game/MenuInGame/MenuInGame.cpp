@@ -3,18 +3,24 @@
 #include "../../../../../../Manager/Texture.hpp"
 #include "../../../../../../Manager/renderSprites.hpp"
 
+#include <ctime>
+
 MenuInGame::MenuInGame(const sf::Vector2u &windowSize) : window(Game::Instance().getWindow())
 {
 	state = new States(States::Mapa);
 
 	background = new sf::RectangleShape(static_cast<sf::Vector2f>(window->getSize()));
 
-	background->setFillColor(sf::Color(1, 36, 3, 220));
+	background->setFillColor(sf::Color(1, 36, 3, 200));
 
 	grandKillerText = new Text(sf::Color::White, 50, "Grand Killer", "data/Font/italic.ttf");
 
 	leftArrow = new sf::Sprite(*textureManager::load("leftArrow","data/Game/MenuInGame/leftArrow.png"));
 	rightArrow = new sf::Sprite(*textureManager::load("rightArrow", "data/Game/MenuInGame/rightArrow.png"));
+
+	name = new Text(sf::Color::White, 17, "Bohater", "data/Font/italic.ttf");
+	time = new Text(sf::Color::White, 17, "Niedziela 13:52", "data/Font/italic.ttf");
+	cash = new Text(sf::Color::White, 17, "$000,00", "data/Font/italic.ttf");
 
 	headersButton.push_back(new Button(sf::Vector2f((window->getSize().x - window->getSize().x * 0.4f) / 5.f, leftArrow->getGlobalBounds().height + 8.f), 15, "MAPA", Button::State::header));
 	headersButton.push_back(new Button(sf::Vector2f((window->getSize().x - window->getSize().x * 0.4f) / 5.f, leftArrow->getGlobalBounds().height + 8.f), 15, "DZIENNIK", Button::State::header));
@@ -70,7 +76,7 @@ MenuInGame::~MenuInGame()
 
 void MenuInGame::updateCooldown()
 {
-	if (cooldownEscapeButton && timeEscapeButton.time->asSeconds() >= 0.75f)
+	if (cooldownEscapeButton && timeEscapeButton.time->asSeconds() >= 0.5f)
 	{
 		cooldownEscapeButton--;
 		timeEscapeButton.clock->restart();
@@ -108,6 +114,15 @@ void MenuInGame::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &p
 	for(size_t i=1;i<headersButton.size();++i)
 		headersButton[i]->setPosition(sf::Vector2f(headersButton[i-1]->getButtonSprite()->getPosition().x + headersButton[i - 1]->getButtonSprite()->getGlobalBounds().width + 2,
 			leftArrow->getPosition().y - 2.5f));
+
+	cash->text->setPosition(headersButton[headersButton.size() - 1]->getButtonSprite()->getPosition().x,
+		headersButton[headersButton.size() - 1]->getButtonSprite()->getPosition().y - cash->text->getGlobalBounds().height - 7);
+
+	time->text->setPosition(headersButton[headersButton.size() - 1]->getButtonSprite()->getPosition().x,
+		cash->text->getPosition().y - time->text->getGlobalBounds().height - 4);
+
+	name->text->setPosition(headersButton[headersButton.size() - 1]->getButtonSprite()->getPosition().x,
+		time->text->getPosition().y - name->text->getGlobalBounds().height - 4);
 
 	rightArrow->setPosition(headersButton[headersButton.size() - 1]->getButtonSprite()->getPosition().x + headersButton[headersButton.size() - 1]->getButtonSprite()->getGlobalBounds().width + 5.f,
 		leftArrow->getPosition().y);
@@ -169,6 +184,10 @@ void MenuInGame::draw()
 		renderSprites::Instance().addToRender(rightArrow);
 		for (const auto &i : headersButton)
 			i->draw();
+
+		renderSprites::Instance().addToRender(name->text);
+		renderSprites::Instance().addToRender(time->text);
+		renderSprites::Instance().addToRender(cash->text);
 	}
 
 	if (optionIsActive)
@@ -188,12 +207,17 @@ void MenuInGame::update()
 {
 	optionIsActive = wsk->isActive();
 
+	std::string newerTime = updateTime();
+
+	if (time->text->getString() != newerTime)
+		time->text->setString(newerTime);
+
 	if (!wsk->exit())
 		escapeWasRelased = false;
 
 	if (!optionIsActive)
 	{
-		if (!escapeWasRelased && !sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		if (!escapeWasRelased && !sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && !sf::Mouse::isButtonPressed(sf::Mouse::Right))
 			escapeWasRelased = true;
 
 		checkArrowIsPressed(1); // right
@@ -214,6 +238,48 @@ void MenuInGame::update()
 			}
 		}
 	}
+}
+
+std::string MenuInGame::updateTime()
+{
+#pragma warning(disable : 4996)
+
+	time_t czas;
+	std::time(&czas);
+	std::string s(ctime(&czas));
+
+	std::string days[] = {
+		"Mon",
+		"Tue",
+		"Wed",
+		"Thu",
+		"Fri",
+		"Sat",
+		"Sun"
+	};
+
+	std::string dni[] = {
+		"Poniedzialek",
+		"Wtorek",
+		"Sroda",
+		"Czwartek",
+		"Piatek",
+		"Sobota",
+		"Niedziela"
+	};
+
+	auto function = [&](const std::string &day) {
+		for (size_t i = 0;i < 7;++i)
+			if (days[i] == day)
+				return i;
+
+		return static_cast<size_t>(0);
+	};
+
+	std::string day = s.substr(0, 3);
+	std::string time = s.substr(s.find(':') - 2, 8);
+
+	return dni[function(day)] + ' ' + time;
 }
 
 void MenuInGame::checkArrowIsPressed(const int &side)

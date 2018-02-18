@@ -10,10 +10,9 @@ mapInMenu::mapInMenu()
 	mapTiles = Map::getTilesVector();
 
 	map = new sf::RectangleShape;
-	map->setFillColor(sf::Color(1, 36, 3, 220));
 
 	scale = sf::Vector2f(0, 0);
-	maxScale = new sf::Vector2f(0.6f, 0.6f);
+	maxScale = new sf::Vector2f(0.8f, 0.8f);
 	minScale = new sf::Vector2f(0.15f, 0.15f);
 
 	mapSizeActive = static_cast<sf::Vector2f>(window->getSize());
@@ -77,6 +76,9 @@ mapInMenu::~mapInMenu()
 {
 	delete map;
 	delete player;
+
+	delete target;
+	delete cursor;
 
 	for (const auto &i : navigation)
 	{
@@ -158,8 +160,6 @@ void mapInMenu::drawActive()
 	for (const auto &i : tag)
 		renderSprites::Instance().addToRender(i);
 
-	renderSprites::Instance().addToRender(centerOfTag);
-
 	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || (mouseOnMap() && sf::Mouse::isButtonPressed(sf::Mouse::Right) && !sf::Mouse::isButtonPressed(sf::Mouse::Left)))
 	{
 		active = false;
@@ -189,25 +189,22 @@ void mapInMenu::drawUnactive()
 
 		canSetTarget = false;
 
-		tag[0]->setPosition(menuPos.x + window->getSize().x / 2.f, menuPos.y + window->getSize().y / 2.f + 5.f);
-		tag[1]->setPosition(menuPos.x + window->getSize().x / 2.f - 5.f, menuPos.y + window->getSize().y / 2.f);
-		tag[2]->setPosition(menuPos.x + window->getSize().x / 2.f, menuPos.y + window->getSize().y / 2.f - 5.f);
-		tag[3]->setPosition(menuPos.x + window->getSize().x / 2.f + 5.f, menuPos.y + window->getSize().y / 2.f);
+		tag[0]->setPosition(menuPos.x + window->getSize().x / 2.f, menuPos.y + window->getSize().y / 2.f + 6.f);
+		tag[1]->setPosition(menuPos.x + window->getSize().x / 2.f - 6.f, menuPos.y + window->getSize().y / 2.f);
+		tag[2]->setPosition(menuPos.x + window->getSize().x / 2.f, menuPos.y + window->getSize().y / 2.f - 6.f);
+		tag[3]->setPosition(menuPos.x + window->getSize().x / 2.f + 6.f, menuPos.y + window->getSize().y / 2.f);
 
-		centerOfTag->setPosition(tag[3]->getPosition().x - 5.f, tag[3]->getPosition().y);
+		centerOfTag->setPosition(tag[3]->getPosition().x - 6.f, tag[3]->getPosition().y);
 	}
 
 	draw();
 }
 
-void mapInMenu::setPlayerPosition(Tile *playerTile, const sf::Vector2f &lengthFromTileOrigin, const float &rot)
+void mapInMenu::setPlayerPosition(Tile *playerTile, const sf::Vector2f &lengthPlayerFromTileOrigin, const float &rot)
 {
 	this->playerTile = playerTile;
-	this->lengthFromTileOrigin = lengthFromTileOrigin;
+	this->lengthPlayerFromTileOrigin = lengthPlayerFromTileOrigin;
 	playerRotation = rot;
-
-	if (targetIsSet)
-		setTarget();
 }
 
 bool mapInMenu::isActive()
@@ -264,7 +261,8 @@ void mapInMenu::toControl()
 		{
 			targetIsSet = true;
 
-
+			targetTile = getTileUnderMouse();
+			lengthTargetFromTileOrigin = static_cast<sf::Vector2f>(window->mapPixelToCoords(sf::Mouse::getPosition())) - targetTile->getTileMapSprite()->getPosition();
 
 			setTarget();
 
@@ -280,7 +278,8 @@ void mapInMenu::toControl()
 		{
 			targetIsSet = true;
 
-
+			targetTile = getCenterTileOnWindow();
+			lengthTargetFromTileOrigin = centerOfTag->getPosition() - targetTile->getTileMapSprite()->getPosition();
 
 			setTarget();
 
@@ -318,19 +317,29 @@ bool mapInMenu::mouseOnMap()
 
 Tile * mapInMenu::getCenterTileOnWindow()
 {
+	return getTileUnderPosition(centerOfTag->getPosition());
+}
+
+Tile * mapInMenu::getTileUnderMouse()
+{
+	return getTileUnderPosition(window->mapPixelToCoords(sf::Mouse::getPosition()));
+}
+
+Tile * mapInMenu::getTileUnderPosition(const sf::Vector2f & position)
+{
 	auto tileLeftUpCornerOfMap = Map::getTilesVector()[0][0];
 
-	size_t y = (centerOfTag->getPosition().y - tileLeftUpCornerOfMap->getTileMapSprite()->getPosition().y) / tileLeftUpCornerOfMap->getTileMapSprite()->getGlobalBounds().height;
-	
-	if (y > Map::getCountTile().y - 1)
-		y = Map::getCountTile().y - 1;
+	size_t y = static_cast<size_t>((position.y - tileLeftUpCornerOfMap->getTileMapSprite()->getPosition().y) / tileLeftUpCornerOfMap->getTileMapSprite()->getGlobalBounds().height);
+
+	if (y > static_cast<size_t>(Map::getCountTile().y) - 1)
+		y = static_cast<size_t>(Map::getCountTile().y) - 1;
 	else if (y < 0)
 		y = 0;
 
-	size_t x = (centerOfTag->getPosition().x - tileLeftUpCornerOfMap->getTileMapSprite()->getPosition().x) / tileLeftUpCornerOfMap->getTileMapSprite()->getGlobalBounds().width;
+	size_t x = static_cast<size_t>((position.x - tileLeftUpCornerOfMap->getTileMapSprite()->getPosition().x) / tileLeftUpCornerOfMap->getTileMapSprite()->getGlobalBounds().width);
 
-	if (x > Map::getCountTile().x - 1)
-		x = Map::getCountTile().x - 1;
+	if (x > static_cast<size_t>(Map::getCountTile().x) - 1)
+		x = static_cast<size_t>(Map::getCountTile().x) - 1;
 	else if (x < 0)
 		x = 0;
 
@@ -339,16 +348,16 @@ Tile * mapInMenu::getCenterTileOnWindow()
 
 void mapInMenu::centerMapOnTile(sf::Sprite *tileSprite, const sf::Vector2f &lengthFromTile)
 {
-	sf::Vector2f moveOffset = sf::Vector2f((map->getPosition().x + map->getGlobalBounds().width / 2.f) - (tileSprite->getPosition().x + lengthFromTile.x * scale.x),
-	(map->getPosition().y + map->getGlobalBounds().height / 2.f) - (tileSprite->getPosition().y + lengthFromTile.y * scale.y));
+	sf::Vector2f moveOffset = sf::Vector2f((map->getPosition().x + map->getGlobalBounds().width / 2.f) - (tileSprite->getPosition().x + lengthFromTile.x),
+	(map->getPosition().y + map->getGlobalBounds().height / 2.f) - (tileSprite->getPosition().y + lengthFromTile.y));
 
 	moveAllTiles(moveOffset);
 }
 
 void mapInMenu::centerMapOnPlayer()
 {
-	sf::Vector2f moveOffset = sf::Vector2f((map->getPosition().x + map->getGlobalBounds().width / 2.f) - (playerTile->getTileMapSprite()->getPosition().x + lengthFromTileOrigin.x * scale.x),
-		(map->getPosition().y + map->getGlobalBounds().height / 2.f) - (playerTile->getTileMapSprite()->getPosition().y + lengthFromTileOrigin.y * scale.y));
+	sf::Vector2f moveOffset = sf::Vector2f((map->getPosition().x + map->getGlobalBounds().width / 2.f) - (playerTile->getTileMapSprite()->getPosition().x + lengthPlayerFromTileOrigin.x * scale.x),
+		(map->getPosition().y + map->getGlobalBounds().height / 2.f) - (playerTile->getTileMapSprite()->getPosition().y + lengthPlayerFromTileOrigin.y * scale.y));
 
 	moveAllTiles(moveOffset);
 }
@@ -364,9 +373,12 @@ void mapInMenu::moveAllTiles(const sf::Vector2f & offset)
 
 void mapInMenu::updateIcons()
 {
-	player->setPosition(sf::Vector2f(playerTile->getTileMapSprite()->getPosition().x + lengthFromTileOrigin.x * scale.x,
-		playerTile->getTileMapSprite()->getPosition().y + lengthFromTileOrigin.y * scale.y));
+	player->setPosition(sf::Vector2f(playerTile->getTileMapSprite()->getPosition().x + lengthPlayerFromTileOrigin.x * scale.x,
+		playerTile->getTileMapSprite()->getPosition().y + lengthPlayerFromTileOrigin.y * scale.y));
 	player->setRotation(playerRotation);
+
+	if(targetIsSet)
+		setTarget();
 }
 
 void mapInMenu::setTilesScale()
@@ -471,5 +483,6 @@ void mapInMenu::setPlayerVisible()
 
 void mapInMenu::setTarget()
 {
-
+	target->setPosition(sf::Vector2f(targetTile->getTileMapSprite()->getPosition().x + lengthTargetFromTileOrigin.x,
+		targetTile->getTileMapSprite()->getPosition().y + lengthTargetFromTileOrigin.y));
 }
