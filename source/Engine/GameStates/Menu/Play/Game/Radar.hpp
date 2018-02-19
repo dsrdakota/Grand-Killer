@@ -19,8 +19,7 @@ public:
 		return radar;
 	}
 
-	void setPlayerPosition(Tile *playerTile, const sf::Vector2f &lengthPlayerFromTileOrigin, const float &rot);
-	void update();
+	void update(const sf::Vector2f &position, const float &rotation);
 	void draw();
 
 private:
@@ -29,6 +28,7 @@ private:
 
 	sf::RenderWindow *window;
 
+	sf::Sprite *radar;
 	sf::RectangleShape *radarArea;
 
 	std::vector<std::vector<Tile*>>radarTiles;

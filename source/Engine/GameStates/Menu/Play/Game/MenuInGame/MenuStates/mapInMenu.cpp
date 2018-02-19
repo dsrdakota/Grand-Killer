@@ -303,7 +303,7 @@ void mapInMenu::toControl()
 		sf::Vector2f lengthFromTile = centerOfTag->getPosition() - tileSprite->getPosition();
 		scale = sf::Vector2f(scale.x - zoomValue, scale.y - zoomValue);
 		setTilesScale();
-		centerMapOnTile(tileSprite,lengthFromTile);
+		centerMapOnTile(tileSprite, lengthFromTile);
 	}
 	*Game::getScrollValue() = 0;
 }
@@ -349,7 +349,7 @@ Tile * mapInMenu::getTileUnderPosition(const sf::Vector2f & position)
 void mapInMenu::centerMapOnTile(sf::Sprite *tileSprite, const sf::Vector2f &lengthFromTile)
 {
 	sf::Vector2f moveOffset = sf::Vector2f((map->getPosition().x + map->getGlobalBounds().width / 2.f) - (tileSprite->getPosition().x + lengthFromTile.x),
-	(map->getPosition().y + map->getGlobalBounds().height / 2.f) - (tileSprite->getPosition().y + lengthFromTile.y));
+		(map->getPosition().y + map->getGlobalBounds().height / 2.f) - (tileSprite->getPosition().y + lengthFromTile.y));
 
 	moveAllTiles(moveOffset);
 }
@@ -377,7 +377,7 @@ void mapInMenu::updateIcons()
 		playerTile->getTileMapSprite()->getPosition().y + lengthPlayerFromTileOrigin.y * scale.y));
 	player->setRotation(playerRotation);
 
-	if(targetIsSet)
+	if (targetIsSet)
 		setTarget();
 }
 

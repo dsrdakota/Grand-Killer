@@ -12,7 +12,7 @@ mGame::mGame()
 
 	map = &Map::Instance();
 
-	taxi = new Car(carType::Type::Taxi,sf::Vector2f(4585,4759));
+	taxi = new Car(carType::Type::Taxi, sf::Vector2f(4585, 4759));
 	cars.push_back(taxi);
 
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4759)));
@@ -48,7 +48,7 @@ void mGame::play()
 		switch (*gameState)
 		{
 		case state::MainGame:
-			
+
 			Map::Instance().updateView(player->getPosition());
 
 			player->move();
@@ -93,21 +93,13 @@ void mGame::draw()
 	{
 		i->draw();
 
-		if(*gameState == state::MainGame)
+		if (*gameState == state::MainGame)
 			i->updatePosition();
 	}
 
 	if (*gameState == state::MainGame)
 	{
-		const auto &allTiles = Map::getTilesVector();
-		Tile *tile = allTiles[static_cast<size_t>(player->getPosition().x / Map::getTileSize())][static_cast<size_t>(player->getPosition().y / Map::getTileSize())];
-
-		sf::Vector2f lenght = player->getPosition() - tile->getTileSprite()->getPosition();
-
-		Radar::Instance().setPlayerPosition(tile, lenght, player->getRotation());
-
-		Radar::Instance().update();
-
+		Radar::Instance().update(player->getPosition(),player->getRotation());
 		Radar::Instance().draw();
 	}
 
@@ -116,14 +108,14 @@ void mGame::draw()
 
 void mGame::switchState()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::MainGame && menu->getCooldownValue() <=0)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::MainGame && menu->getCooldownValue() <= 0)
 	{
 		menu->setPosition(Map::getUpLeftCornerPosOfCurrentView(), player->getPosition(), player->getRotation());
 		menu->restartCooldownValue();
 		window->setMouseCursorVisible(true);
 		*gameState = state::Menu;
 	}
-	else if (menu->canExitMenu() &&  (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || sf::Mouse::isButtonPressed(sf::Mouse::Right)) && *gameState == state::Menu && menu->getCooldownValue() <= 0)
+	else if (menu->canExitMenu() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || sf::Mouse::isButtonPressed(sf::Mouse::Right)) && *gameState == state::Menu && menu->getCooldownValue() <= 0)
 	{
 		menu->restartCooldownValue();
 		window->setMouseCursorVisible(false);
@@ -131,7 +123,7 @@ void mGame::switchState()
 	}
 
 	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && *gameState == state::MainGame)
-		*gameState = state::Map;
+	*gameState = state::Map;
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && *gameState == state::Map)
-		*gameState = state::MainGame;*/
+	*gameState = state::MainGame;*/
 }

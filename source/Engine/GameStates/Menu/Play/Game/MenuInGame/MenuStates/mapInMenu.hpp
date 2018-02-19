@@ -40,7 +40,7 @@ private:
 	Tile *playerTile;
 	sf::Vector2f lengthPlayerFromTileOrigin;
 	float playerRotation;
-	
+
 	Tile *targetTile;
 	sf::Vector2f lengthTargetFromTileOrigin;
 
@@ -64,7 +64,7 @@ private:
 	Tile *getCenterTileOnWindow();
 	Tile *getTileUnderMouse();
 	Tile *getTileUnderPosition(const sf::Vector2f &position);
-	void centerMapOnTile(sf::Sprite *tileSprite,const sf::Vector2f &lengthFromTile);
+	void centerMapOnTile(sf::Sprite *tileSprite, const sf::Vector2f &lengthFromTile);
 	void centerMapOnPlayer();
 	void moveAllTiles(const sf::Vector2f &offset);
 	void updateIcons();
@@ -74,5 +74,4 @@ private:
 
 	void setPlayerVisible();
 	void setTarget();
-
 };

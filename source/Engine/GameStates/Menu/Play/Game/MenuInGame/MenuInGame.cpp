@@ -15,7 +15,7 @@ MenuInGame::MenuInGame(const sf::Vector2u &windowSize) : window(Game::Instance()
 
 	grandKillerText = new Text(sf::Color::White, 50, "Grand Killer", "data/Font/italic.ttf");
 
-	leftArrow = new sf::Sprite(*textureManager::load("leftArrow","data/Game/MenuInGame/leftArrow.png"));
+	leftArrow = new sf::Sprite(*textureManager::load("leftArrow", "data/Game/MenuInGame/leftArrow.png"));
 	rightArrow = new sf::Sprite(*textureManager::load("rightArrow", "data/Game/MenuInGame/rightArrow.png"));
 
 	name = new Text(sf::Color::White, 17, "Bohater", "data/Font/italic.ttf");
@@ -30,10 +30,10 @@ MenuInGame::MenuInGame(const sf::Vector2u &windowSize) : window(Game::Instance()
 
 	map = new mapInMenu;
 	options.push_back(map);
-	options.push_back(new Diary()); 
-	options.push_back(new Statistics()); 
-	options.push_back(new Steerage()); 
-	options.push_back(new gameInMenu()); 
+	options.push_back(new Diary());
+	options.push_back(new Statistics());
+	options.push_back(new Steerage());
+	options.push_back(new gameInMenu());
 
 	headersButton[0]->setEnabled();
 
@@ -83,7 +83,7 @@ void MenuInGame::updateCooldown()
 		*timeEscapeButton.time = sf::Time::Zero;
 	}
 
-	if(cooldownChangeStates && timeChangeStates.time->asSeconds() >=0.2f)
+	if (cooldownChangeStates && timeChangeStates.time->asSeconds() >= 0.2f)
 	{
 		cooldownChangeStates = 0;
 		timeChangeStates.clock->restart();
@@ -111,8 +111,8 @@ void MenuInGame::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &p
 
 	headersButton[0]->setPosition(sf::Vector2f(grandKillerText->text->getPosition().x, leftArrow->getPosition().y - 2.5f));
 
-	for(size_t i=1;i<headersButton.size();++i)
-		headersButton[i]->setPosition(sf::Vector2f(headersButton[i-1]->getButtonSprite()->getPosition().x + headersButton[i - 1]->getButtonSprite()->getGlobalBounds().width + 2,
+	for (size_t i = 1;i<headersButton.size();++i)
+		headersButton[i]->setPosition(sf::Vector2f(headersButton[i - 1]->getButtonSprite()->getPosition().x + headersButton[i - 1]->getButtonSprite()->getGlobalBounds().width + 2,
 			leftArrow->getPosition().y - 2.5f));
 
 	cash->text->setPosition(headersButton[headersButton.size() - 1]->getButtonSprite()->getPosition().x,
@@ -154,7 +154,7 @@ void MenuInGame::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &p
 
 	map->setPlayerPosition(tile, lenght, playerRot);
 
-	for(const auto &i:options)
+	for (const auto &i : options)
 		i->setPosition(background->getPosition(), sf::Vector2f(firstButton->getPosition().x,
 			firstButton->getPosition().x + window->getSize().x * 0.8f - window->getSize().x * 0.2f + 10),
 			sf::Vector2f(firstButton->getPosition().y + firstButton->getGlobalBounds().height + 10,

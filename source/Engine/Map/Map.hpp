@@ -4,7 +4,6 @@
 
 #include "../../Manager/Tiles.hpp"
 
-#include "MapEffects/Tile.hpp"
 #include "MapEffects/OtherElements.hpp"
 #include "MapEffects/TrafficSigns.hpp"
 #include "MapEffects/TrafficLights.hpp"
@@ -33,6 +32,8 @@ public:
 	void drawUnder();
 	void drawOn();
 
+	static sf::Sprite* getRadar();
+
 	static const short int getTileSize() { return *Instance().TileSize; }
 	static const sf::Vector2f getCountTile() { return sf::Vector2f(*Instance().tilesCountWidth, *Instance().tilesCountHeigth); }
 	static bool isOutsideView(const sf::Vector2f & pos);
@@ -49,6 +50,13 @@ private:
 	Map();
 
 	sf::RenderWindow *window;
+
+	sf::Sprite *map;
+	sf::Sprite *radar;
+
+	sf::RenderTexture *textureOfMap;
+	sf::RenderTexture *textureOfMiniMap;
+	sf::Image *hitboxGrass;
 
 	const sf::Vector2f *mapSize;
 	const short int *TileSize;

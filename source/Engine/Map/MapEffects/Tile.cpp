@@ -14,12 +14,6 @@ Tile::Tile(const size_t & index, const sf::Vector2f & position)
 	mapSprite = new sf::Sprite(*textureManager::get(std::to_string(index) + "_Minimap"));
 
 	radarSprite = new sf::Sprite(*textureManager::get(std::to_string(index) + "_Minimap"));
-
-	this->index = index;
-
-	if ((index >= 1 && index <=28) ||
-		(index >= 64 && index <= 76))
-		tilesManager::Instance().addTileToGrassVector(this);
 }
 
 Tile::~Tile()

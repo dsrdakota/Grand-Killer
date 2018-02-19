@@ -101,17 +101,19 @@ public:
 		return tiles;
 	}
 
-	std::vector<Tile*> getOnlyGrassTiles();
-	const sf::Image *getTileGrassHitbox(const size_t &index);
-
-	void addTileToGrassVector(Tile* tile);
+	sf::Sprite* getTilesMap(const size_t &index);
+	sf::Sprite* getTilesMiniMap(const size_t &index);
+	sf::Sprite* getTilesHitboxGrass(const size_t &index);
 
 private:
 
-	std::vector<std::string>TilesPath;
+	const unsigned *countOfTiles;
 
-	std::vector<Tile*> allGrassTile;
-	std::vector<std::pair<sf::Image*, size_t*>>grassTitlesHitbox;
+	std::vector<sf::Sprite*>TilesMap;
+	std::vector<sf::Sprite*>TilesMiniMap;
+	std::vector<sf::Sprite*>TilesHitboxGrass;
 
 	tilesManager();
+
+	bool validateIndex(const size_t &index);
 };

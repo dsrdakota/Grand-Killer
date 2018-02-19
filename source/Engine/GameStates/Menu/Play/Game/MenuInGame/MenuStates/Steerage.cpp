@@ -10,7 +10,7 @@ Steerage::Steerage()
 	buttons.push_back(new Button(sf::Vector2f(225, 30), 15, "Sterowanie - ruch"));
 	buttons.push_back(new Button(sf::Vector2f(225, 30), 15, "Sterowanie - walka"));
 	buttons.push_back(new Button(sf::Vector2f(225, 30), 15, "Sterowanie - wybieranie broni"));
-	buttons.push_back(new Button(sf::Vector2f(225, 30), 15, "Sterowanie - samochody"));
+	buttons.push_back(new Button(sf::Vector2f(225, 30), 15, "Sterowanie - pojazdy"));
 
 	hitboxClick = new sf::RectangleShape;
 	backgroundRight = new sf::RectangleShape;

@@ -20,20 +20,54 @@ Map::Map() : window(Game::Instance().getWindow())
 
 	std::ifstream file("data/Map/Tileset/Tiles.txt"); // binary soon
 
+	textureOfMap = new sf::RenderTexture;
+	textureOfMiniMap = new sf::RenderTexture;
+	sf::RenderTexture textureOfHitboxGrass;
+
+	textureOfMap->create(6000, 6000);
+	textureOfMiniMap->create(6000, 6000);
+	textureOfHitboxGrass.create(6000, 6000);
+
+	textureOfMap->clear();
+	textureOfMiniMap->clear();
+	textureOfHitboxGrass.clear();
+
 	for (int i = 0; i<*tilesCountHeigth; i++)
 	{
 		std::vector<Tile*>buf;
-		for (int j = 0; j<*tilesCountWidth; j++)
+		for (int j = 0; j < *tilesCountWidth; j++)
 		{
 			int a;
 			file >> a;
+			sf::Sprite *spriteMap = tilesManager::Instance().getTilesMap(a);
+			spriteMap->setPosition(j * *TileSize, i * *TileSize);
+			textureOfMap->draw(*spriteMap);
+
+			sf::Sprite *spriteMiniMap = tilesManager::Instance().getTilesMiniMap(a);
+			spriteMiniMap->setPosition(j * *TileSize, i * *TileSize);
+			textureOfMiniMap->draw(*spriteMiniMap);
+
+			sf::Sprite *spriteHitbox = tilesManager::Instance().getTilesHitboxGrass(a);
+			spriteHitbox->setPosition(j * *TileSize, i * *TileSize);
+			textureOfHitboxGrass.draw(*spriteHitbox);
+
 			buf.push_back(new Tile(a, sf::Vector2f(static_cast<float>(j * *TileSize), static_cast<float>(i * *TileSize))));
 		}
 		Tiles.push_back(buf);
 	}
 
+	// adding buildings on map
+
+	textureOfMap->display();
+	textureOfMiniMap->display();
+	textureOfHitboxGrass.display();
+
 	file.clear();
 	file.close();
+
+	map = new sf::Sprite(textureOfMap->getTexture());
+	radar = new sf::Sprite(textureOfMiniMap->getTexture());
+	hitboxGrass = new sf::Image(textureOfHitboxGrass.getTexture().copyToImage());
 
 	otherElements = new Other;
 	trafficSigns = new TrafficSigns;
@@ -48,9 +82,9 @@ Map::~Map()
 	delete tilesCountHeigth;
 	delete tilesCountWidth;
 
-	for (const auto &i : Tiles)
-		for (const auto &j : i)
-			delete j;
+	delete map;
+	delete textureOfMap;
+	delete hitboxGrass;
 
 	delete otherElements;
 	delete trafficSigns;
@@ -84,20 +118,15 @@ void Map::updateView(const sf::Vector2f &newerView)
 	else if (view->getCenter().y + view->getSize().y / 2 > mapSize->y)
 		setView(sf::Vector2f(view->getCenter().x, mapSize->y - view->getSize().y / 2));
 
+	map->setTextureRect(sf::IntRect(sf::Vector2i(view->getCenter().x - view->getSize().x / 2 - 10, view->getCenter().y - view->getSize().y / 2 - 10),
+		sf::Vector2i(view->getSize().x + 10,view->getSize().y + 10)));
+
+	map->setPosition(sf::Vector2f(view->getCenter().x - view->getSize().x / 2 - 10, view->getCenter().y - view->getSize().y / 2 - 10));
 }
 
 void Map::drawUnder()
 {
-	for (const auto &i : Tiles)
-		for (const auto &j : i)
-		{
-			const auto &sprite = j->getTileSprite();
-			if (!isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top)) ||
-				!isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top)) ||
-				!isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left + sprite->getGlobalBounds().width, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)) ||
-				!isOutsideView(sf::Vector2f(sprite->getGlobalBounds().left, sprite->getGlobalBounds().top + sprite->getGlobalBounds().height)))
-				renderSprites::Instance().addToRender(sprite);
-		}
+	renderSprites::Instance().addToRender(map);
 
 	if (allCarTraces.size() > 600 * allCarTraces.size())
 	{
@@ -137,6 +166,11 @@ void Map::drawOn()
 	//trafficLights->drawOn();
 }
 
+sf::Sprite * Map::getRadar()
+{
+	return Instance().radar;
+}
+
 bool Map::isOutsideView(const sf::Vector2f & pos)
 {
 	const sf::Vector2f viewSize = Map::Instance().view->getSize();
@@ -154,26 +188,15 @@ bool Map::isOutsideView(const sf::Vector2f & pos)
 
 bool Map::isPointOnGrass(const sf::Vector2f & pos)
 {
-	auto allTileWithGrass = tilesManager::Instance().getOnlyGrassTiles();
+	if (pos.x < 0 || pos.y < 0)
+		return false;
 
-	for (auto &i : allTileWithGrass)
-	{
-		if (i->getTileSprite()->getGlobalBounds().contains(pos))
-		{
-			if (static_cast<tilesManager::tileTypes>(i->getIndex()) == tilesManager::tileTypes::grass) // full grass
-				return true;
+	if (pos.x > Instance().mapSize->x || pos.y > Instance().mapSize->y)
+		return false;
 
-			const sf::Image *hitbox = tilesManager::Instance().getTileGrassHitbox(i->getIndex());
-			sf::Vector2f lengthFromTile = pos - i->getTileSprite()->getPosition();
+	if (Instance().hitboxGrass->getPixel(static_cast<unsigned>(pos.x),static_cast<unsigned>(pos.y)) == sf::Color::White)
+		return true;
 
-			if (lengthFromTile.x >= 0 &&
-				lengthFromTile.x < hitbox->getSize().x &&
-				lengthFromTile.y >= 0 &&
-				lengthFromTile.y < hitbox->getSize().y &&
-				hitbox->getPixel(static_cast<unsigned>(lengthFromTile.x), static_cast<unsigned>(lengthFromTile.y)) == sf::Color::White)
-				return true;
-		}
-	}
 	return false;
 }
 
