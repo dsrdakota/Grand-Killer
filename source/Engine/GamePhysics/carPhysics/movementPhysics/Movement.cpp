@@ -21,6 +21,14 @@ Movement::Movement(Car *car) : car(car)
 	case carType::Type::Ambulance:
 		break;
 	case carType::Type::Audi:
+
+		MAX_SPEED = new double(23);
+
+		acceleration = new double(0.1);
+		breakingForce = new double(0.4);
+
+		drive = TypeOfDrive::Back;
+
 		break;
 	case carType::Type::Black_viper:
 		break;

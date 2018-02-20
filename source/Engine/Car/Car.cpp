@@ -17,6 +17,19 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	case carType::Type::Ambulance:
 		break;
 	case carType::Type::Audi:
+
+		weight = new unsigned(1500);
+
+		origin = sf::Vector2f(48, 111);
+
+		pathToTexture += "Audi/audi.png";
+		pathToShadow += "Audi/audi_shadow.png";
+		nameTexture = "Audi";
+
+		shadow = new sf::Sprite(*textureManager::load(nameTexture + "Shadow", pathToShadow));
+		shadow->setPosition(startPos.x + 40, startPos.y);
+		shadow->setOrigin(83, 128);
+
 		break;
 	case carType::Type::Black_viper:
 		break;
@@ -30,7 +43,7 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 		break;
 	case carType::Type::Taxi:
 
-		weight = new unsigned(1500);
+		weight = new unsigned(1750);
 
 		origin = sf::Vector2f(41,99);
 
@@ -40,7 +53,7 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 
 		shadow = new sf::Sprite(*textureManager::load(nameTexture + "Shadow", pathToShadow));
 		shadow->setPosition(startPos.x + 20, startPos.y);
-		shadow->setOrigin(origin.x + 40, origin.y + 30);
+		shadow->setOrigin(81, 129);
 
 		break;
 	case carType::Type::Truck:
@@ -187,7 +200,7 @@ void Car::toControl()
 
 float Car::getRotation()
 {
-	return static_cast<float>(sprite->getRotation() - *getOverSteerValue());
+	return sprite->getRotation();
 }
 
 sf::Vector2f Car::getPosition()

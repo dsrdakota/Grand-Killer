@@ -17,6 +17,9 @@ carCollisionHitbox::carCollisionHitbox(Car *car)
 	case carType::Type::Ambulance:
 		break;
 	case carType::Type::Audi:
+
+		pathToHitboxFile += "Audi/audi.gk";
+
 		break;
 	case carType::Type::Black_viper:
 		break;

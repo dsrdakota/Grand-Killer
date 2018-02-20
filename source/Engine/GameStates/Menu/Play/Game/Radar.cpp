@@ -4,8 +4,6 @@
 #include "../../../../../Manager/renderSprites.hpp"
 #include "../../../../../Manager/Texture.hpp"
 
-#include <iostream>
-
 Radar::Radar() : window(Game::Instance().getWindow())
 {
 	radarArea = new sf::RectangleShape(sf::Vector2f(300, 150));
@@ -13,50 +11,147 @@ Radar::Radar() : window(Game::Instance().getWindow())
 
 	radar = Map::getRadar();
 
-	player = new sf::Sprite(*textureManager::get("playerMinimap"));
-	player->setOrigin(player->getGlobalBounds().left + player->getGlobalBounds().width / 2.f, player->getGlobalBounds().top + player->getGlobalBounds().height / 2.f);
+	playerIco = new sf::Sprite(*textureManager::get("playerMinimap"));
+	playerIco->setOrigin(playerIco->getGlobalBounds().left + playerIco->getGlobalBounds().width / 2.f, playerIco->getGlobalBounds().top + playerIco->getGlobalBounds().height / 2.f);
 
 	scale = sf::Vector2f(0.1f, 0.1f);
 	radar->setScale(scale);
+
+	radarView = new sf::Sprite(*radar->getTexture());
+	radarView2 = new sf::Sprite(*radar->getTexture());
+
+	radarView->setScale(scale);
+	radarView2->setScale(scale);
+	
+	const float outlineThickness = 2;
+
+	hpBackground = new sf::RectangleShape(sf::Vector2f(radarArea->getSize().x / 4 * 2 - outlineThickness, 8));
+	hpBackground->setOutlineThickness(2);
+	hpBackground->setOutlineColor(sf::Color(0,0,0,220));
+	hpBackground->setFillColor(sf::Color(72, 121, 68, 200));
+
+	hp = new sf::RectangleShape(sf::Vector2f(radarArea->getSize().x / 4 * 2 - outlineThickness - 10, 8));
+	hp->setFillColor(sf::Color(126, 221, 119, 200));
+
+	armorBackground = new sf::RectangleShape(sf::Vector2f(radarArea->getSize().x / 4 * 1 - outlineThickness, 8));
+	armorBackground->setOutlineThickness(2);
+	armorBackground->setOutlineColor(sf::Color(0, 0, 0, 220));
+	armorBackground->setFillColor(sf::Color(51, 108, 152, 200));
+
+	armor = new sf::RectangleShape(sf::Vector2f(radarArea->getSize().x / 4 * 1 - outlineThickness - 50, 8));
+	armor->setFillColor(sf::Color(75, 160, 226, 200));
+
+	thirdBackground = new sf::RectangleShape(sf::Vector2f(radarArea->getSize().x / 4 * 1 - outlineThickness, 8));
+	thirdBackground->setOutlineThickness(2);
+	thirdBackground->setOutlineColor(sf::Color(0, 0, 0, 220));
+	thirdBackground->setFillColor(sf::Color(131, 113, 50, 200));
+
+	third = new sf::RectangleShape(sf::Vector2f(radarArea->getSize().x / 4 * 1 - outlineThickness - 30, 8));
+	third->setFillColor(sf::Color(227, 196, 85, 200));
 }
 
 Radar::~Radar()
 {
 	delete radarArea;
-	delete player;
+	delete playerIco;
 	delete target;
+
+	delete hp;
+	delete armor;
+	delete third;
 }
 
-void Radar::update(const sf::Vector2f &position, const float &rotation)
+void Radar::update(Player *player)
 {
 	radar = Map::getRadar();
+
+	radarView->setTexture(*radar->getTexture());
+	radarView2->setTexture(*radar->getTexture());
 
 	radarArea->setPosition(sf::Vector2f(Map::getUpLeftCornerPosOfCurrentView().x + 40,
 		Map::getUpLeftCornerPosOfCurrentView().y + window->getSize().y - radarArea->getSize().y - 80));
 
-	player->setPosition(position.x * (radar->getGlobalBounds().width / 6000), position.y * (radar->getGlobalBounds().height / 6000));
+	playerIco->setPosition(player->getPosition().x * (radar->getGlobalBounds().width / Map::getMapSize().x), player->getPosition().y * (radar->getGlobalBounds().height / Map::getMapSize().y));
 
-	player->setRotation(rotation);
+	playerIco->setRotation(player->getRotation());
 
 	radar->setPosition(radarArea->getPosition());
-	player->setPosition(player->getPosition() + radarArea->getPosition());
+	playerIco->setPosition(playerIco->getPosition() + radarArea->getPosition());
 
 	centerMapOnPlayer();
 }
 
 void Radar::centerMapOnPlayer()
 {
-	sf::Vector2f moveOffset = sf::Vector2f(radarArea->getGlobalBounds().width / 2.f - player->getPosition().x,
-		radarArea->getGlobalBounds().height / 2.f - player->getPosition().y);
+	sf::Vector2f moveOffset = sf::Vector2f(radarArea->getGlobalBounds().width / 2.f - playerIco->getPosition().x,
+		radarArea->getGlobalBounds().height / 2.f - playerIco->getPosition().y);
 
-	radar->move(moveOffset + radarArea->getPosition());
-	player->move(moveOffset + radarArea->getPosition());
+	moveOffset += radarArea->getPosition();
+
+	if (radar->getPosition().x + moveOffset.x < radarArea->getPosition().x &&
+		radar->getPosition().x + radar->getGlobalBounds().width + moveOffset.x > radarArea->getPosition().x + radarArea->getGlobalBounds().width)
+	{
+		radar->move(moveOffset.x, 0);
+		playerIco->move(moveOffset.x, 0);
+	}
+
+	else if(!(radar->getPosition().x + radar->getGlobalBounds().width + moveOffset.x > radarArea->getPosition().x + radarArea->getGlobalBounds().width))
+	{
+		playerIco->setPosition(playerIco->getPosition().x - radarArea->getGlobalBounds().width, playerIco->getPosition().y);
+		radar->setPosition(radarArea->getPosition().x + radarArea->getGlobalBounds().width - radar->getGlobalBounds().width ,radar->getPosition().y);
+	}
+	
+
+	if (radar->getPosition().y + moveOffset.y < radarArea->getPosition().y &&
+		radar->getPosition().y + radar->getGlobalBounds().height + moveOffset.y > radarArea->getPosition().y + radarArea->getGlobalBounds().height)
+	{
+		radar->move(0, moveOffset.y);
+		playerIco->move(0, moveOffset.y);
+	}
+
+	else if (!(radar->getPosition().y + radar->getGlobalBounds().height + moveOffset.y > radarArea->getPosition().y + radarArea->getGlobalBounds().height))
+	{
+		playerIco->setPosition(playerIco->getPosition().x, playerIco->getPosition().y - radarArea->getGlobalBounds().height * 3);
+		radar->setPosition(radar->getPosition().x, radarArea->getPosition().y + radarArea->getGlobalBounds().height - radar->getGlobalBounds().height);
+	}
+
+	radarView->setTextureRect(sf::IntRect(sf::Vector2i(static_cast<int>((radarArea->getPosition().x - radar->getPosition().x) * (Map::getMapSize().x / radar->getGlobalBounds().width)), static_cast<int>((radarArea->getPosition().y - radar->getPosition().y) * (Map::getMapSize().y / radar->getGlobalBounds().height))),
+		sf::Vector2i(static_cast<int>(radarArea->getGlobalBounds().width * (Map::getMapSize().x / radar->getGlobalBounds().width)), static_cast<int>(radarArea->getGlobalBounds().height * (Map::getMapSize().y / radar->getGlobalBounds().height)))));
+
+	radarView->setPosition(radarArea->getPosition());
+	radarView->setColor(sf::Color(255, 255, 255, 180));
+
+	radarView2->setTextureRect(sf::IntRect(sf::Vector2i(static_cast<int>((radarArea->getPosition().x - radar->getPosition().x - 10.f) * (Map::getMapSize().x / radar->getGlobalBounds().width)), static_cast<int>((radarArea->getPosition().y - radar->getPosition().y - 10.f) * (Map::getMapSize().y / radar->getGlobalBounds().height))),
+		sf::Vector2i(static_cast<int>((radarArea->getGlobalBounds().width + 20.f) * (Map::getMapSize().x / radar->getGlobalBounds().width)), static_cast<int>((radarArea->getGlobalBounds().height + 20.f) * (Map::getMapSize().y / radar->getGlobalBounds().height)))));
+
+	radarView2->setPosition(radarArea->getPosition().x - 10.f, radarArea->getPosition().y - 10.f);
+	radarView2->setColor(sf::Color(255, 255, 255, 40));
+
+	hpBackground->setPosition(radarArea->getPosition().x, radarArea->getPosition().y + radarArea->getGlobalBounds().height + 5);
+	hp->setPosition(hpBackground->getPosition());
+
+	armorBackground->setPosition(hpBackground->getPosition().x + hpBackground->getGlobalBounds().width,
+		hpBackground->getPosition().y);
+	armor->setPosition(armorBackground->getPosition());
+
+	thirdBackground->setPosition(armorBackground->getPosition().x + armorBackground->getGlobalBounds().width,
+		armorBackground->getPosition().y);
+	third->setPosition(thirdBackground->getPosition());
 }
 
 void Radar::draw()
 {
-	renderSprites::Instance().addToRender(radar);
-	renderSprites::Instance().addToRender(radarArea);
+	renderSprites::Instance().addToRender(radarView);
+	renderSprites::Instance().addToRender(radarView2);
 
-	renderSprites::Instance().addToRender(player);
+	renderSprites::Instance().addToRender(playerIco);
+
+	renderSprites::Instance().addToRender(hpBackground);
+	renderSprites::Instance().addToRender(hp);
+
+	renderSprites::Instance().addToRender(armorBackground);
+	renderSprites::Instance().addToRender(armor);
+
+	renderSprites::Instance().addToRender(thirdBackground);
+	renderSprites::Instance().addToRender(third);
 }

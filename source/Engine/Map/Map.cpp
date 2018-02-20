@@ -24,9 +24,9 @@ Map::Map() : window(Game::Instance().getWindow())
 	textureOfMiniMap = new sf::RenderTexture;
 	sf::RenderTexture textureOfHitboxGrass;
 
-	textureOfMap->create(6000, 6000);
-	textureOfMiniMap->create(6000, 6000);
-	textureOfHitboxGrass.create(6000, 6000);
+	textureOfMap->create(mapSize->x, mapSize->y);
+	textureOfMiniMap->create(mapSize->x, mapSize->y);
+	textureOfHitboxGrass.create(mapSize->x, mapSize->y);
 
 	textureOfMap->clear();
 	textureOfMiniMap->clear();

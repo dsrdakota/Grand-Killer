@@ -12,10 +12,12 @@ mGame::mGame()
 
 	map = &Map::Instance();
 
-	taxi = new Car(carType::Type::Taxi, sf::Vector2f(4585, 4759));
+	taxi = new Car(carType::Type::Audi, sf::Vector2f(4585, 4759));
 	cars.push_back(taxi);
 
-	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4759)));
+	cars.push_back(new Car(carType::Type::Audi, sf::Vector2f(4385, 4959)));
+
+	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4085, 4959)));
 	/*cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(5900, 5800)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4959)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4885, 4559)));
@@ -99,7 +101,7 @@ void mGame::draw()
 
 	if (*gameState == state::MainGame)
 	{
-		Radar::Instance().update(player->getPosition(),player->getRotation());
+		Radar::Instance().update(player);
 		Radar::Instance().draw();
 	}
 

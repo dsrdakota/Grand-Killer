@@ -369,14 +369,19 @@ std::pair<Car::collisionSide, Car::collisionSide> carCollisionWithCar::whereIsCo
 bool carCollisionWithCar::checkCollisionBetweenTwoCars(std::pair<const std::vector<sf::CircleShape*>, const std::vector<sf::CircleShape*>>hitbox, const std::pair<bool*, bool*>&isCollision)
 {
 	for (const auto &i : hitbox.first)
-		for (const auto &j : hitbox.second)
+	{
+		if (car2->getGlobalBounds().intersects(i->getGlobalBounds()))
 		{
-			sf::Vector2f vector = carCollisionHitbox::getCenterOfHitbox(*j) - carCollisionHitbox::getCenterOfHitbox(*i);
-			float length = sqrt(vector.x*vector.x + vector.y * vector.y);
+			for (const auto &j : hitbox.second)
+			{
+				sf::Vector2f vector = carCollisionHitbox::getCenterOfHitbox(*j) - carCollisionHitbox::getCenterOfHitbox(*i);
+				float length = sqrt(vector.x*vector.x + vector.y * vector.y);
 
-			if (length < 4)
-				return true;
+				if (length < 4)
+					return true;
+			}
 		}
+	}
 
 	*isCollision.first = false;
 	*isCollision.second = false;
@@ -468,6 +473,8 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 
 	car1->breakSlide();
 	car2->breakSlide();
+
+	car2->setSpeed(static_cast<float>(car2->getSpeed()) / 2.f);
 
 	switch (side.first)
 	{

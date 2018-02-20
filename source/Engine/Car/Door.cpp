@@ -7,11 +7,11 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 {
 	car = sprite;
 
-	underDoors = new sf::RectangleShape(sf::Vector2f(78, 120));
-	underDoors->setOrigin(sprite->getOrigin().x - 2, sprite->getOrigin().y - 35);
+	underDoors = new sf::RectangleShape;
 	underDoors->setFillColor(sf::Color::Black);
 
 	doorsHitbox = new sf::CircleShape[4];
+	doors = new sf::RectangleShape[4];
 
 	std::string pathToTexture = "data/Models/Cars/";
 
@@ -20,6 +20,27 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 	case carType::Type::Ambulance:
 		break;
 	case carType::Type::Audi:
+
+		underDoors->setSize(sf::Vector2f(78, 130));
+		underDoors->setOrigin(sprite->getOrigin().x - 10, sprite->getOrigin().y - 40);
+
+		pathToTexture += "Audi/doors/";
+
+		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 14.5f, sprite->getOrigin().y - 71);
+		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 14, sprite->getOrigin().y - 122);
+		doorsHitbox[2].setOrigin(sprite->getOrigin().x - 80.5f, sprite->getOrigin().y - 69);
+		doorsHitbox[3].setOrigin(sprite->getOrigin().x - 77.5f, sprite->getOrigin().y - 122);
+
+		doors[0].setSize(sf::Vector2f(8.5f, 49));
+		doors[1].setSize(sf::Vector2f(8, 52));
+		doors[2].setSize(sf::Vector2f(7.5f, 52));
+		doors[3].setSize(sf::Vector2f(8, 49));
+
+		doors[0].setOrigin(3, 3);
+		doors[1].setOrigin(1, 1);
+		doors[2].setOrigin(5, 4);
+		doors[3].setOrigin(3, 1);
+
 		break;
 	case carType::Type::Black_viper:
 		break;
@@ -33,12 +54,25 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 		break;
 	case carType::Type::Taxi:
 
+		underDoors->setSize(sf::Vector2f(78, 120));
+		underDoors->setOrigin(sprite->getOrigin().x - 2, sprite->getOrigin().y - 35);
+
 		pathToTexture += "Taxi/doors/";
 
 		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 3, sprite->getOrigin().y - 62);
 		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 3, sprite->getOrigin().y - 107);
 		doorsHitbox[2].setOrigin(sprite->getOrigin().x - 77, sprite->getOrigin().y - 59);
 		doorsHitbox[3].setOrigin(sprite->getOrigin().x - 77, sprite->getOrigin().y - 108);
+
+		doors[0].setSize(sf::Vector2f(9, 44));
+		doors[1].setSize(sf::Vector2f(8, 49));
+		doors[2].setSize(sf::Vector2f(8, 49));
+		doors[3].setSize(sf::Vector2f(7, 41));
+
+		doors[0].setOrigin(1, 1);
+		doors[1].setOrigin(1, 1);
+		doors[2].setOrigin(6, 0);
+		doors[3].setOrigin(6, 0);
 
 		break;
 	case carType::Type::Truck:
@@ -51,13 +85,6 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 	doorTextures[2].loadFromFile(pathToTexture + "rightF.png");
 	doorTextures[3].loadFromFile(pathToTexture + "rightB.png");
 
-	doors = new sf::RectangleShape[4];
-
-	doors[0].setSize(sf::Vector2f(9, 44));
-	doors[1].setSize(sf::Vector2f(8, 49));
-	doors[2].setSize(sf::Vector2f(8, 49));
-	doors[3].setSize(sf::Vector2f(7, 41));
-
 	for (size_t i = 0;i < 4;++i)
 	{
 		doorTextures[i].setSmooth(true);
@@ -69,11 +96,6 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 		doorsHitbox[i].setRadius(1);
 		doorsHitbox[i].setFillColor(sf::Color::Red);
 	}
-
-	doors[0].setOrigin(1, 1);
-	doors[1].setOrigin(1, 1);
-	doors[2].setOrigin(6, 0);
-	doors[3].setOrigin(6, 0);
 
 	angleOpen = new float[4]{ 0 };
 	MAX_ANGLEN_OPEN = new const float(65.f);

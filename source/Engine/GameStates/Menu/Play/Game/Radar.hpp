@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../../../../Map/Map.hpp"
+#include "../../../../Player/Player.hpp"
 
 class Radar
 {
@@ -19,7 +20,7 @@ public:
 		return radar;
 	}
 
-	void update(const sf::Vector2f &position, const float &rotation);
+	void update(Player *player);
 	void draw();
 
 private:
@@ -29,21 +30,25 @@ private:
 	sf::RenderWindow *window;
 
 	sf::Sprite *radar;
+	sf::Sprite *radarView;
+	sf::Sprite *radarView2; // more opacity
 	sf::RectangleShape *radarArea;
 
 	std::vector<std::vector<Tile*>>radarTiles;
 
 	sf::Vector2f scale;
 
-	sf::Sprite *player;
-	Tile *playerTile;
-	sf::Vector2f lengthPlayerFromTileOrigin;
+	sf::Sprite *playerIco;
 	float playerRotation;
 
 	sf::Sprite *target;
-	Tile *targetTile;
-	sf::Vector2f lengthTargetFromTileOrigin;
+
+	sf::RectangleShape *hp;
+	sf::RectangleShape *hpBackground;
+	sf::RectangleShape *armor;
+	sf::RectangleShape *armorBackground;
+	sf::RectangleShape *third; // condition or car damage
+	sf::RectangleShape *thirdBackground;
 
 	void centerMapOnPlayer();
-	void moveAllTiles(const sf::Vector2f & offset);
 };

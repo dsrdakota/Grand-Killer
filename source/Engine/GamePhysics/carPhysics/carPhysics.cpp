@@ -11,6 +11,10 @@ carPhysics::carPhysics(Car *car)
 	case carType::Type::Ambulance:
 		break;
 	case carType::Type::Audi:
+
+		SPEED_ROTATE_CAR = new double(0.2);
+		SPEED_ROTATE_TIRE = new const double(5);
+
 		break;
 	case carType::Type::Black_viper:
 		break;
@@ -32,7 +36,7 @@ carPhysics::carPhysics(Car *car)
 		break;
 	}
 
-	turnPhysics = new toTurn(car, std::make_pair(car->getTires()->getTires(0), car->getTires()->getTires(1)), std::make_pair(car->getTires()->getTires(2), car->getTires()->getTires(3)), SPEED_ROTATE_TIRE,SPEED_ROTATE_CAR);
+	turnPhysics = new toTurn(car, std::make_pair(car->getTires()->getTires(0), car->getTires()->getTires(1)), std::make_pair(car->getTires()->getTires(2), car->getTires()->getTires(3)), SPEED_ROTATE_TIRE, SPEED_ROTATE_CAR);
 	movePhysics = new Movement(car);
 	collisionHitboxes = new carCollisionHitbox(car);
 }

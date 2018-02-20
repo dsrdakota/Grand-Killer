@@ -34,6 +34,7 @@ public:
 
 	static sf::Sprite* getRadar();
 
+	static const sf::Vector2f getMapSize() { return *Instance().mapSize; }
 	static const short int getTileSize() { return *Instance().TileSize; }
 	static const sf::Vector2f getCountTile() { return sf::Vector2f(*Instance().tilesCountWidth, *Instance().tilesCountHeigth); }
 	static bool isOutsideView(const sf::Vector2f & pos);

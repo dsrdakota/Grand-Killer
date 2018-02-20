@@ -22,6 +22,13 @@ Tire::Tire(Car *car,const carType::Type &type)
 	case carType::Type::Ambulance:
 		break;
 	case carType::Type::Audi:
+
+		pathToTexture += "Audi/tire.png";
+		nameTexture = "audiTire";
+
+		for (auto i = 0;i < 4;++i)
+			tires[i].setOrigin(5, 12);
+
 		break;
 	case carType::Type::Black_viper:
 		break;
@@ -65,6 +72,13 @@ void Tire::setPosition(const sf::Sprite* car, const carType::Type & type)
 	case carType::Type::Ambulance:
 		break;
 	case carType::Type::Audi:
+
+		tiresPos[0].setOrigin(car->getOrigin().x, car->getOrigin().y - 45);
+		tiresPos[1].setOrigin(car->getOrigin().x - 89.f, car->getOrigin().y - 45);
+
+		tiresPos[2].setOrigin(tiresPos[0].getOrigin().x - 4.f, car->getOrigin().y - 170);
+		tiresPos[3].setOrigin(tiresPos[1].getOrigin().x + 2.f, car->getOrigin().y - 170);
+
 		break;
 	case carType::Type::Black_viper:
 		break;
