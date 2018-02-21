@@ -32,6 +32,19 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 
 		break;
 	case carType::Type::Black_viper:
+
+		weight = new unsigned(1750);
+
+		origin = sf::Vector2f(44, 111);
+
+		pathToTexture += "Black_viper/black_viper.png";
+		pathToShadow += "Black_viper/black_viper_shadow.png";
+		nameTexture = "Black_viper";
+
+		shadow = new sf::Sprite(*textureManager::load(nameTexture + "Shadow", pathToShadow));
+		shadow->setPosition(startPos.x + 40, startPos.y);
+		shadow->setOrigin(79, 128);
+
 		break;
 	case carType::Type::Car:
 		break;
@@ -43,7 +56,7 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 		break;
 	case carType::Type::Taxi:
 
-		weight = new unsigned(1750);
+		weight = new unsigned(2000);
 
 		origin = sf::Vector2f(41,99);
 
@@ -151,6 +164,16 @@ void Car::setPowerOfCrashMove(const std::pair<sf::Vector2f, float> &power)
 void Car::setPowerOfCrashRotate(const std::pair<float, float>&power)
 {
 	physics->getPhysicsMove()->setPowerOfCrashRotate(power);
+}
+
+bool Car::isRotateAble()
+{
+	return physics->getPhysicsMove()->isRotateAble();
+}
+
+bool Car::isMoveAble()
+{
+	return physics->getPhysicsMove()->isMoveAble();
 }
 
 bool Car::isSlide()

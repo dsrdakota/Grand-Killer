@@ -74,6 +74,9 @@ public:
 	void setPowerOfCrashMove(const std::pair<sf::Vector2f, float> &power);
 	void setPowerOfCrashRotate(const std::pair<float, float>&power);
 
+	bool isRotateAble();
+	bool isMoveAble();
+
 	void toControl() override;
 	float getRotation() override;
 	sf::Vector2f getPosition() override;

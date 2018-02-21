@@ -17,6 +17,10 @@ carPhysics::carPhysics(Car *car)
 
 		break;
 	case carType::Type::Black_viper:
+
+		SPEED_ROTATE_CAR = new double(0.3);
+		SPEED_ROTATE_TIRE = new const double(5);
+
 		break;
 	case carType::Type::Car:
 		break;

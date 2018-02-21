@@ -159,7 +159,7 @@ void toTurn::rotateCar(const float & actualValueRotateCar, const Car::collisionS
 	if (car->getSpeed() < 4)
 		valueRotate = actualValueRotateCar * static_cast<float>(car->getSpeed()) /4.f;
 
-	if (!car->getStateMoving() && !car->getBoolIsCollision(sideFirst) && !checkCollisionWithOneHitbox(hitboxLeftRight.first, -valueRotate))
+	if (!car->getStateMoving()  && !car->getBoolIsCollision(Car::collisionSide::Front) && !car->getBoolIsCollision(sideFirst) && !checkCollisionWithOneHitbox(hitboxLeftRight.first, -valueRotate))
 	{
 		int side = valueRotate > 0 ? 2 : 1; // right : left
 
@@ -168,7 +168,7 @@ void toTurn::rotateCar(const float & actualValueRotateCar, const Car::collisionS
 		else
 			car->rotate(-valueRotate);
 	}
-	else if (car->getStateMoving() == 1 && !car->getBoolIsCollision(sideSecond) && !checkCollisionWithOneHitbox(hitboxLeftRight.second, valueRotate))
+	else if (car->getStateMoving() == 1 && !car->getBoolIsCollision(Car::collisionSide::Back) && !car->getBoolIsCollision(sideSecond) && !checkCollisionWithOneHitbox(hitboxLeftRight.second, valueRotate))
 		car->rotate(valueRotate);
 }
 

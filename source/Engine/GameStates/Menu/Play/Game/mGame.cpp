@@ -16,7 +16,7 @@ mGame::mGame()
 	cars.push_back(taxi);
 
 	cars.push_back(new Car(carType::Type::Audi, sf::Vector2f(4385, 4959)));
-
+	cars.push_back(new Car(carType::Type::Black_viper, sf::Vector2f(3785, 4959)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4085, 4959)));
 	/*cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(5900, 5800)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4959)));

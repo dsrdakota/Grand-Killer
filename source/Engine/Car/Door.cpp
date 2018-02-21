@@ -10,9 +10,6 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 	underDoors = new sf::RectangleShape;
 	underDoors->setFillColor(sf::Color::Black);
 
-	doorsHitbox = new sf::CircleShape[4];
-	doors = new sf::RectangleShape[4];
-
 	std::string pathToTexture = "data/Models/Cars/";
 
 	switch (type)
@@ -21,28 +18,53 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 		break;
 	case carType::Type::Audi:
 
+		countDoors = 4;
+
+		doorsHitbox = new sf::CircleShape[countDoors];
+		doors = new sf::RectangleShape[countDoors];
+
 		underDoors->setSize(sf::Vector2f(78, 130));
 		underDoors->setOrigin(sprite->getOrigin().x - 10, sprite->getOrigin().y - 40);
 
 		pathToTexture += "Audi/doors/";
 
 		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 14.5f, sprite->getOrigin().y - 71);
-		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 14, sprite->getOrigin().y - 122);
-		doorsHitbox[2].setOrigin(sprite->getOrigin().x - 80.5f, sprite->getOrigin().y - 69);
+		doorsHitbox[2].setOrigin(sprite->getOrigin().x - 14, sprite->getOrigin().y - 122);
+		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 80.5f, sprite->getOrigin().y - 69);
 		doorsHitbox[3].setOrigin(sprite->getOrigin().x - 77.5f, sprite->getOrigin().y - 122);
 
 		doors[0].setSize(sf::Vector2f(8.5f, 49));
-		doors[1].setSize(sf::Vector2f(8, 52));
-		doors[2].setSize(sf::Vector2f(7.5f, 52));
+		doors[2].setSize(sf::Vector2f(8, 52));
+		doors[1].setSize(sf::Vector2f(7.5f, 52));
 		doors[3].setSize(sf::Vector2f(8, 49));
 
 		doors[0].setOrigin(3, 3);
-		doors[1].setOrigin(1, 1);
-		doors[2].setOrigin(5, 4);
+		doors[2].setOrigin(1, 1);
+		doors[1].setOrigin(5, 4);
 		doors[3].setOrigin(3, 1);
 
 		break;
 	case carType::Type::Black_viper:
+
+		countDoors = 2;
+
+		doorsHitbox = new sf::CircleShape[countDoors];
+		doors = new sf::RectangleShape[countDoors];
+
+		underDoors->setSize(sf::Vector2f(82, 120));
+		underDoors->setOrigin(sprite->getOrigin().x - 2, sprite->getOrigin().y - 35);
+
+		pathToTexture += "Black_viper/doors/";
+
+		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 7.8f, sprite->getOrigin().y - 87);
+		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 73.8f, sprite->getOrigin().y - 87);
+
+		doors[0].setSize(sf::Vector2f(8.5f, 50));
+		doors[1].setSize(sf::Vector2f(8.5f, 50));
+
+		doors[0].setOrigin(3, 3);
+		doors[1].setOrigin(1, 1);
+
 		break;
 	case carType::Type::Car:
 		break;
@@ -54,24 +76,29 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 		break;
 	case carType::Type::Taxi:
 
+		countDoors = 4;
+
+		doorsHitbox = new sf::CircleShape[countDoors];
+		doors = new sf::RectangleShape[countDoors];
+
 		underDoors->setSize(sf::Vector2f(78, 120));
 		underDoors->setOrigin(sprite->getOrigin().x - 2, sprite->getOrigin().y - 35);
 
 		pathToTexture += "Taxi/doors/";
 
 		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 3, sprite->getOrigin().y - 62);
-		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 3, sprite->getOrigin().y - 107);
-		doorsHitbox[2].setOrigin(sprite->getOrigin().x - 77, sprite->getOrigin().y - 59);
+		doorsHitbox[2].setOrigin(sprite->getOrigin().x - 3, sprite->getOrigin().y - 107);
+		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 77, sprite->getOrigin().y - 59);
 		doorsHitbox[3].setOrigin(sprite->getOrigin().x - 77, sprite->getOrigin().y - 108);
 
 		doors[0].setSize(sf::Vector2f(9, 44));
-		doors[1].setSize(sf::Vector2f(8, 49));
 		doors[2].setSize(sf::Vector2f(8, 49));
+		doors[1].setSize(sf::Vector2f(8, 49));
 		doors[3].setSize(sf::Vector2f(7, 41));
 
 		doors[0].setOrigin(1, 1);
-		doors[1].setOrigin(1, 1);
-		doors[2].setOrigin(6, 0);
+		doors[2].setOrigin(1, 1);
+		doors[1].setOrigin(6, 0);
 		doors[3].setOrigin(6, 0);
 
 		break;
@@ -79,25 +106,29 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 		break;
 	}
 
-	doorTextures = new sf::Texture[4];
+	doorTextures = new sf::Texture[countDoors];
 	doorTextures[0].loadFromFile(pathToTexture + "leftF.png");
-	doorTextures[1].loadFromFile(pathToTexture + "leftB.png");
-	doorTextures[2].loadFromFile(pathToTexture + "rightF.png");
-	doorTextures[3].loadFromFile(pathToTexture + "rightB.png");
+	doorTextures[1].loadFromFile(pathToTexture + "rightF.png");
 
-	for (size_t i = 0;i < 4;++i)
+	if (countDoors == 4)
+	{
+		doorTextures[2].loadFromFile(pathToTexture + "leftB.png");
+		doorTextures[3].loadFromFile(pathToTexture + "rightB.png");
+	}
+
+	for (size_t i = 0;i < countDoors;++i)
 	{
 		doorTextures[i].setSmooth(true);
 		doors[i].setTexture(dynamic_cast<const sf::Texture*>(&doorTextures[i]));
 	}
 
-	for (size_t i = 0;i < 4;++i)
+	for (size_t i = 0;i < countDoors;++i)
 	{
 		doorsHitbox[i].setRadius(1);
 		doorsHitbox[i].setFillColor(sf::Color::Red);
 	}
 
-	angleOpen = new float[4]{ 0 };
+	angleOpen = new float[countDoors]{ 0 };
 	MAX_ANGLEN_OPEN = new const float(65.f);
 
 	updatePosition();
@@ -127,32 +158,43 @@ void Door::toControl()
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
 		close(doorSide::rightFront, 1);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::H))
-		open(doorSide::leftBack, 1);
+	if (countDoors == 4)
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::H))
+			open(doorSide::leftBack, 1);
 
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::J))
-		close(doorSide::leftBack, -1);
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::J))
+			close(doorSide::leftBack, -1);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
-		open(doorSide::rightBack, -1);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+			open(doorSide::rightBack, -1);
 
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
-		close(doorSide::rightBack, 1);
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+			close(doorSide::rightBack, 1);
+	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::N))
 	{
 		open(doorSide::leftFront, 1);
 		open(doorSide::rightFront, -1);
-		open(doorSide::leftBack, 1);
-		open(doorSide::rightBack, -1);
+
+		if (countDoors == 4)
+		{
+			open(doorSide::leftBack, 1);
+			open(doorSide::rightBack, -1);
+		}
 	}
 
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
 	{
 		close(doorSide::leftFront, -1);
 		close(doorSide::rightFront, 1);
-		close(doorSide::leftBack, -1);
-		close(doorSide::rightBack, 1);
+
+		if (countDoors == 4)
+		{
+			close(doorSide::leftBack, -1);
+			close(doorSide::rightBack, 1);
+		}
 	}
 }
 
@@ -160,7 +202,7 @@ void Door::move(const sf::Vector2f & offset)
 {
 	underDoors->move(offset);
 
-	for (size_t i = 0;i < 4;++i)
+	for (size_t i = 0;i < countDoors;++i)
 		doorsHitbox[i].move(offset);
 	updatePosition();
 }
@@ -169,7 +211,7 @@ void Door::rotate(const float & angle)
 {
 	underDoors->rotate(angle);
 
-	for (size_t i = 0;i < 4;++i)
+	for (size_t i = 0;i < countDoors;++i)
 	{
 		doorsHitbox[i].rotate(angle);
 		doors[i].rotate(angle);
@@ -181,7 +223,7 @@ void Door::setRotation(const float & rotation)
 {
 	underDoors->setRotation(rotation);
 
-	for (size_t i = 0;i < 4;++i)
+	for (size_t i = 0;i < countDoors;++i)
 		doorsHitbox[i].setRotation(rotation);
 	updatePosition();
 }
@@ -215,7 +257,7 @@ void Door::drawCenter()
 
 void Door::drawDoors()
 {
-	for (size_t i = 0;i < 4;++i)
+	for (size_t i = 0;i < countDoors;++i)
 		renderSprites::Instance().addToRender(&doors[i]);
 }
 
@@ -224,13 +266,13 @@ void Door::updatePosition()
 	underDoors->setPosition(car->getPosition());
 	underDoors->setRotation(car->getRotation());
 
-	for (size_t i = 0;i < 4;++i)
+	for (size_t i = 0;i < countDoors;++i)
 	{
 		doorsHitbox[i].setPosition(car->getPosition());
 		doorsHitbox[i].setRotation(car->getRotation());
 	}
 
-	for (size_t i = 0;i < 4;++i)
+	for (size_t i = 0;i < countDoors;++i)
 	{
 		doors[i].setPosition(doorsHitbox[i].getGlobalBounds().left + doorsHitbox[i].getGlobalBounds().width / 2,
 			doorsHitbox[i].getGlobalBounds().top + doorsHitbox[i].getGlobalBounds().height / 2);

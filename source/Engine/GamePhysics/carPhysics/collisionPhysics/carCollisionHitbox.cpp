@@ -22,6 +22,9 @@ carCollisionHitbox::carCollisionHitbox(Car *car)
 
 		break;
 	case carType::Type::Black_viper:
+
+		pathToHitboxFile += "Black_viper/black_viper.gk";
+
 		break;
 	case carType::Type::Car:
 		break;

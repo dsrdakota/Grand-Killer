@@ -10,8 +10,8 @@ public:
 	enum class doorSide
 	{
 		leftFront,
-		leftBack,
 		rightFront,
+		leftBack,
 		rightBack
 	};
 
@@ -34,6 +34,8 @@ private:
 	sf::Texture *doorTextures;
 	sf::RectangleShape *underDoors;
 	sf::CircleShape *doorsHitbox;
+
+	unsigned countDoors;
 
 	const float *MAX_ANGLEN_OPEN;
 	float *angleOpen;

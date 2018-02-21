@@ -25,6 +25,9 @@ public:
 	void setPowerOfCrashMove(const std::pair<sf::Vector2f, float> &power) { powerOfCrashMove = power; }
 	void setPowerOfCrashRotate(const std::pair<float,float>&power) { powerOfCrashRotate = power; }
 
+	bool isRotateAble() { return rotateAble; }
+	bool isMoveAble() { return moveAble; }
+
 	void updatePosition();
 
 	void gas(const sf::Keyboard::Key &key);
@@ -53,6 +56,9 @@ private:
 		back,
 		stop
 	};
+
+	bool moveAble;
+	bool rotateAble;
 
 	stateMoving *movingState;
 

@@ -7,8 +7,23 @@ Traces::Traces(Car *car, const sf::CircleShape *tiresPos)
 {
 	this->car = car;
 	this->tiresPos = tiresPos;
-	textureManager::load("traceGrassTexture", "data/Models/Cars/Taxi/tracesTexture/grass.png");
-	textureManager::load("traceAsphaltTexture", "data/Models/Cars/Taxi/tracesTexture/asphalt.png");
+
+	std::string carTypes[]{
+		"Ambulance",
+		"Audi",
+		"Black_viper",
+		"Car",
+		"Mini_truck",
+		"Mini_van",
+		"Police",
+		"Taxi",
+		"Truck"
+	};
+
+	std::string carTypeString = carTypes[static_cast<int>(*car->getType())];
+
+	textureManager::load("traceGrassTexture", "data/Models/Cars/" + carTypeString + "/tracesTexture/grass.png");
+	textureManager::load("traceAsphaltTexture", "data/Models/Cars/" + carTypeString + "/tracesTexture/asphalt.png");
 }
 
 void Traces::setTraces()

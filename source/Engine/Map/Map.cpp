@@ -128,28 +128,28 @@ void Map::drawUnder()
 {
 	renderSprites::Instance().addToRender(map);
 
-	if (allCarTraces.size() > 600 * allCarTraces.size())
+	if (allCarSingleTraces.size() > 600 * allCarSingleTraces.size())
 	{
 		for (auto i = 0;i < 10;++i)
-			delete allCarTraces[i].first;
+			delete allCarSingleTraces[i].first;
 
-		allCarTraces.erase(allCarTraces.begin(), allCarTraces.begin() + 10);
+		allCarSingleTraces.erase(allCarSingleTraces.begin(), allCarSingleTraces.begin() + 10);
 	}
 
-	for (size_t i = 0;i<allCarTraces.size();i++)
+	for (size_t i = 0;i<allCarSingleTraces.size();i++)
 	{
-		if (allCarTraces[i].second <= 0 &&
-			Map::isOutsideView(sf::Vector2f(allCarTraces[i].first->getGlobalBounds().left + allCarTraces[i].first->getGlobalBounds().width,
-				allCarTraces[i].first->getGlobalBounds().top + allCarTraces[i].first->getGlobalBounds().height)))
+		if (allCarSingleTraces[i].second <= 0 &&
+			Map::isOutsideView(sf::Vector2f(allCarSingleTraces[i].first->getGlobalBounds().left + allCarSingleTraces[i].first->getGlobalBounds().width,
+				allCarSingleTraces[i].first->getGlobalBounds().top + allCarSingleTraces[i].first->getGlobalBounds().height)))
 		{
-			delete allCarTraces[i].first;
-			allCarTraces.erase(allCarTraces.begin() + i, allCarTraces.begin() + i + 1);
+			delete allCarSingleTraces[i].first;
+			allCarSingleTraces.erase(allCarSingleTraces.begin() + i, allCarSingleTraces.begin() + i + 1);
 			--i;
 		}
-		else if (!Map::isOutsideView(sf::Vector2f(allCarTraces[i].first->getGlobalBounds().left + allCarTraces[i].first->getGlobalBounds().width,
-			allCarTraces[i].first->getGlobalBounds().top + allCarTraces[i].first->getGlobalBounds().height)))
+		else if (!Map::isOutsideView(sf::Vector2f(allCarSingleTraces[i].first->getGlobalBounds().left + allCarSingleTraces[i].first->getGlobalBounds().width,
+			allCarSingleTraces[i].first->getGlobalBounds().top + allCarSingleTraces[i].first->getGlobalBounds().height)))
 
-			renderSprites::Instance().addToRender(allCarTraces[i].first);
+			renderSprites::Instance().addToRender(allCarSingleTraces[i].first);
 	}
 
 	//trafficSigns->drawUnder();

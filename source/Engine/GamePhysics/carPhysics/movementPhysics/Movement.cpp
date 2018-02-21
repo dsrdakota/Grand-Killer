@@ -31,6 +31,14 @@ Movement::Movement(Car *car) : car(car)
 
 		break;
 	case carType::Type::Black_viper:
+
+		MAX_SPEED = new double(20);
+
+		acceleration = new double(0.09);
+		breakingForce = new double(0.4);
+
+		drive = TypeOfDrive::Back;
+
 		break;
 	case carType::Type::Car:
 		break;
@@ -213,8 +221,8 @@ void Movement::move()
 
 	auto &allCars = mGame::Instance().getAllCars();
 	bool breakLoop = false;
-
-	bool rotateAble = true;
+	rotateAble = true;
+	moveAble = true;
 
 	Car::collisionSide firstCheckingSide = Car::collisionSide::None;
 	Car::collisionSide secondCheckingSide = Car::collisionSide::None;
@@ -276,6 +284,7 @@ void Movement::move()
 				}
 
 				powerOfCrashMove = std::make_pair(sf::Vector2f(0, 0), 0.f);
+				moveAble = false;
 
 				break;
 			}

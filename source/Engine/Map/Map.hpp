@@ -23,7 +23,7 @@ public:
 		return map;
 	}
 
-	std::vector<std::pair<sf::Sprite*, int>> &getAllCarTraces() { return allCarTraces; }
+	std::vector<std::pair<sf::Sprite*, int>> &getAllCarTraces() { return allCarSingleTraces; }
 
 	void setView(const sf::Vector2f &center);
 	void setRotation(const float &angle);
@@ -65,7 +65,7 @@ private:
 	const short int *tilesCountHeigth;
 
 	std::vector<std::vector<Tile*>>Tiles;
-	std::vector<std::pair<sf::Sprite*, int>>allCarTraces;
+	std::vector<std::pair<sf::Sprite*, int>>allCarSingleTraces;
 
 	sf::View *view;
 
