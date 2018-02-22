@@ -28,20 +28,20 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 
 		pathToTexture += "Audi/doors/";
 
-		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 14.5f, sprite->getOrigin().y - 71);
-		doorsHitbox[2].setOrigin(sprite->getOrigin().x - 14, sprite->getOrigin().y - 122);
-		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 80.5f, sprite->getOrigin().y - 69);
-		doorsHitbox[3].setOrigin(sprite->getOrigin().x - 77.5f, sprite->getOrigin().y - 122);
+		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 12.5f, sprite->getOrigin().y - 70.5f);
+		doorsHitbox[2].setOrigin(sprite->getOrigin().x - 12, sprite->getOrigin().y - 122);
+		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 80.5f, sprite->getOrigin().y - 68.5f);
+		doorsHitbox[3].setOrigin(sprite->getOrigin().x - 80.5f, sprite->getOrigin().y - 122);
 
-		doors[0].setSize(sf::Vector2f(8.5f, 49));
-		doors[2].setSize(sf::Vector2f(8, 52));
-		doors[1].setSize(sf::Vector2f(7.5f, 52));
-		doors[3].setSize(sf::Vector2f(8, 49));
+		doors[0].setSize(sf::Vector2f(10.5f, 49));
+		doors[2].setSize(sf::Vector2f(10, 53));
+		doors[1].setSize(sf::Vector2f(10.5f, 52));
+		doors[3].setSize(sf::Vector2f(10, 49));
 
 		doors[0].setOrigin(3, 3);
 		doors[2].setOrigin(1, 1);
 		doors[1].setOrigin(5, 4);
-		doors[3].setOrigin(3, 1);
+		doors[3].setOrigin(6, 0);
 
 		break;
 	case carType::Type::Black_viper:
@@ -56,23 +56,95 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 
 		pathToTexture += "Black_viper/doors/";
 
-		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 7.8f, sprite->getOrigin().y - 87);
+		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 6.f, sprite->getOrigin().y - 87);
 		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 73.8f, sprite->getOrigin().y - 87);
 
-		doors[0].setSize(sf::Vector2f(8.5f, 50));
-		doors[1].setSize(sf::Vector2f(8.5f, 50));
+		doors[0].setSize(sf::Vector2f(9.8f, 50));
+		doors[1].setSize(sf::Vector2f(9.8f, 50));
 
 		doors[0].setOrigin(3, 3);
 		doors[1].setOrigin(1, 1);
 
 		break;
 	case carType::Type::Car:
+
+		countDoors = 4;
+
+		doorsHitbox = new sf::CircleShape[countDoors];
+		doors = new sf::RectangleShape[countDoors];
+
+		underDoors->setSize(sf::Vector2f(81, 130));
+		underDoors->setOrigin(sprite->getOrigin().x - 2, sprite->getOrigin().y - 40);
+
+		pathToTexture += "Car/doors/";
+
+		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 6.f, sprite->getOrigin().y - 75);
+		doorsHitbox[2].setOrigin(sprite->getOrigin().x - 4.5f, sprite->getOrigin().y - 112.5f);
+		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 76.5f, sprite->getOrigin().y - 66);
+		doorsHitbox[3].setOrigin(sprite->getOrigin().x - 74.5f, sprite->getOrigin().y - 113);
+
+		doors[0].setSize(sf::Vector2f(11.5f, 34));
+		doors[2].setSize(sf::Vector2f(12.f, 41));
+		doors[1].setSize(sf::Vector2f(10.5f, 45));
+		doors[3].setSize(sf::Vector2f(9.5f, 36.5f));
+
+		doors[0].setOrigin(3, 3);
+		doors[2].setOrigin(1, 1);
+		doors[1].setOrigin(5, 4);
+		doors[3].setOrigin(3, 1);
+
 		break;
 	case carType::Type::Mini_truck:
+
+		countDoors = 2;
+
+		doorsHitbox = new sf::CircleShape[countDoors];
+		doors = new sf::RectangleShape[countDoors];
+
+		underDoors->setSize(sf::Vector2f(82, 100));
+		underDoors->setOrigin(sprite->getOrigin().x - 13, sprite->getOrigin().y - 40);
+
+		pathToTexture += "Mini_truck/doors/";
+
+		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 19.5f, sprite->getOrigin().y - 83);
+		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 83.5f, sprite->getOrigin().y - 81);
+
+		doors[0].setSize(sf::Vector2f(10.f, 43));
+		doors[1].setSize(sf::Vector2f(10.f, 43));
+
+		doors[0].setOrigin(3, 3);
+		doors[1].setOrigin(1, 1);
+
 		break;
 	case carType::Type::Mini_van:
 		break;
 	case carType::Type::Police:
+
+		countDoors = 4;
+
+		doorsHitbox = new sf::CircleShape[countDoors];
+		doors = new sf::RectangleShape[countDoors];
+
+		underDoors->setSize(sf::Vector2f(78, 130));
+		underDoors->setOrigin(sprite->getOrigin().x - 7, sprite->getOrigin().y - 40);
+
+		pathToTexture += "Police/doors/";
+
+		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 9.3f, sprite->getOrigin().y - 73.5f);
+		doorsHitbox[2].setOrigin(sprite->getOrigin().x - 9.3f, sprite->getOrigin().y - 119);
+		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 78.8f, sprite->getOrigin().y - 68.5f);
+		doorsHitbox[3].setOrigin(sprite->getOrigin().x - 79.3f, sprite->getOrigin().y - 119);
+
+		doors[0].setSize(sf::Vector2f(11.2f, 43));
+		doors[2].setSize(sf::Vector2f(10.2f, 54.5f));
+		doors[1].setSize(sf::Vector2f(10.7f, 49));
+		doors[3].setSize(sf::Vector2f(10.2f, 49));
+
+		doors[0].setOrigin(3, 3);
+		doors[2].setOrigin(1, 1);
+		doors[1].setOrigin(5, 4);
+		doors[3].setOrigin(6, 0);
+
 		break;
 	case carType::Type::Taxi:
 
@@ -101,8 +173,6 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 		doors[1].setOrigin(6, 0);
 		doors[3].setOrigin(6, 0);
 
-		break;
-	case carType::Type::Truck:
 		break;
 	}
 

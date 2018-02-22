@@ -45,9 +45,11 @@ private:
 
 	Map *map;
 	Player *player;
-	Car *taxi;
 
 	void draw();
 
 	void switchState();
+
+	Time cooldown;
+	void switchCars(size_t &index);
 };

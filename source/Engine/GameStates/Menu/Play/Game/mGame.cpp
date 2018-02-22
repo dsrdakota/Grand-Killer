@@ -12,12 +12,15 @@ mGame::mGame()
 
 	map = &Map::Instance();
 
-	taxi = new Car(carType::Type::Audi, sf::Vector2f(4585, 4759));
-	cars.push_back(taxi);
+	cars.push_back(new Car(carType::Type::Audi, sf::Vector2f(4585, 4759)));
 
 	cars.push_back(new Car(carType::Type::Audi, sf::Vector2f(4385, 4959)));
-	cars.push_back(new Car(carType::Type::Black_viper, sf::Vector2f(3785, 4959)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4085, 4959)));
+	cars.push_back(new Car(carType::Type::Black_viper, sf::Vector2f(3785, 4959)));
+	cars.push_back(new Car(carType::Type::Car, sf::Vector2f(3585, 4959)));
+	cars.push_back(new Car(carType::Type::Police, sf::Vector2f(3385, 4959)));
+	cars.push_back(new Car(carType::Type::Mini_truck, sf::Vector2f(3185, 4959)));
+
 	/*cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(5900, 5800)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4959)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4885, 4559)));
@@ -42,7 +45,10 @@ mGame::~mGame()
 
 void mGame::play()
 {
-	player->giveMeYourCar(taxi);
+	size_t carIndex = 0;
+
+	player->giveMeYourCar(cars[carIndex]);
+
 	while (game.getStatus() != Game::status::CleaningUp)
 	{
 		game.events();
@@ -54,6 +60,8 @@ void mGame::play()
 			Map::Instance().updateView(player->getPosition());
 
 			player->move();
+
+			switchCars(carIndex);
 
 			draw();
 
@@ -128,4 +136,36 @@ void mGame::switchState()
 	*gameState = state::Map;
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && *gameState == state::Map)
 	*gameState = state::MainGame;*/
+}
+
+void mGame::switchCars(size_t &index)
+{
+	if (cooldown.time->asSeconds() > 0.5f)
+	{
+		bool isSwitch = false;
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		{
+			index++;
+			isSwitch = true;
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		{
+			index--;
+			isSwitch = true;
+		}
+
+		if (isSwitch)
+		{
+			if (index == -1)
+				index = cars.size() - 1;
+			else if (index == cars.size())
+				index = 0;
+
+			player->giveMeYourCar(cars[index]);
+
+			*cooldown.time = sf::Time::Zero;
+			cooldown.clock->restart();
+		}
+	}
 }

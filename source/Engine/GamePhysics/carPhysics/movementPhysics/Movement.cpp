@@ -32,7 +32,7 @@ Movement::Movement(Car *car) : car(car)
 		break;
 	case carType::Type::Black_viper:
 
-		MAX_SPEED = new double(20);
+		MAX_SPEED = new double(21);
 
 		acceleration = new double(0.09);
 		breakingForce = new double(0.4);
@@ -41,12 +41,36 @@ Movement::Movement(Car *car) : car(car)
 
 		break;
 	case carType::Type::Car:
+
+		MAX_SPEED = new double(20);
+
+		acceleration = new double(0.12);
+		breakingForce = new double(0.4);
+
+		drive = TypeOfDrive::Back;
+
 		break;
 	case carType::Type::Mini_truck:
+
+		MAX_SPEED = new double(15);
+
+		acceleration = new double(0.06);
+		breakingForce = new double(0.4);
+
+		drive = TypeOfDrive::Front;
+
 		break;
 	case carType::Type::Mini_van:
 		break;
 	case carType::Type::Police:
+
+		MAX_SPEED = new double(21);
+
+		acceleration = new double(0.11);
+		breakingForce = new double(0.4);
+
+		drive = TypeOfDrive::Back;
+
 		break;
 	case carType::Type::Taxi:
 
@@ -57,8 +81,6 @@ Movement::Movement(Car *car) : car(car)
 
 		drive = TypeOfDrive::Back;
 
-		break;
-	case carType::Type::Truck:
 		break;
 	}
 
@@ -211,6 +233,7 @@ void Movement::move()
 	switch (*movingState)
 	{
 	case stateMoving::front:
+	case stateMoving::stop:
 		SPEED = *speedf;
 		break;
 	case stateMoving::back:
@@ -259,14 +282,16 @@ void Movement::move()
 				rotateAble = false;
 		}
 
+		bool checkOnlyRotateAble = false;
+
 		for (const auto &j : allCars)
 		{
 			auto resultWithCars = carCollisionWithCar::checkCollisions(car, j);
 			if (resultWithCars != Car::collisionSide::None)
 			{
-				if((resultWithCars == Car::collisionSide::Front ||
+				if ((resultWithCars == Car::collisionSide::Front ||
 					resultWithCars == Car::collisionSide::LeftUp ||
-					resultWithCars == Car::collisionSide::RightUp) && 
+					resultWithCars == Car::collisionSide::RightUp) &&
 					*movingState == stateMoving::front)
 					breakLoop = true;
 
@@ -276,35 +301,35 @@ void Movement::move()
 					*movingState == stateMoving::back)
 					breakLoop = true;
 
+				powerOfCrashMove = std::make_pair(sf::Vector2f(0, 0), 0.f);
+				moveAble = false;
+
+				checkOnlyRotateAble = true;
+
 				if (powerOfCrashRotate.second != 0 && rotateAble)
 				{
 					if (resultWithCars == firstCheckingSide ||
 						resultWithCars == secondCheckingSide)
 						rotateAble = false;
 				}
-
-				powerOfCrashMove = std::make_pair(sf::Vector2f(0, 0), 0.f);
-				moveAble = false;
-
-				break;
 			}
-		}
-
-		if (rotateAble && fabs(powerOfCrashRotate.second) > fabs(powerOfCrashRotate.first))
-		{
-			float powerSingleRotate = 3.f * simulationStep;
-
-			if (powerOfCrashRotate.second < 0)
-				powerSingleRotate = -powerSingleRotate;
-
-			car->rotate(powerSingleRotate);
-			powerOfCrashRotate.first += powerSingleRotate / 3.f * simulationStep;
 		}
 
 		if (breakLoop)
 			break;
 
 		car->move(v);
+
+		if (rotateAble && fabs(powerOfCrashRotate.second) > fabs(powerOfCrashRotate.first))
+		{
+			float powerSingleRotate = 1.f * simulationStep;
+
+			if (powerOfCrashRotate.second < 0)
+				powerSingleRotate = -powerSingleRotate;
+
+			car->rotate(powerSingleRotate);
+			powerOfCrashRotate.first += powerSingleRotate / 1.f * simulationStep;
+		}
 
 		if (powerOfCrashMove.second > 0)
 			car->move(powerOfCrashMove.first / 4.f * simulationStep);

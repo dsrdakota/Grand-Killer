@@ -23,20 +23,30 @@ carPhysics::carPhysics(Car *car)
 
 		break;
 	case carType::Type::Car:
+
+		SPEED_ROTATE_CAR = new double(0.25);
+		SPEED_ROTATE_TIRE = new const double(5);
+
 		break;
 	case carType::Type::Mini_truck:
+
+		SPEED_ROTATE_CAR = new double(0.18);
+		SPEED_ROTATE_TIRE = new const double(4);
+
 		break;
 	case carType::Type::Mini_van:
 		break;
 	case carType::Type::Police:
+
+		SPEED_ROTATE_CAR = new double(0.23);
+		SPEED_ROTATE_TIRE = new const double(5);
+
 		break;
 	case carType::Type::Taxi:
 
 		SPEED_ROTATE_CAR = new double(0.2);
 		SPEED_ROTATE_TIRE = new const double(5);
 
-		break;
-	case carType::Type::Truck:
 		break;
 	}
 

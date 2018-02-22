@@ -27,19 +27,26 @@ carCollisionHitbox::carCollisionHitbox(Car *car)
 
 		break;
 	case carType::Type::Car:
+
+		pathToHitboxFile += "Car/car.gk";
+
 		break;
 	case carType::Type::Mini_truck:
+
+		pathToHitboxFile += "Mini_truck/mini_truck.gk";
+
 		break;
 	case carType::Type::Mini_van:
 		break;
 	case carType::Type::Police:
+
+		pathToHitboxFile += "Police/police.gk";
+
 		break;
 	case carType::Type::Taxi:
 
 		pathToHitboxFile += "Taxi/taxi.gk";
 
-		break;
-	case carType::Type::Truck:
 		break;
 	}
 

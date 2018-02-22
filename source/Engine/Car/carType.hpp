@@ -12,7 +12,6 @@ public:
 		Mini_truck,
 		Mini_van,
 		Police,
-		Taxi,
-		Truck
+		Taxi
 	};
 };

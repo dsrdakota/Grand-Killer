@@ -16,19 +16,29 @@ Traces::Traces(Car *car, const sf::CircleShape *tiresPos)
 		"Mini_truck",
 		"Mini_van",
 		"Police",
-		"Taxi",
-		"Truck"
+		"Taxi"
 	};
 
 	std::string carTypeString = carTypes[static_cast<int>(*car->getType())];
 
-	textureManager::load("traceGrassTexture", "data/Models/Cars/" + carTypeString + "/tracesTexture/grass.png");
-	textureManager::load("traceAsphaltTexture", "data/Models/Cars/" + carTypeString + "/tracesTexture/asphalt.png");
+	textureManager::load("traceGrassTexture" + carTypeString, "data/Models/Cars/" + carTypeString + "/tracesTexture/grass.png");
+	textureManager::load("traceAsphaltTexture" + carTypeString, "data/Models/Cars/" + carTypeString + "/tracesTexture/asphalt.png");
 }
 
 void Traces::setTraces()
 {
 	auto &traces = Map::Instance().getAllCarTraces();
+
+	std::string carTypes[]{
+		"Ambulance",
+		"Audi",
+		"Black_viper",
+		"Car",
+		"Mini_truck",
+		"Mini_van",
+		"Police",
+		"Taxi"
+	};
 
 	for (auto i = 0;i < 4;++i)
 	{
@@ -39,19 +49,19 @@ void Traces::setTraces()
 			!isSameTraceOnVector(getCenterOfHitbox(tiresPos[i]), car->getSprite()->getRotation()))
 		{
 			needAdd = true;
-			textureName = "traceGrassTexture";
+			textureName = "traceGrassTexture" + carTypes[static_cast<int>(*car->getType())];
 		}
 		else if (fabs(*car->getOverSteerValue()) > 20 &&
 			!isSameTraceOnVector(getCenterOfHitbox(tiresPos[i]), car->getSprite()->getRotation()))
 		{
 			needAdd = true;
-			textureName = "traceAsphaltTexture";
+			textureName = "traceAsphaltTexture" + carTypes[static_cast<int>(*car->getType())];
 		}
 
 		if (needAdd && textureName != "")
 		{
 			sf::Sprite *trace = new sf::Sprite(*textureManager::get(textureName));
-			trace->setOrigin(2.5, 2.5);
+			trace->setOrigin(trace->getGlobalBounds().width / 2.f, trace->getGlobalBounds().height / 2.f);
 			trace->setPosition(getCenterOfHitbox(tiresPos[i]));
 			trace->setRotation(tiresPos[i].getRotation());
 

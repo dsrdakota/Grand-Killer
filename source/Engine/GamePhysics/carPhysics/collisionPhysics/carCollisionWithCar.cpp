@@ -143,200 +143,186 @@ Car::collisionSide carCollisionWithCar::checkCollisions(Car * car1, Car * car2, 
 			case Car::collisionSide::RightUp:
 
 				car1->getBoolIsCollision(Car::collisionSide::Right) = true;
-				if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
+
+				switch (carSidesOfCollision.second)
 				{
+				case Car::collisionSide::Front:
+				case Car::collisionSide::Back:
+				case Car::collisionSide::Left:
+				case Car::collisionSide::Right:
 
-					switch (carSidesOfCollision.second)
-					{
-					case Car::collisionSide::Front:
-					case Car::collisionSide::Back:
-					case Car::collisionSide::Left:
-					case Car::collisionSide::Right:
+					car2->getBoolIsCollision(carSidesOfCollision.second) = true;
+					instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						car2->getBoolIsCollision(carSidesOfCollision.second) = true;
+					break;
+
+				case Car::collisionSide::RightUp:
+
+					car2->getBoolIsCollision(Car::collisionSide::Right) = true;
+					if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
 						instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						break;
+					break;
+				case Car::collisionSide::RightDown:
 
-					case Car::collisionSide::RightUp:
+					car2->getBoolIsCollision(Car::collisionSide::Right) = true;
+					instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						car2->getBoolIsCollision(Car::collisionSide::Right) = true;
-						if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
-							instance.collisionIs(car1, car2, carSidesOfCollision);
+					break;
 
-						break;
-					case Car::collisionSide::RightDown:
+				case Car::collisionSide::LeftUp:
 
-						car2->getBoolIsCollision(Car::collisionSide::Right) = true;
+					car2->getBoolIsCollision(Car::collisionSide::Left) = true;
+					if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
 						instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						break;
+					break;
+				case Car::collisionSide::LeftDown:
 
-					case Car::collisionSide::LeftUp:
+					car2->getBoolIsCollision(Car::collisionSide::Left) = true;
+					instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						car2->getBoolIsCollision(Car::collisionSide::Left) = true;
-						if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
-							instance.collisionIs(car1, car2, carSidesOfCollision);
-
-						break;
-					case Car::collisionSide::LeftDown:
-
-						car2->getBoolIsCollision(Car::collisionSide::Left) = true;
-						instance.collisionIs(car1, car2, carSidesOfCollision);
-
-						break;
-
-					}
+					break;
 				}
 
 				break;
 			case Car::collisionSide::RightDown:
 
 				car1->getBoolIsCollision(Car::collisionSide::Right) = true;
-				if (*car1->getLastCollisionSide() != Car::collisionSide::Back)
+
+				switch (carSidesOfCollision.second)
 				{
+				case Car::collisionSide::Front:
+				case Car::collisionSide::Back:
+				case Car::collisionSide::Left:
+				case Car::collisionSide::Right:
 
-					switch (carSidesOfCollision.second)
-					{
-					case Car::collisionSide::Front:
-					case Car::collisionSide::Back:
-					case Car::collisionSide::Left:
-					case Car::collisionSide::Right:
+					car2->getBoolIsCollision(carSidesOfCollision.second) = true;
+					instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						car2->getBoolIsCollision(carSidesOfCollision.second) = true;
+					break;
+
+				case Car::collisionSide::RightUp:
+
+					car2->getBoolIsCollision(Car::collisionSide::Right) = true;
+					if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
 						instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						break;
+					break;
+				case Car::collisionSide::RightDown:
 
-					case Car::collisionSide::RightUp:
+					car2->getBoolIsCollision(Car::collisionSide::Right) = true;
+					instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						car2->getBoolIsCollision(Car::collisionSide::Right) = true;
-						if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
-							instance.collisionIs(car1, car2, carSidesOfCollision);
+					break;
 
-						break;
-					case Car::collisionSide::RightDown:
+				case Car::collisionSide::LeftUp:
 
-						car2->getBoolIsCollision(Car::collisionSide::Right) = true;
+					car2->getBoolIsCollision(Car::collisionSide::Left) = true;
+					if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
 						instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						break;
+					break;
+				case Car::collisionSide::LeftDown:
 
-					case Car::collisionSide::LeftUp:
+					car2->getBoolIsCollision(Car::collisionSide::Left) = true;
+					instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						car2->getBoolIsCollision(Car::collisionSide::Left) = true;
-						if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
-							instance.collisionIs(car1, car2, carSidesOfCollision);
-
-						break;
-					case Car::collisionSide::LeftDown:
-
-						car2->getBoolIsCollision(Car::collisionSide::Left) = true;
-						instance.collisionIs(car1, car2, carSidesOfCollision);
-
-						break;
-
-					}
+					break;
 				}
 
 				break;
 			case Car::collisionSide::LeftUp:
 
 				car1->getBoolIsCollision(Car::collisionSide::Left) = true;
-				if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
+
+				switch (carSidesOfCollision.second)
 				{
+				case Car::collisionSide::Front:
+				case Car::collisionSide::Back:
+				case Car::collisionSide::Left:
+				case Car::collisionSide::Right:
 
-					switch (carSidesOfCollision.second)
-					{
-					case Car::collisionSide::Front:
-					case Car::collisionSide::Back:
-					case Car::collisionSide::Left:
-					case Car::collisionSide::Right:
+					car2->getBoolIsCollision(carSidesOfCollision.second) = true;
+					instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						car2->getBoolIsCollision(carSidesOfCollision.second) = true;
+					break;
+
+				case Car::collisionSide::RightUp:
+
+					car2->getBoolIsCollision(Car::collisionSide::Right) = true;
+					if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
 						instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						break;
+					break;
+				case Car::collisionSide::RightDown:
 
-					case Car::collisionSide::RightUp:
+					car2->getBoolIsCollision(Car::collisionSide::Right) = true;
+					instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						car2->getBoolIsCollision(Car::collisionSide::Right) = true;
-						if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
-							instance.collisionIs(car1, car2, carSidesOfCollision);
+					break;
 
-						break;
-					case Car::collisionSide::RightDown:
+				case Car::collisionSide::LeftUp:
 
-						car2->getBoolIsCollision(Car::collisionSide::Right) = true;
+					car2->getBoolIsCollision(Car::collisionSide::Left) = true;
+					if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
 						instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						break;
+					break;
+				case Car::collisionSide::LeftDown:
 
-					case Car::collisionSide::LeftUp:
+					car2->getBoolIsCollision(Car::collisionSide::Left) = true;
+					instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						car2->getBoolIsCollision(Car::collisionSide::Left) = true;
-						if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
-							instance.collisionIs(car1, car2, carSidesOfCollision);
+					break;
 
-						break;
-					case Car::collisionSide::LeftDown:
-
-						car2->getBoolIsCollision(Car::collisionSide::Left) = true;
-						instance.collisionIs(car1, car2, carSidesOfCollision);
-
-						break;
-
-					}
 				}
 
 				break;
 			case Car::collisionSide::LeftDown:
 
 				car1->getBoolIsCollision(Car::collisionSide::Left) = true;
-				if (*car1->getLastCollisionSide() != Car::collisionSide::Back)
+
+				switch (carSidesOfCollision.second)
 				{
+				case Car::collisionSide::Front:
+				case Car::collisionSide::Back:
+				case Car::collisionSide::Left:
+				case Car::collisionSide::Right:
 
-					switch (carSidesOfCollision.second)
-					{
-					case Car::collisionSide::Front:
-					case Car::collisionSide::Back:
-					case Car::collisionSide::Left:
-					case Car::collisionSide::Right:
+					car2->getBoolIsCollision(carSidesOfCollision.second) = true;
+					instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						car2->getBoolIsCollision(carSidesOfCollision.second) = true;
+					break;
+
+				case Car::collisionSide::RightUp:
+
+					car2->getBoolIsCollision(Car::collisionSide::Right) = true;
+					if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
 						instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						break;
+					break;
+				case Car::collisionSide::RightDown:
 
-					case Car::collisionSide::RightUp:
+					car2->getBoolIsCollision(Car::collisionSide::Right) = true;
+					instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						car2->getBoolIsCollision(Car::collisionSide::Right) = true;
-						if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
-							instance.collisionIs(car1, car2, carSidesOfCollision);
+					break;
 
-						break;
-					case Car::collisionSide::RightDown:
+				case Car::collisionSide::LeftUp:
 
-						car2->getBoolIsCollision(Car::collisionSide::Right) = true;
+					car2->getBoolIsCollision(Car::collisionSide::Left) = true;
+					if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
 						instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						break;
+					break;
+				case Car::collisionSide::LeftDown:
 
-					case Car::collisionSide::LeftUp:
+					car2->getBoolIsCollision(Car::collisionSide::Left) = true;
+					instance.collisionIs(car1, car2, carSidesOfCollision);
 
-						car2->getBoolIsCollision(Car::collisionSide::Left) = true;
-						if (*car1->getLastCollisionSide() != Car::collisionSide::Front)
-							instance.collisionIs(car1, car2, carSidesOfCollision);
+					break;
 
-						break;
-					case Car::collisionSide::LeftDown:
-
-						car2->getBoolIsCollision(Car::collisionSide::Left) = true;
-						instance.collisionIs(car1, car2, carSidesOfCollision);
-
-						break;
-
-					}
 				}
 
 				break;
@@ -474,7 +460,7 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 	car1->breakSlide();
 	car2->breakSlide();
 
-	car2->setSpeed(static_cast<float>(car2->getSpeed()) / 2.f);
+	car2->setSpeed(0.f);
 
 	switch (side.first)
 	{
@@ -505,6 +491,8 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 				else
 					car1->setSpeed(0.f);
 			}
+			else
+				car1->setSpeed(0.f);
 
 			break;
 		case Car::collisionSide::RightUp:
@@ -517,11 +505,13 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 
 			if (angle != 0 && car2->isRotateAble())
 			{
-				if (car1->getSpeed() > 2.f)
-					car1->setSpeed(static_cast<float>(car1->getSpeed()) / 2.f);
+				if (car1->getSpeed() > 1.f)
+					car1->setSpeed(static_cast<float>(car1->getSpeed()) / 1.2f);
 				else
-					car1->setSpeed(1.f);
+					car1->setSpeed(0.f);
 			}
+			else
+				car1->setSpeed(0.f);
 
 			break;
 		}
@@ -536,7 +526,7 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 		case Car::collisionSide::Right:
 		case Car::collisionSide::Back:
 		case Car::collisionSide::Left:
-
+	
 			if (car1->getStateMoving() == 0) // front
 			{
 				angle2 = instance.howManyRotate(car1, car2, std::make_pair(side.first, side.second));
@@ -552,7 +542,10 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 			v = instance.moveFromCar(car2, car1, std::make_pair(side.second, side.first));
 			car2->setPowerOfCrashMove(std::make_pair(v, fabs(powerFirst - powerSecond)));
 
-			car1->setSpeed(static_cast<float>(car1->getSpeed()) / 1.1f);
+			if (car1->getSpeed() > 1)
+				car1->setSpeed(static_cast<float>(car1->getSpeed()) / 1.1f);
+			else
+				car1->setSpeed(0);
 
 			break;
 		case Car::collisionSide::RightUp:
@@ -575,7 +568,10 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 			angle = instance.howManyRotate(car2, car1, std::make_pair(side.second, side.first));
 			car2->setPowerOfCrashRotate(std::make_pair(0.f, angle * static_cast<float>(car1->getSpeed()) / 2.f));
 
-			car1->setSpeed(static_cast<float>(car1->getSpeed() / 1.1f));
+			if (car1->getSpeed() > 1)
+				car1->setSpeed(static_cast<float>(car1->getSpeed()) / 1.1f);
+			else
+				car1->setSpeed(0);
 
 			break;
 		}
@@ -591,13 +587,13 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 		case Car::collisionSide::Back:
 		case Car::collisionSide::Left:
 
-			if (car1->getStateMoving() == 1) // front
+			if (car1->getStateMoving() == 1) // back
 			{
 				angle2 = instance.howManyRotate(car1, car2, std::make_pair(side.first, side.second));
 				car1->rotate(angle2);
 
 			}
-			else if (car1->getStateMoving() == 0) // back
+			else if (car1->getStateMoving() == 0) // front
 			{
 				v = instance.moveFromCar(car1, car2, std::make_pair(side.first, side.second));
 				car1->move(v);
@@ -606,7 +602,10 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 			v = instance.moveFromCar(car2, car1, std::make_pair(side.second, side.first));
 			car2->setPowerOfCrashMove(std::make_pair(v, fabs(powerFirst - powerSecond)));
 
-			car1->setSpeed(static_cast<float>(car1->getSpeed()) / 1.1f);
+			if (car1->getSpeed() > 1)
+				car1->setSpeed(static_cast<float>(car1->getSpeed()) / 1.1f);
+			else
+				car1->setSpeed(0);
 
 			break;
 		case Car::collisionSide::RightUp:
@@ -614,13 +613,13 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 		case Car::collisionSide::LeftDown:
 		case Car::collisionSide::RightDown:
 
-			if (car1->getStateMoving() == 1) // front
+			if (car1->getStateMoving() == 1) // back
 			{
 				angle2 = instance.howManyRotate(car1, car2, std::make_pair(side.first, side.second));
 				car1->rotate(angle2);
 
 			}
-			else if (car1->getStateMoving() == 0) // back
+			else if (car1->getStateMoving() == 0) // front
 			{
 				v = instance.moveFromCar(car1, car2, std::make_pair(side.first, side.second));
 				car1->move(v);
@@ -629,7 +628,10 @@ void carCollisionWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Ca
 			angle = instance.howManyRotate(car2, car1, std::make_pair(side.second, side.first));
 			car2->setPowerOfCrashRotate(std::make_pair(0.f, angle * static_cast<float>(car1->getSpeed()) / 2.f));
 
-			car1->setSpeed(static_cast<float>(car1->getSpeed() / 1.1f));
+			if (car1->getSpeed() > 1)
+				car1->setSpeed(static_cast<float>(car1->getSpeed()) / 1.1f);
+			else
+				car1->setSpeed(0);
 
 			break;
 		}

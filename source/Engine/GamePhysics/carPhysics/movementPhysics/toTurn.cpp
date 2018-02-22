@@ -157,9 +157,9 @@ void toTurn::rotateCar(const float & actualValueRotateCar, const Car::collisionS
 	float valueRotate = actualValueRotateCar;
 
 	if (car->getSpeed() < 4)
-		valueRotate = actualValueRotateCar * static_cast<float>(car->getSpeed()) /4.f;
+		valueRotate = actualValueRotateCar * static_cast<float>(car->getSpeed()) / 4.f;
 
-	if (!car->getStateMoving()  && !car->getBoolIsCollision(Car::collisionSide::Front) && !car->getBoolIsCollision(sideFirst) && !checkCollisionWithOneHitbox(hitboxLeftRight.first, -valueRotate))
+	if (!car->getStateMoving() && !car->getBoolIsCollision(Car::collisionSide::Front) && !car->getBoolIsCollision(sideFirst) && !checkCollisionWithOneHitbox(hitboxLeftRight.first, -valueRotate))
 	{
 		int side = valueRotate > 0 ? 2 : 1; // right : left
 
@@ -175,13 +175,12 @@ void toTurn::rotateCar(const float & actualValueRotateCar, const Car::collisionS
 bool toTurn::checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const float & angle)
 {
 	rotateOneHitbox(hitbox, angle);
-	bool toReturn = false;
 	for (const auto &i : hitbox)
 		if (Map::isPointInCollisionArea(getCenterOfHitbox(*i)))
 		{
 			car->setSpeed(static_cast<float>(car->getSpeed() / 1.03f));
-			toReturn = true;
-			break;
+			rotateOneHitbox(hitbox, -angle);
+			return true;
 		}
 
 	const auto &cars = mGame::Instance().getAllCars();
@@ -189,13 +188,11 @@ bool toTurn::checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>& hi
 	for (const auto &i : cars)
 		if (carCollisionWithCar::checkCollisions(car, i, false) != Car::collisionSide::None)
 		{
-			car->setSpeed(static_cast<float>(car->getSpeed() / 1.03f));
-			toReturn = true;
-			break;
+			//car->setSpeed(static_cast<float>(car->getSpeed() / 1.03f));
+			rotateOneHitbox(hitbox, -angle);
+			return true;
 		}
-
-	rotateOneHitbox(hitbox, -angle);
-	return toReturn;
+	return false;
 }
 
 void toTurn::rotateOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const float & angle)

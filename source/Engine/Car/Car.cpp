@@ -47,12 +47,51 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 
 		break;
 	case carType::Type::Car:
+
+		weight = new unsigned(2200);
+
+		origin = sf::Vector2f(42, 105);
+
+		pathToTexture += "Car/car.png";
+		pathToShadow += "Car/car_shadow.png";
+		nameTexture = "Car";
+
+		shadow = new sf::Sprite(*textureManager::load(nameTexture + "Shadow", pathToShadow));
+		shadow->setPosition(startPos.x + 40, startPos.y);
+		shadow->setOrigin(77, 122);
+
 		break;
 	case carType::Type::Mini_truck:
+
+		weight = new unsigned(3000);
+
+		origin = sf::Vector2f(54, 116);
+
+		pathToTexture += "Mini_truck/mini_truck.png";
+		pathToShadow += "Mini_truck/mini_truck_shadow.png";
+		nameTexture = "Mini_truck";
+
+		shadow = new sf::Sprite(*textureManager::load(nameTexture + "Shadow", pathToShadow));
+		shadow->setPosition(startPos.x + 40, startPos.y);
+		shadow->setOrigin(79, 122);
+
 		break;
 	case carType::Type::Mini_van:
 		break;
 	case carType::Type::Police:
+
+		weight = new unsigned(1850);
+
+		origin = sf::Vector2f(45, 110);
+
+		pathToTexture += "Police/police.png";
+		pathToShadow += "Police/police_shadow.png";
+		nameTexture = "Police";
+
+		shadow = new sf::Sprite(*textureManager::load(nameTexture + "Shadow", pathToShadow));
+		shadow->setPosition(startPos.x + 40, startPos.y);
+		shadow->setOrigin(80, 129);
+
 		break;
 	case carType::Type::Taxi:
 
@@ -68,8 +107,6 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 		shadow->setPosition(startPos.x + 20, startPos.y);
 		shadow->setOrigin(81, 129);
 
-		break;
-	case carType::Type::Truck:
 		break;
 	}
 
