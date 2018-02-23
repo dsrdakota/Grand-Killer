@@ -15,6 +15,9 @@ carCollisionHitbox::carCollisionHitbox(Car *car)
 	switch (*car->getType())
 	{
 	case carType::Type::Ambulance:
+
+		pathToHitboxFile += "Ambulance/ambulance.gk";
+
 		break;
 	case carType::Type::Audi:
 
@@ -35,8 +38,6 @@ carCollisionHitbox::carCollisionHitbox(Car *car)
 
 		pathToHitboxFile += "Mini_truck/mini_truck.gk";
 
-		break;
-	case carType::Type::Mini_van:
 		break;
 	case carType::Type::Police:
 

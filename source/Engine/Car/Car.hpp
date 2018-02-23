@@ -17,7 +17,7 @@ class Car : public playerStates
 {
 public: 
 
-	Car(const carType::Type &type,const sf::Vector2f &startPos = sf::Vector2f(0,0));
+	Car(const carType::Type &type,const sf::Vector2f &startPos = sf::Vector2f(0,0), const float &startRot = 0);
 	~Car();
 
 	inline carType::Type *getType() { return type; }

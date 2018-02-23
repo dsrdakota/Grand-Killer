@@ -10,7 +10,6 @@ public:
 		Black_viper,
 		Car,
 		Mini_truck,
-		Mini_van,
 		Police,
 		Taxi
 	};

@@ -12,14 +12,13 @@ mGame::mGame()
 
 	map = &Map::Instance();
 
-	cars.push_back(new Car(carType::Type::Audi, sf::Vector2f(4585, 4759)));
-
-	cars.push_back(new Car(carType::Type::Audi, sf::Vector2f(4385, 4959)));
-	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4085, 4959)));
-	cars.push_back(new Car(carType::Type::Black_viper, sf::Vector2f(3785, 4959)));
-	cars.push_back(new Car(carType::Type::Car, sf::Vector2f(3585, 4959)));
-	cars.push_back(new Car(carType::Type::Police, sf::Vector2f(3385, 4959)));
-	cars.push_back(new Car(carType::Type::Mini_truck, sf::Vector2f(3185, 4959)));
+	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4564, 4870)));
+	cars.push_back(new Car(carType::Type::Black_viper, sf::Vector2f(1042, 1002), -180));
+	cars.push_back(new Car(carType::Type::Police, sf::Vector2f(3236, 2773), -180));
+	cars.push_back(new Car(carType::Type::Ambulance, sf::Vector2f(3714, 1509)));
+	cars.push_back(new Car(carType::Type::Audi, sf::Vector2f(3064, 1792), -90));
+	cars.push_back(new Car(carType::Type::Car, sf::Vector2f(761, 5803), 90));
+	cars.push_back(new Car(carType::Type::Mini_truck, sf::Vector2f(5240, 2723), -180));
 
 	/*cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(5900, 5800)));
 	cars.push_back(new Car(carType::Type::Taxi, sf::Vector2f(4385, 4959)));
@@ -140,7 +139,7 @@ void mGame::switchState()
 
 void mGame::switchCars(size_t &index)
 {
-	if (cooldown.time->asSeconds() > 0.5f)
+	if (cooldown.time->asSeconds() > 0.3f)
 	{
 		bool isSwitch = false;
 

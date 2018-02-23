@@ -15,6 +15,26 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 	switch (type)
 	{
 	case carType::Type::Ambulance:
+
+		countDoors = 2;
+
+		doorsHitbox = new sf::CircleShape[countDoors];
+		doors = new sf::RectangleShape[countDoors];
+
+		underDoors->setSize(sf::Vector2f(80, 100));
+		underDoors->setOrigin(sprite->getOrigin().x - 1, sprite->getOrigin().y - 40);
+
+		pathToTexture += "Ambulance/doors/";
+
+		doorsHitbox[0].setOrigin(sprite->getOrigin().x - 3.5f, sprite->getOrigin().y - 42);
+		doorsHitbox[1].setOrigin(sprite->getOrigin().x - 74.5f, sprite->getOrigin().y - 40);
+
+		doors[0].setSize(sf::Vector2f(7.f, 34));
+		doors[1].setSize(sf::Vector2f(7.f, 34));
+
+		doors[0].setOrigin(3, 3);
+		doors[1].setOrigin(1, 1);
+
 		break;
 	case carType::Type::Audi:
 
@@ -116,8 +136,6 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 		doors[1].setOrigin(1, 1);
 
 		break;
-	case carType::Type::Mini_van:
-		break;
 	case carType::Type::Police:
 
 		countDoors = 4;
@@ -176,6 +194,8 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 		break;
 	}
 
+	underDoors->setRotation(car->getRotation());
+
 	doorTextures = new sf::Texture[countDoors];
 	doorTextures[0].loadFromFile(pathToTexture + "leftF.png");
 	doorTextures[1].loadFromFile(pathToTexture + "rightF.png");
@@ -190,6 +210,7 @@ Door::Door(const sf::Sprite *sprite, const carType::Type &type)
 	{
 		doorTextures[i].setSmooth(true);
 		doors[i].setTexture(dynamic_cast<const sf::Texture*>(&doorTextures[i]));
+		doors[i].setRotation(car->getRotation());
 	}
 
 	for (size_t i = 0;i < countDoors;++i)

@@ -5,8 +5,6 @@
 #include "../collisionPhysics/carCollisionWithWall.hpp"
 #include "../../../GameStates/Menu/Play/Game/mGame.hpp"
 
-#include <iostream>
-
 #define PI 3.14159265359f
 
 Movement::Movement(Car *car) : car(car)
@@ -19,6 +17,12 @@ Movement::Movement(Car *car) : car(car)
 	switch (*car->getType())
 	{
 	case carType::Type::Ambulance:
+
+		MAX_SPEED = new double(16);
+
+		acceleration = new double(0.07);
+		breakingForce = new double(0.4);
+
 		break;
 	case carType::Type::Audi:
 
@@ -59,8 +63,6 @@ Movement::Movement(Car *car) : car(car)
 
 		drive = TypeOfDrive::Front;
 
-		break;
-	case carType::Type::Mini_van:
 		break;
 	case carType::Type::Police:
 
@@ -233,7 +235,6 @@ void Movement::move()
 	switch (*movingState)
 	{
 	case stateMoving::front:
-	case stateMoving::stop:
 		SPEED = *speedf;
 		break;
 	case stateMoving::back:
@@ -282,8 +283,6 @@ void Movement::move()
 				rotateAble = false;
 		}
 
-		bool checkOnlyRotateAble = false;
-
 		for (const auto &j : allCars)
 		{
 			auto resultWithCars = carCollisionWithCar::checkCollisions(car, j);
@@ -303,8 +302,6 @@ void Movement::move()
 
 				powerOfCrashMove = std::make_pair(sf::Vector2f(0, 0), 0.f);
 				moveAble = false;
-
-				checkOnlyRotateAble = true;
 
 				if (powerOfCrashRotate.second != 0 && rotateAble)
 				{
@@ -347,6 +344,12 @@ void Movement::move()
 	}
 
 	carCollisionWithWall::checkCollisions(car);
+
+	if (SPEED < 0.02) // eliminate bugs ;/
+	{
+		*speedf = 0;
+		*speedb = 0;
+	}
 }
 
 void Movement::acceleratingFunction(double *speed, double *counterSpeed, const double MAX_SPEED, bool &stateKey)

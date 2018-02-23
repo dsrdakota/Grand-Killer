@@ -71,7 +71,5 @@ private:
 	sf::Vector2f giveMeCenterOfHitbox(sf::CircleShape * hitbox);
 	float toRad(float degrees);
 
-	// dont delete
-
 	Car *car;
 };

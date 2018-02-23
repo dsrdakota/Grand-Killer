@@ -14,7 +14,6 @@ Traces::Traces(Car *car, const sf::CircleShape *tiresPos)
 		"Black_viper",
 		"Car",
 		"Mini_truck",
-		"Mini_van",
 		"Police",
 		"Taxi"
 	};
@@ -35,7 +34,6 @@ void Traces::setTraces()
 		"Black_viper",
 		"Car",
 		"Mini_truck",
-		"Mini_van",
 		"Police",
 		"Taxi"
 	};

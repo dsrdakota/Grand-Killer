@@ -20,6 +20,13 @@ Tire::Tire(Car *car,const carType::Type &type)
 	switch (type)
 	{
 	case carType::Type::Ambulance:
+
+		pathToTexture += "Ambulance/tire.png";
+		nameTexture = "ambulanceTire";
+
+		for (auto i = 0;i < 4;++i)
+			tires[i].setOrigin(5, 12);
+
 		break;
 	case carType::Type::Audi:
 
@@ -57,8 +64,6 @@ Tire::Tire(Car *car,const carType::Type &type)
 			tires[i].setOrigin(5, 12);
 
 		break;
-	case carType::Type::Mini_van:
-		break;
 	case carType::Type::Police:
 
 		pathToTexture += "Police/tire.png";
@@ -80,7 +85,10 @@ Tire::Tire(Car *car,const carType::Type &type)
 	}
 
 	for (auto i = 0;i < 4;++i)
+	{
 		tires[i].setTexture(*textureManager::load(nameTexture + std::to_string(i), pathToTexture));
+		tires[i].setRotation(car->getRotation());
+	}
 
 	traces = new Traces(car,tiresPos);
 }
@@ -96,6 +104,13 @@ void Tire::setPosition(const sf::Sprite* car, const carType::Type & type)
 	switch (type)
 	{
 	case carType::Type::Ambulance:
+
+		tiresPos[0].setOrigin(car->getOrigin().x, car->getOrigin().y - 37);
+		tiresPos[1].setOrigin(car->getOrigin().x - 75.f, car->getOrigin().y - 37);
+
+		tiresPos[2].setOrigin(tiresPos[0].getOrigin().x, car->getOrigin().y - 170);
+		tiresPos[3].setOrigin(tiresPos[1].getOrigin().x, car->getOrigin().y - 170);
+
 		break;
 	case carType::Type::Audi:
 
@@ -132,8 +147,6 @@ void Tire::setPosition(const sf::Sprite* car, const carType::Type & type)
 		tiresPos[2].setOrigin(tiresPos[0].getOrigin().x, car->getOrigin().y - 180);
 		tiresPos[3].setOrigin(tiresPos[1].getOrigin().x, car->getOrigin().y - 180);
 
-		break;
-	case carType::Type::Mini_van:
 		break;
 	case carType::Type::Police:
 

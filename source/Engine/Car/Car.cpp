@@ -3,7 +3,7 @@
 #include "../../Manager/renderSprites.hpp"
 #include "../GamePhysics/carPhysics/carPhysics.hpp"
 
-Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game::Instance().getWindow())
+Car::Car(const carType::Type &type, const sf::Vector2f &startPos, const float &startRot) : window(Game::Instance().getWindow())
 {
 	this->type = new carType::Type(type);
 
@@ -15,6 +15,19 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	switch (type)
 	{
 	case carType::Type::Ambulance:
+
+		weight = new unsigned(3200);
+
+		origin = sf::Vector2f(39, 107);
+
+		pathToTexture += "Ambulance/ambulance.png";
+		pathToShadow += "Ambulance/ambulance_shadow.png";
+		nameTexture = "Ambulance";
+
+		shadow = new sf::Sprite(*textureManager::load(nameTexture + "Shadow", pathToShadow));
+		shadow->setPosition(startPos.x + 40, startPos.y);
+		shadow->setOrigin(79, 122);
+
 		break;
 	case carType::Type::Audi:
 
@@ -76,8 +89,6 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 		shadow->setOrigin(79, 122);
 
 		break;
-	case carType::Type::Mini_van:
-		break;
 	case carType::Type::Police:
 
 		weight = new unsigned(1850);
@@ -113,6 +124,8 @@ Car::Car(const carType::Type &type, const sf::Vector2f &startPos) : window(Game:
 	sprite = new sf::Sprite(*textureManager::load(nameTexture, pathToTexture));
 	sprite->setPosition(startPos);
 	sprite->setOrigin(origin);
+	sprite->setRotation(startRot);
+	shadow->setRotation(startRot);
 
 	tire = new Tire(this, type);
 	door = new Door(sprite, type);

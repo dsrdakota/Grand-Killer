@@ -9,6 +9,10 @@ carPhysics::carPhysics(Car *car)
 	switch (*car->getType())
 	{
 	case carType::Type::Ambulance:
+
+		SPEED_ROTATE_CAR = new double(0.15);
+		SPEED_ROTATE_TIRE = new const double(3);
+
 		break;
 	case carType::Type::Audi:
 
@@ -33,8 +37,6 @@ carPhysics::carPhysics(Car *car)
 		SPEED_ROTATE_CAR = new double(0.18);
 		SPEED_ROTATE_TIRE = new const double(4);
 
-		break;
-	case carType::Type::Mini_van:
 		break;
 	case carType::Type::Police:
 
