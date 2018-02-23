@@ -24,9 +24,9 @@ Map::Map() : window(Game::Instance().getWindow())
 	textureOfMiniMap = new sf::RenderTexture;
 	sf::RenderTexture textureOfHitboxGrass;
 
-	textureOfMap->create(mapSize->x, mapSize->y);
-	textureOfMiniMap->create(mapSize->x, mapSize->y);
-	textureOfHitboxGrass.create(mapSize->x, mapSize->y);
+	textureOfMap->create(static_cast<unsigned>(mapSize->x), static_cast<unsigned>(mapSize->y));
+	textureOfMiniMap->create(static_cast<unsigned>(mapSize->x), static_cast<unsigned>(mapSize->y));
+	textureOfHitboxGrass.create(static_cast<unsigned>(mapSize->x), static_cast<unsigned>(mapSize->y));
 
 	textureOfMap->clear();
 	textureOfMiniMap->clear();
@@ -40,15 +40,15 @@ Map::Map() : window(Game::Instance().getWindow())
 			int a;
 			file >> a;
 			sf::Sprite *spriteMap = tilesManager::Instance().getTilesMap(a);
-			spriteMap->setPosition(j * *TileSize, i * *TileSize);
+			spriteMap->setPosition(j * static_cast<float>(*TileSize), i * static_cast<float>(*TileSize));
 			textureOfMap->draw(*spriteMap);
 
 			sf::Sprite *spriteMiniMap = tilesManager::Instance().getTilesMiniMap(a);
-			spriteMiniMap->setPosition(j * *TileSize, i * *TileSize);
+			spriteMiniMap->setPosition(j * static_cast<float>(*TileSize), i * static_cast<float>(*TileSize));
 			textureOfMiniMap->draw(*spriteMiniMap);
 
 			sf::Sprite *spriteHitbox = tilesManager::Instance().getTilesHitboxGrass(a);
-			spriteHitbox->setPosition(j * *TileSize, i * *TileSize);
+			spriteHitbox->setPosition(j * static_cast<float>(*TileSize), i * static_cast<float>(*TileSize));
 			textureOfHitboxGrass.draw(*spriteHitbox);
 
 			buf.push_back(new Tile(a, sf::Vector2f(static_cast<float>(j * *TileSize), static_cast<float>(i * *TileSize))));
@@ -131,18 +131,22 @@ void Map::drawUnder()
 	if (allCarSingleTraces.size() > 600 * allCarSingleTraces.size())
 	{
 		for (auto i = 0;i < 10;++i)
+		{
 			delete allCarSingleTraces[i].first;
+			delete allCarSingleTraces[i].second;
+		}
 
 		allCarSingleTraces.erase(allCarSingleTraces.begin(), allCarSingleTraces.begin() + 10);
 	}
 
 	for (size_t i = 0;i<allCarSingleTraces.size();i++)
 	{
-		if (allCarSingleTraces[i].second <= 0 &&
+		if (*allCarSingleTraces[i].second <= 0 &&
 			Map::isOutsideView(sf::Vector2f(allCarSingleTraces[i].first->getGlobalBounds().left + allCarSingleTraces[i].first->getGlobalBounds().width,
 				allCarSingleTraces[i].first->getGlobalBounds().top + allCarSingleTraces[i].first->getGlobalBounds().height)))
 		{
 			delete allCarSingleTraces[i].first;
+			delete allCarSingleTraces[i].second;
 			allCarSingleTraces.erase(allCarSingleTraces.begin() + i, allCarSingleTraces.begin() + i + 1);
 			--i;
 		}
@@ -155,6 +159,8 @@ void Map::drawUnder()
 	//trafficSigns->drawUnder();
 
 	//trafficLights->drawUnder();
+
+	updateTimeInTrace();
 }
 
 void Map::drawOn()
@@ -218,4 +224,19 @@ sf::Vector2f Map::getUpLeftCornerPosOfCurrentView()
 	auto &map = Instance();
 	return sf::Vector2f(map.view->getCenter().x - map.view->getSize().x / 2,
 		map.view->getCenter().y - map.view->getSize().y / 2);
+}
+
+void Map::updateTimeInTrace()
+{
+	auto &traces = Map::Instance().getAllCarTraces();
+
+	if (clock.time->asSeconds() > 1)
+	{
+		for (auto &i : traces)
+			if (*i.second > 0)
+				(*i.second)--;
+
+		clock.clock->restart();
+		*clock.time = clock.time->Zero;
+	}
 }

@@ -17,9 +17,6 @@ private:
 
 	const sf::CircleShape *tiresPos;
 
-	Time clock;
-
-	void updateTimeInTrace();
 	bool isSameTraceOnVector(const sf::Vector2f &pos, const float &rot);
 
 	sf::Vector2f getCenterOfHitbox(const sf::CircleShape &hitbox);

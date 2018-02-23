@@ -3,6 +3,8 @@
 #include "../../../../Manager/renderSprites.hpp"
 #include "../../../Car/Car.hpp"
 
+#include <iostream>
+
 Traces::Traces(Car *car, const sf::CircleShape *tiresPos)
 {
 	this->car = car;
@@ -63,23 +65,8 @@ void Traces::setTraces()
 			trace->setPosition(getCenterOfHitbox(tiresPos[i]));
 			trace->setRotation(tiresPos[i].getRotation());
 
-			traces.push_back(std::make_pair(trace, 5));
+			traces.push_back(std::make_pair(trace, new int(8))); // time trace
 		}
-	}
-	updateTimeInTrace();
-}
-
-void Traces::updateTimeInTrace()
-{
-	auto &traces = Map::Instance().getAllCarTraces();
-
-	if (clock.time->asSeconds() > 1)
-	{
-		for (auto &i : traces)
-			i.second--;
-
-		clock.clock->restart();
-		*clock.time = clock.time->Zero;
 	}
 }
 
