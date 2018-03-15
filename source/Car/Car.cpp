@@ -11,9 +11,6 @@ Car::Car()
 
 	weight = new unsigned;
 	damageCondition = new int;
-
-	movement = new Movement(this);
-	toTurn = new ToTurn(this);
 }
 
 Car::~Car()
@@ -70,6 +67,11 @@ const unsigned& Car::getWeight()
 	return *weight;
 }
 
+const unsigned & Car::getCountDoors()
+{
+	return countDoors;
+}
+
 void Car::setDriver(IObject * driver)
 {
 	this->driver = driver;
@@ -99,9 +101,12 @@ void Car::rotate(const float & angle)
 
 void Car::setAttributes()
 {
-	door = new Door(sprite);
+	door = new Door(this);
 	tire = new Tire(this);
 	hitbox = new Hitbox(name);
+
+	movement = new Movement(this);
+	toTurn = new ToTurn(this);
 }
 
 void Car::noneDriver()

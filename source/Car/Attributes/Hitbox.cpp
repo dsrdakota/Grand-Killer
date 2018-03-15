@@ -8,7 +8,8 @@
 
 Hitbox::Hitbox(const std::string &carName)
 {
-	allHitboxInOneVector = CarConfig::getHitboxes(carName);
+	allHitboxes = CarConfig::getHitboxes(carName);
+	allHitboxInOneVector = CarConfig::getHitboxVectors(carName);
 	spliteToVectors();
 }
 

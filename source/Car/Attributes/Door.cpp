@@ -4,21 +4,30 @@
 
 #include "../../Engine/Engine.hpp"
 
-Door::Door(const sf::Sprite *sprite)
+Door::Door(Car *car)
 {
-	this->sprite = sprite;
+	this->sprite = car->getSprite();
+
+	countDoors = car->getCountDoors();
+	doors = new sf::RectangleShape[countDoors];
+	doorsHitbox = new sf::CircleShape[countDoors];
 
 	underDoors = new sf::RectangleShape;
 	underDoors->setFillColor(sf::Color::Black);
 
 	underDoors->setRotation(sprite->getRotation());
+	
+	doors[0].setTexture(TextureManager::get(car->getName() + "_leftF"));
+	doors[1].setTexture(TextureManager::get(car->getName() + "_rightF"));
 
-	for (size_t i = 0;i < countDoors;++i)
+	if (countDoors)
 	{
-		doorTextures[i].setSmooth(true);
-		doors[i].setTexture(dynamic_cast<const sf::Texture*>(&doorTextures[i]));
-		doors[i].setRotation(sprite->getRotation());
+		doors[2].setTexture(TextureManager::get(car->getName() + "_leftB"));
+		doors[3].setTexture(TextureManager::get(car->getName() + "_rightB"));
 	}
+	
+	for (size_t i = 0;i < countDoors;++i)
+		doors[i].setRotation(sprite->getRotation());
 
 	for (size_t i = 0;i < countDoors;++i)
 	{
@@ -35,7 +44,6 @@ Door::Door(const sf::Sprite *sprite)
 Door::~Door()
 {
 	delete[]doors;
-	delete[]doorTextures;
 	delete[]doorsHitbox;
 	delete underDoors;
 }

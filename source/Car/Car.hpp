@@ -29,11 +29,16 @@ public:
 	const sf::FloatRect getGlobalBounds();
 	const unsigned &getWeight();
 
+	const unsigned &getCountDoors();
+
 	void setDriver(IObject *driver);
 
 	void control();
 	void move(const sf::Vector2f &offset);
 	void rotate(const float &angle);
+
+	void draw();
+	void drawShadow();
 
 protected:
 
@@ -49,6 +54,8 @@ protected:
 	unsigned *weight;
 	int *damageCondition;
 
+	unsigned countDoors;
+
 	sf::Sprite *sprite;
 	sf::Sprite *shadow;
 
@@ -58,9 +65,5 @@ protected:
 	~Car();
 
 	void setAttributes();
-
 	void noneDriver();
-
-	void draw();
-	void drawShadow();
 };

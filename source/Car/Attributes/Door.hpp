@@ -16,7 +16,7 @@ public:
 		rightBack
 	};
 
-	Door(const sf::Sprite *sprite);
+	Door(Car *car);
 	~Door();
 
 	void move(const sf::Vector2f &offset);
@@ -31,7 +31,6 @@ private:
 	const sf::Sprite *sprite;
 
 	sf::RectangleShape *doors;
-	sf::Texture *doorTextures;
 	sf::RectangleShape *underDoors;
 	sf::CircleShape *doorsHitbox;
 

@@ -15,7 +15,7 @@ Tire::Tire(Car *car)
 
 	for (auto i = 0;i < 4;++i)
 	{
-		tires[i].setTexture(*TextureManager::get(car->getName() + "tire"));
+		tires[i].setTexture(*TextureManager::get(car->getName() + "_tire"));
 		tires[i].setRotation(car->getSprite()->getRotation());
 	}
 
