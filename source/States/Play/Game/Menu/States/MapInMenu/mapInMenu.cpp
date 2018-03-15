@@ -5,6 +5,8 @@ mapInMenu::mapInMenu()
 	map = new sf::Sprite;
 	mapArea = new sf::RectangleShape;
 
+	mapTiles = MapsManager::getMinimap()->getTiles();
+
 	scale = sf::Vector2f(0, 0);
 	maxScale = new sf::Vector2f(0.8f, 0.8f);
 	minScale = new sf::Vector2f(0.15f, 0.15f);

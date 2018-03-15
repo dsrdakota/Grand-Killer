@@ -1,11 +1,22 @@
 #include "Radar.hpp"
 
-Radar::Radar()
+#include <iostream>
+
+Radar::~Radar()
+{
+	delete radarArea;
+	delete playerIco;
+	delete target;
+
+	delete hp;
+	delete armor;
+	delete third;
+}
+
+void Radar::init()
 {
 	radarArea = new sf::RectangleShape(sf::Vector2f(300, 150));
 	radarArea->setFillColor(sf::Color(255, 0, 0, 100));
-
-	updateMap();
 
 	playerIco = new sf::Sprite(*TextureManager::get("playerMinimap"));
 	playerIco->setOrigin(playerIco->getGlobalBounds().left + playerIco->getGlobalBounds().width / 2.f, playerIco->getGlobalBounds().top + playerIco->getGlobalBounds().height / 2.f);
@@ -18,12 +29,12 @@ Radar::Radar()
 
 	radarView->setScale(scale);
 	radarView2->setScale(scale);
-	
+
 	const float outlineThickness = 2;
 
 	hpBackground = new sf::RectangleShape(sf::Vector2f(radarArea->getSize().x / 4 * 2 - outlineThickness, 8));
 	hpBackground->setOutlineThickness(2);
-	hpBackground->setOutlineColor(sf::Color(0,0,0,220));
+	hpBackground->setOutlineColor(sf::Color(0, 0, 0, 220));
 	hpBackground->setFillColor(sf::Color(72, 121, 68, 200));
 
 	hp = new sf::RectangleShape(sf::Vector2f(radarArea->getSize().x / 4 * 2 - outlineThickness - 10, 8));
@@ -46,21 +57,8 @@ Radar::Radar()
 	third->setFillColor(sf::Color(227, 196, 85, 200));
 }
 
-Radar::~Radar()
-{
-	delete radarArea;
-	delete playerIco;
-	delete target;
-
-	delete hp;
-	delete armor;
-	delete third;
-}
-
 void Radar::update(IObject *player)
 {
-	updateMap();
-
 	radarView->setTexture(*map->getTexture());
 	radarView2->setTexture(*map->getTexture());
 

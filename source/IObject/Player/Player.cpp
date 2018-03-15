@@ -3,8 +3,12 @@
 #include "../../Engine/Engine.hpp"
 #include "../../Car/Car.hpp"
 
-Player::Player()
+Player::Player(const sf::Vector2f &startPos, const float &startRot)
 {
+	sprite = new sf::Sprite;
+	sprite->setPosition(startPos);
+	sprite->setRotation(startRot);
+
 	hp = 100;
 	armor = 100;
 	condition = 100;

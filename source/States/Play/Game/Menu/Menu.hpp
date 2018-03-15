@@ -16,7 +16,7 @@ class MenuInGame
 {
 public:
 
-	MenuInGame(const sf::Vector2u &windowSize);
+	MenuInGame();
 	~MenuInGame();
 
 	void updateCooldown();

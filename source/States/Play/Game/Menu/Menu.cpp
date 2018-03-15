@@ -2,7 +2,7 @@
 
 #include <ctime>
 
-MenuInGame::MenuInGame(const sf::Vector2u &windowSize) : window(Game::Instance().getWindow())
+MenuInGame::MenuInGame() : window(Game::Instance().getWindow())
 {
 	state = new States(States::Mapa);
 
@@ -10,14 +10,14 @@ MenuInGame::MenuInGame(const sf::Vector2u &windowSize) : window(Game::Instance()
 
 	background->setFillColor(sf::Color(1, 36, 3, 200));
 
-	grandKillerText = new Text(sf::Color::White, 50, "Grand Killer", "data/Font/italic.ttf");
+	grandKillerText = new Text(sf::Color::White, 50, "Grand Killer", "italic");
 
 	leftArrow = new sf::Sprite(*TextureManager::get("leftArrow"));
 	rightArrow = new sf::Sprite(*TextureManager::get("rightArrow"));
 
-	name = new Text(sf::Color::White, 17, "Bohater", "data/Font/italic.ttf");
-	time = new Text(sf::Color::White, 17, "Niedziela 13:52", "data/Font/italic.ttf");
-	cash = new Text(sf::Color::White, 17, "$000,00", "data/Font/italic.ttf");
+	name = new Text(sf::Color::White, 17, "Bohater", "italic");
+	time = new Text(sf::Color::White, 17, "Niedziela 13:52", "italic");
+	cash = new Text(sf::Color::White, 17, "$000,00", "italic");
 
 	headersButton.push_back(new Button(sf::Vector2f((window->getSize().x - window->getSize().x * 0.4f) / 5.f, leftArrow->getGlobalBounds().height + 8.f), 15, "MAPA", Button::State::header));
 	headersButton.push_back(new Button(sf::Vector2f((window->getSize().x - window->getSize().x * 0.4f) / 5.f, leftArrow->getGlobalBounds().height + 8.f), 15, "DZIENNIK", Button::State::header));
@@ -60,6 +60,9 @@ MenuInGame::~MenuInGame()
 	delete rightArrow;
 	delete grandKillerText;
 	delete background;
+
+	for (const auto &i : headersButton)
+		delete i;
 
 	for (const auto &i : options)
 		delete i;

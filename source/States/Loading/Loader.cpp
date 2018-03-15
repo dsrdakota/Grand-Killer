@@ -4,11 +4,13 @@
 
 #include <fstream>
 
+// i think its to change, too many repeted
+
 bool Loader::play()
 {
 	isError = false;
 
-	unsigned amountOfFiles = carsName.size() * carTextures1.size() + carTextures2.size() + carTextures3.size() + textureWithName.size() + otherTextures.size() + mapTiles.size() + /* minimapTiles*/56 + carsName.size() * carsConfigFiles.size();
+	unsigned amountOfFiles = carsName.size() * carTextures1.size() + carTextures2.size() + carDoors.size() * carsName.size() + textureWithName.size() + otherTextures.size() + mapTiles.size() + /* minimapTiles*/56 + carsName.size() * carsConfigFiles.size();
 
 	text = new Text(sf::Color::White, 50, "Loader ( to change ), files to load: " + std::to_string(amountOfFiles));
 
@@ -21,8 +23,11 @@ bool Loader::play()
 
 	loadCarTextures1();
 
-	drawLoadingText("Creating map...");
-	MapsManager::Instance().init();
+	if (!isError)
+	{
+		drawLoadingText("Creating map...");
+		MapsManager::Instance().init();
+	}
 
 	return !isError;
 }
@@ -38,7 +43,48 @@ void Loader::loadCarTextures1()
 
 			drawLoadingText(path);
 
-			auto result = TextureManager::load(path.substr(path.find_last_of('/') + 1, path.find_last_of('.')), path);
+			auto result = TextureManager::load(i + '_' + path.substr(path.find_last_of('/') + 1, path.find(".gk") - path.find_last_of('/') - 1), path);
+
+			if (!result)
+			{
+				error(path);
+				return;
+			}
+		}
+	}
+	loadCarTextures2();
+}
+
+void Loader::loadCarTextures2()
+{
+	for (const auto &j : carTextures2)
+	{
+		drawLoadingText(j);
+
+		auto result = TextureManager::load(j.substr(j.find_last_of('/') + 1, j.find(".gk") - j.find_last_of('/') - 1), j);
+
+		if (!result)
+		{
+			error(j);
+			return;
+		}
+	}
+
+	loadCarDoors();
+}
+
+void Loader::loadCarDoors()
+{
+	for (const auto &i : carsName)
+	{
+		for (const auto &j : carDoors)
+		{
+			std::string path = j;
+			path.replace(path.find("carName"), 7, i);
+
+			drawLoadingText(path);
+
+			auto result = TextureManager::load(i + '_' + path.substr(path.find_last_of('/') + 1, path.find(".gk") - path.find_last_of('/') - 1), path);
 
 			if (!result)
 			{
@@ -48,31 +94,7 @@ void Loader::loadCarTextures1()
 		}
 	}
 
-	loadCarTextures2();
-}
-
-void Loader::loadCarTextures2()
-{
-	auto load = [&](const std::vector<std::string> &textures) {
-		for (const auto &j : textures)
-		{
-			drawLoadingText(j);
-
-			auto result = TextureManager::load(j.substr(j.find_last_of('/') + 1, j.find_last_of('.')), j);
-
-			if (!result)
-			{
-				error(j);
-				return;
-			}
-		}
-	};
-
-	if (!isError)
-		load(carTextures3);
-
-	if (!isError)
-		loadMapTiles();
+	loadMapTiles();
 }
 
 void Loader::loadMapTiles()
@@ -132,6 +154,19 @@ void Loader::loadMapTiles()
 
 void Loader::loadOtherTextures()
 {
+	for (const auto &j : otherTextures)
+	{
+		drawLoadingText(j);
+
+		auto result = TextureManager::load(j.substr(j.find_last_of('/') + 1, j.find(".gk") - j.find_last_of('/') -1), j);
+
+		if (!result)
+		{
+			error(j);
+			return;
+		}
+	}
+
 	loadTexturesWithName();
 }
 
@@ -149,7 +184,6 @@ void Loader::loadTexturesWithName()
 			return;
 		}
 	}
-
 	checkCarsConfigFiles();
 }
 

@@ -9,6 +9,8 @@
 #include "../../../Map/MapsManager.hpp"
 #include "Menu/Menu.hpp"
 
+#include "../../../IObject/Player/Player.hpp"
+
 class mGame : public GameStates
 {
 public:
@@ -46,7 +48,7 @@ private:
 
 	MapsManager *maps;
 	
-	IObject *player;
+	Player *player;
 
 	void draw();
 

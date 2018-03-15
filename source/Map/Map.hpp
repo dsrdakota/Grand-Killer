@@ -13,6 +13,7 @@ public:
 
 	void updateMap();
 
+	const sf::Vector2u& getSize();
 	std::vector<std::vector<sf::Sprite*>>&getTiles();
 	sf::Sprite* getMap();
 

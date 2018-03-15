@@ -1,15 +1,26 @@
 #include "mGame.hpp"
 
-#include <iostream>
+#include "../../../Car/Types/Ambulance.hpp"
+#include "../../../Car/Types/Audi.hpp"
+#include "../../../Car/Types/Black_viper.hpp"
+#include "../../../Car/Types/Dodge.hpp"
+#include "../../../Car/Types/Mini_truck.hpp"
+#include "../../../Car/Types/Police.hpp"
+#include "../../../Car/Types/Taxi.hpp"
 
 mGame::mGame()
 {
 	gameState = new state(state::MainGame);
-	//menu = new MenuInGame(window->getSize());
+	player = new Player(sf::Vector2f(1000, 1000),25);
+	menu = new MenuInGame();
+
+	cars.push_back(new Audi(sf::Vector2f(500,500),0));
 }
 
 mGame::~mGame()
 {
+	delete player;
+
 	delete gameState;
 	delete menu;
 }
@@ -24,6 +35,8 @@ bool mGame::play()
 		{
 		case state::MainGame:
 
+			View::updateView(player);
+
 			draw();
 
 			break;
@@ -37,8 +50,8 @@ bool mGame::play()
 			break;
 		}
 
-		//switchState();
-		//menu->updateCooldown();
+		switchState();
+		menu->updateCooldown();
 
 		TimeManager::getTimeOnClocks();
 		Painter::Instance().run();
@@ -55,6 +68,23 @@ std::vector<Car*> &mGame::getAllCars()
 void mGame::draw()
 {
 	Painter::Instance().addToDraw(MapsManager::getMainmap()->getMap());
+
+	for (const auto &i : cars)
+		i->drawShadow();
+
+	for (const auto &i : cars)
+	{
+		i->draw();
+
+		if (*gameState == state::MainGame)
+			i->control();
+	}
+
+	if (*gameState == state::MainGame)
+	{
+		MapsManager::getRadar()->update(player);
+		MapsManager::getRadar()->draw();
+	}
 }
 
 void mGame::switchState()

@@ -14,6 +14,7 @@ private:
 
 	void loadCarTextures1();
 	void loadCarTextures2();
+	void loadCarDoors();
 	void loadMapTiles();
 	void loadOtherTextures();
 	void loadTexturesWithName();
@@ -34,7 +35,7 @@ private:
 		"Ambulance",
 		"Audi",
 		"Black_viper",
-		"Car",
+		"Dodge",
 		"Mini_truck",
 		"Police",
 		"Taxi"
@@ -42,8 +43,6 @@ private:
 
 	std::vector<std::string> carTextures1 = {
 		"data/Models/Cars/carName/tire.gk",
-		"data/Models/Cars/carName/doors/leftF.gk",
-		"data/Models/Cars/carName/doors/rightF.gk",
 		"data/Models/Cars/carName/tracesTexture/asphalt.gk",
 		"data/Models/Cars/carName/tracesTexture/grass.gk"
 	};
@@ -58,8 +57,8 @@ private:
 		"data/Models/Cars/Black_viper/black_viper.gk",
 		"data/Models/Cars/Black_viper/black_viper_shadow.gk",
 
-		"data/Models/Cars/Car/car.gk",
-		"data/Models/Cars/Car/car_shadow.gk",
+		"data/Models/Cars/Dodge/dodge.gk",
+		"data/Models/Cars/Dodge/dodge_shadow.gk",
 
 		"data/Models/Cars/Mini_truck/mini_truck.gk",
 		"data/Models/Cars/Mini_truck/mini_truck_shadow.gk",
@@ -71,18 +70,9 @@ private:
 		"data/Models/Cars/Taxi/taxi_shadow.gk",
 	};
 
-	std::vector<std::string> carTextures3 = {
-		"data/Models/Cars/Audi/doors/rightB.gk",
-		"data/Models/Cars/Audi/doors/leftB.gk",
-
-		"data/Models/Cars/Car/doors/rightB.gk",
-		"data/Models/Cars/Car/doors/leftB.gk",
-
-		"data/Models/Cars/Police/doors/rightB.gk",
-		"data/Models/Cars/Police/doors/leftB.gk",
-
-		"data/Models/Cars/Taxi/doors/rightB.gk",
-		"data/Models/Cars/Taxi/doors/leftB.gk"
+	std::vector<std::string> carDoors = {
+		"data/Models/Cars/carName/doors/leftF.gk",
+		"data/Models/Cars/carName/doors/rightF.gk",
 	};
 
 	std::vector<std::string> otherTextures = {
@@ -99,7 +89,15 @@ private:
 
 	std::vector<std::pair<std::string, std::string>>textureWithName = {
 		std::make_pair("playerMinimap", "data/Map/Minimap/player.gk"),
-		std::make_pair("targetMinimap", "data/Map/Minimap/target.gk")
+		std::make_pair("targetMinimap", "data/Map/Minimap/target.gk"),
+		std::make_pair("Audi_rightB", "data/Models/Cars/Audi/doors/rightB.gk"),
+		std::make_pair("Audi_leftB", "data/Models/Cars/Audi/doors/leftB.gk"),
+		std::make_pair("Dodge_rightB", "data/Models/Cars/Dodge/doors/rightB.gk"),
+		std::make_pair("Dodge_leftB", "data/Models/Cars/Dodge/doors/leftB.gk"),
+		std::make_pair("Police_rightB", "data/Models/Cars/Police/doors/rightB.gk"),
+		std::make_pair("Police_leftB", "data/Models/Cars/Police/doors/leftB.gk"),
+		std::make_pair("Taxi_rightB", "data/Models/Cars/Taxi/doors/rightB.gk"),
+		std::make_pair("Taxi_leftB", "data/Models/Cars/Taxi/doors/leftB.gk"),
 	};
 
 	std::vector<std::string> mapTiles = {

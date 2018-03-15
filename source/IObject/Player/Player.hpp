@@ -6,7 +6,7 @@ class Player : public IObject
 {
 public:
 
-	Player();
+	Player(const sf::Vector2f &startPos, const float &startRot);
 
 private:
 

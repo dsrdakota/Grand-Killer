@@ -10,11 +10,16 @@ MapsManager::MapsManager()
 void MapsManager::init()
 {
 	mainmap = new Mainmap;
-	//minimap = new Minimap;
-	//radar = new Radar;
+	minimap = new Minimap;
+	radar = new Radar;
+
 	loadMapFromFile();
 
 	mainmap->updateMap();
+	minimap->updateMap();
+	radar->updateMap();
+
+	radar->init();
 }
 
 MapsManager::~MapsManager()
@@ -45,30 +50,31 @@ void MapsManager::loadMapFromFile()
 
 void MapsManager::addTile(const Tiles::Types &type, const sf::Vector2f & position)
 {
-	mainmap->getTiles()[static_cast<unsigned>(position.x) / Tiles::getTileSize().y][static_cast<unsigned>(position.y) / Tiles::getTileSize().x]->setTexture(*TextureManager::get(std::to_string(static_cast<int>(type))));
-	mainmap->getTiles()[static_cast<unsigned>(position.x) / Tiles::getTileSize().y][static_cast<unsigned>(position.y) / Tiles::getTileSize().x]->setPosition(position);
-
-	//sf::Sprite *minimapSprite = new sf::Sprite;
+	mainmap->getTiles()[static_cast<unsigned>(position.y) / Tiles::getTileSize().y][static_cast<unsigned>(position.x) / Tiles::getTileSize().x]->setTexture(*TextureManager::get(std::to_string(static_cast<int>(type))));
 	
-	/*if (static_cast<int>(type) == 0 ||
+	if (static_cast<int>(type) == 0 ||
 		(static_cast<int>(type) >= 29 && static_cast<int>(type) <= 34) ||
 		(static_cast<int>(type) >= 59 && static_cast<int>(type) <= 63))
-		minimapSprite->setTexture(*TextureManager::get(std::to_string(static_cast<int>(Tiles::Types::asphalt)) + "_Minimap"));
+	{
+		minimap->getTiles()[static_cast<unsigned>(position.y) / Tiles::getTileSize().y][static_cast<unsigned>(position.x) / Tiles::getTileSize().x]->setTexture(*TextureManager::get(std::to_string(static_cast<int>(Tiles::Types::asphalt)) + "_Minimap"));
+		radar->getTiles()[static_cast<unsigned>(position.y) / Tiles::getTileSize().y][static_cast<unsigned>(position.x) / Tiles::getTileSize().x]->setTexture(*TextureManager::get(std::to_string(static_cast<int>(Tiles::Types::asphalt)) + "_Minimap"));
+	}
 
 	else if (static_cast<int>(type) >= 64)
-		minimapSprite->setTexture(*TextureManager::get(std::to_string(static_cast<int>(Tiles::Types::grass)) + "_Minimap"));
+	{
+		minimap->getTiles()[static_cast<unsigned>(position.y) / Tiles::getTileSize().y][static_cast<unsigned>(position.x) / Tiles::getTileSize().x]->setTexture(*TextureManager::get(std::to_string(static_cast<int>(Tiles::Types::grass)) + "_Minimap"));
+		radar->getTiles()[static_cast<unsigned>(position.y) / Tiles::getTileSize().y][static_cast<unsigned>(position.x) / Tiles::getTileSize().x]->setTexture(*TextureManager::get(std::to_string(static_cast<int>(Tiles::Types::grass)) + "_Minimap"));
+	}
 
 	else
-		minimapSprite->setTexture(*TextureManager::get(std::to_string(static_cast<int>(type)) + "_Minimap"));
-	
-	sf::Sprite *radarSprite = new sf::Sprite;
+	{
+		minimap->getTiles()[static_cast<unsigned>(position.y) / Tiles::getTileSize().y][static_cast<unsigned>(position.x) / Tiles::getTileSize().x]->setTexture(*TextureManager::get(std::to_string(static_cast<int>(type)) + "_Minimap"));
+		radar->getTiles()[static_cast<unsigned>(position.y) / Tiles::getTileSize().y][static_cast<unsigned>(position.x) / Tiles::getTileSize().x]->setTexture(*TextureManager::get(std::to_string(static_cast<int>(type)) + "_Minimap"));
+	}
 
-	minimapSprite->setPosition(position);
-
-	*radarSprite = *minimapSprite;
-
-	Instance().minimap->getTiles()[static_cast<unsigned>(position.y) / *Instance().TileSize].push_back(minimapSprite);
-	Instance().radar->getTiles()[static_cast<unsigned>(position.y) / *Instance().TileSize].push_back(radarSprite);*/
+	mainmap->getTiles()[static_cast<unsigned>(position.y) / Tiles::getTileSize().y][static_cast<unsigned>(position.x) / Tiles::getTileSize().x]->setPosition(position);
+	minimap->getTiles()[static_cast<unsigned>(position.y) / Tiles::getTileSize().y][static_cast<unsigned>(position.x) / Tiles::getTileSize().x]->setPosition(position);
+	radar->getTiles()[static_cast<unsigned>(position.y) / Tiles::getTileSize().y][static_cast<unsigned>(position.x) / Tiles::getTileSize().x]->setPosition(position);
 }
 
 

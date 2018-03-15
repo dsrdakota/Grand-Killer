@@ -10,9 +10,9 @@ class Radar : public Map
 {
 public:
 
-	Radar();
 	~Radar();
 
+	void init();
 	void update(IObject *player);
 	void draw();
 

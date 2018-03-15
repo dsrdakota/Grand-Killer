@@ -3,8 +3,6 @@
 #include "../Engine/Engine.hpp"
 #include "MapsManager.hpp"
 
-#include <iostream>
-
 Map::Map()
 {
 	size = sf::Vector2u(6000, 6000);
@@ -30,6 +28,11 @@ Map::~Map()
 
 	delete map;
 	delete mapTexture;
+}
+
+const sf::Vector2u& Map::getSize()
+{
+	return size;
 }
 
 std::vector<std::vector<sf::Sprite*>>& Map::getTiles()
