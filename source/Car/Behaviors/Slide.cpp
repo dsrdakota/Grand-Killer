@@ -1,8 +1,8 @@
 #include "Slide.hpp"
 
-#include "../Car.hpp"
+#include "../../Map/Map.hpp"
 
-#include "../../Map/MapsManager.hpp"
+#include "../Car.hpp"
 
 Slide::Slide(Car * car)
 {
@@ -34,10 +34,10 @@ Slide::~Slide()
 const double * Slide::getOverSteer()
 {
 	double *overSteer = new double(0);
-	
-	if (fabs(*overSteerLeft) >0 && fabs(*overSteerRight) <=0)
+
+	if (fabs(*overSteerLeft) >0 && fabs(*overSteerRight) <= 0)
 		return overSteerLeft;
-	else if (fabs(*overSteerRight) >0 && fabs(*overSteerLeft) <=0)
+	else if (fabs(*overSteerRight) >0 && fabs(*overSteerLeft) <= 0)
 		return overSteerRight;
 
 	return overSteer;
@@ -52,7 +52,7 @@ const int Slide::getOverSteerSide()
 	return 0;
 }
 
-const bool Slide::isSlideBool()
+const bool Slide::getSlideBool()
 {
 	return isSlide;
 }
@@ -68,7 +68,7 @@ void Slide::breakSlide()
 	*overSteerRight = 0;
 }
 
-void Slide::setOverSteer(const int & drivingStatus, const bool canDoSlide)
+void Slide::setOverSteer(const int & drivingStatus)
 {
 	if (!car->getMovementClass()->getTypeOfDrive())
 		setPowerOfSlide(std::make_pair(car->getTireClass()->getTiresPos(0), car->getTireClass()->getTiresPos(1)));
@@ -76,7 +76,13 @@ void Slide::setOverSteer(const int & drivingStatus, const bool canDoSlide)
 	else
 		setPowerOfSlide(std::make_pair(car->getTireClass()->getTiresPos(2), car->getTireClass()->getTiresPos(3)));
 
-	if(canDoSlide)
+	if (*car->getMovementClass()->getSpeed() > 1 && !car->getMovementClass()->getStateMoving() &&
+		(*car->getMovementClass()->getSpeed() > *car->getMovementClass()->getMaxSpeed() * 0.92f || // car on asphalt
+			isSlide ||
+			(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && *car->getMovementClass()->getSpeed() > 0) ||
+			(car->getMovementClass()->getTypeOfDrive() ?
+				Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*car->getTireClass()->getTiresPos(2))) && Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*car->getTireClass()->getTiresPos(3)))
+				: Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*car->getTireClass()->getTiresPos(0))) && Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*car->getTireClass()->getTiresPos(1))))))
 	{
 		Status status = static_cast<Status>(drivingStatus);
 		if (status == Status::TurningLeft)
@@ -94,13 +100,37 @@ void Slide::setOverSteer(const int & drivingStatus, const bool canDoSlide)
 				reduceSlide(*powerReduceSlide * 2, overSteerLeft);
 		}
 		else
-			reduceOverSteer();
+		{
+			if (*overSteerLeft && !*overSteerRight)
+				reduceSlide(*powerReduceSlide, overSteerLeft);
+			else
+				*overSteerLeft = 0;
+
+			if (*overSteerRight && !*overSteerLeft)
+				reduceSlide(-*powerReduceSlide, overSteerRight);
+			else
+				*overSteerRight = 0;
+
+			if (!*overSteerRight && !*overSteerLeft)
+				isSlide = false;
+		}
 	}
 	else
 	{
-		reduceOverSteer();
+		if (*overSteerLeft && !*overSteerRight)
+			reduceSlide(*powerReduceSlide, overSteerLeft);
+		else
+			*overSteerLeft = 0;
 
-		if (car->getMovementClass()->getSpeed() <= 0)
+		if (*overSteerRight && !*overSteerLeft)
+			reduceSlide(-*powerReduceSlide, overSteerRight);
+		else
+			*overSteerRight = 0;
+
+		if (!*overSteerRight && !*overSteerLeft)
+			isSlide = false;
+
+		if (*car->getMovementClass()->getSpeed() <= 0)
 		{
 			*overSteerLeft = 0;
 			*overSteerRight = 0;
@@ -111,6 +141,8 @@ void Slide::setOverSteer(const int & drivingStatus, const bool canDoSlide)
 
 void Slide::setPowerOfSlide(std::pair<sf::CircleShape*, sf::CircleShape*>hitbox)
 {
+	// R 133 G 91 B 0
+
 	double PowerDoingOfBothHitbox = 0;
 	double PowerReduceOfBothHitbox = 0;
 
@@ -122,22 +154,6 @@ void Slide::setPowerOfSlide(std::pair<sf::CircleShape*, sf::CircleShape*>hitbox)
 
 	*powerDoingSlide = PowerDoingOfBothHitbox / 2;
 	*powerReduceSlide = PowerReduceOfBothHitbox / 2;
-}
-
-void Slide::reduceOverSteer()
-{
-	if (*overSteerLeft && !*overSteerRight)
-		reduceSlide(*powerReduceSlide, overSteerLeft);
-	else
-		*overSteerLeft = 0;
-
-	if (*overSteerRight && !*overSteerLeft)
-		reduceSlide(-*powerReduceSlide, overSteerRight);
-	else
-		*overSteerRight = 0;
-
-	if (!*overSteerRight && !*overSteerLeft)
-		isSlide = false;
 }
 
 void Slide::doSlide(const double &angle, double *overSteer, const double *MAX_OVERSTEER)
@@ -181,7 +197,7 @@ void Slide::isTireOnGrass(sf::CircleShape * hitbox, double &powerDoing, double &
 	const double POWER_REDUCE_ON_ASPHALT = 0.7;
 	const double POWER_REDUCE_ON_GRASS = 0.6;
 
-	if (MapsManager::getMainmap()->isPointOnGrass(Hitbox::getCenterOfHitbox(*hitbox)))
+	if (Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*hitbox)))
 	{
 		powerDoing += POWER_DOING_ON_GRASS;
 		powerReduce += POWER_REDUCE_ON_GRASS;

@@ -37,8 +37,6 @@ Door::Door(Car *car)
 
 	angleOpen = new float[countDoors]{ 0 };
 	MAX_ANGLEN_OPEN = new const float(65.f);
-
-	updatePosition();
 }
 
 Door::~Door()
@@ -46,6 +44,21 @@ Door::~Door()
 	delete[]doors;
 	delete[]doorsHitbox;
 	delete underDoors;
+}
+
+sf::RectangleShape * Door::getDoors()
+{
+	return doors;
+}
+
+sf::RectangleShape * Door::getUnderDoors()
+{
+	return underDoors;
+}
+
+sf::CircleShape * Door::getDoorsHitbox()
+{
+	return doorsHitbox;
 }
 
 void Door::move(const sf::Vector2f & offset)

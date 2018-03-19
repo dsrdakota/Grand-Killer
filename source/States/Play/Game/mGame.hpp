@@ -1,23 +1,19 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-
 #include "../../States.hpp"
-
-#include "../../../Engine/Engine.hpp"
+#include "../../../Map/Map.hpp"
 #include "../../../Car/Car.hpp"
-#include "../../../Map/MapsManager.hpp"
+#include "../../../IObject/Player/Player.hpp"
 #include "Menu/Menu.hpp"
 
-#include "../../../IObject/Player/Player.hpp"
+#include <SFML/Graphics.hpp>
 
 class mGame : public GameStates
 {
 public:
 
-	mGame();
 	~mGame();
-	
+
 	mGame(const mGame &) = delete;
 	void operator=(const mGame &) = delete;
 
@@ -40,14 +36,15 @@ public:
 
 private:
 
+	mGame();
+
 	state *gameState;
 
 	std::vector<Car*> cars;
 
-	MenuInGame *menu;
+	Menu *menu;
 
-	MapsManager *maps;
-	
+	Map *map;
 	Player *player;
 
 	void draw();
@@ -55,4 +52,5 @@ private:
 	void switchState();
 
 	Time cooldown;
+	void switchCars(size_t &index);
 };

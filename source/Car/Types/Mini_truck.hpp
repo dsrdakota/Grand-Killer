@@ -9,4 +9,8 @@ public:
 	Mini_truck(const sf::Vector2f &startPos, const float &startRot);
 
 private:
+
+	void setDoorPosition();
+	void setTirePosition();
+
 };

@@ -13,24 +13,24 @@ Traces::Traces(Car *car, const sf::CircleShape *tiresPos)
 
 void Traces::setTraces()
 {
-	auto &traces = MapsManager::getMainmap()->getAllCarTraces();
+	auto &traces = Map::Instance().getAllCarTraces();
 
-	for (auto i = 0;i < 4;++i)
+	for (size_t i = 0;i < car->getCountTires();++i)
 	{
 		bool needAdd = false;
 		std::string textureName = "";
 
-		if (MapsManager::getMainmap()->isPointOnGrass(Hitbox::getCenterOfHitbox(tiresPos[i])) &&
+		if (Map::isPointOnGrass(Hitbox::getCenterOfHitbox(tiresPos[i])) &&
 			!isSameTraceOnVector(Hitbox::getCenterOfHitbox(tiresPos[i]), car->getSprite()->getRotation()))
 		{
 			needAdd = true;
-			textureName = "traceGrassTexture" + car->getName();
+			textureName = car->getName() + "_grass";
 		}
 		else if (fabs(*car->getToTurnClass()->getSlidePhycics()->getOverSteer()) > 20 &&
 			!isSameTraceOnVector(Hitbox::getCenterOfHitbox(tiresPos[i]), car->getSprite()->getRotation()))
 		{
 			needAdd = true;
-			textureName = "traceAsphaltTexture" + car->getName();
+			textureName = car->getName() + "_asphalt";
 		}
 
 		if (needAdd && textureName != "")
@@ -47,7 +47,7 @@ void Traces::setTraces()
 
 bool Traces::isSameTraceOnVector(const sf::Vector2f &pos, const float &rot)
 {
-	auto &traces = MapsManager::getMainmap()->getAllCarTraces();
+	auto &traces = Map::Instance().getAllCarTraces();
 
 	for (const auto &i : traces)
 		if (i.first->getGlobalBounds().contains(pos) && i.first->getRotation() == rot)

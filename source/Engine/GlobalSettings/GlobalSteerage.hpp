@@ -27,7 +27,7 @@ public:
 		Guns
 	};
 
-	enum class Rodzaj
+	enum class Type
 	{
 		Gas,
 		Break,
@@ -36,7 +36,7 @@ public:
 		TurnRight
 	};
 
-	static const sf::Keyboard::Key &getKey(const Sections &section, const Rodzaj &rodzaj);
+	static const sf::Keyboard::Key &getKey(const Sections &section, const Type &type);
 
 private:
 
@@ -47,5 +47,5 @@ private:
 	void loadDefaultFightSteerage();
 	void loadDefaultGunsSteerage();
 
-	std::unordered_map<Sections, std::unordered_map<Rodzaj, sf::Keyboard::Key>> steerage;
+	std::unordered_map<Sections, std::unordered_map<Type, sf::Keyboard::Key>> steerage;
 };

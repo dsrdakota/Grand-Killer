@@ -67,7 +67,7 @@ private:
 
 	void move();
 	void setStateMoving();
-	void acceleratingFunction(double *speed, double *counterSpeed, const double MAX_SPEED);
+	void acceleratingFunction(double *speed, double *counterSpeed, const double MAX_SPEED, bool &stateKey);
 	void breakingFunction(double * speed, double breakValue = 0, double minSpeed = 0);
 	float toRad(float degrees);
 

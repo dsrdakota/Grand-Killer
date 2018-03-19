@@ -1,113 +1,87 @@
 #include "Tiles.hpp"
-
-#include "../MapsManager.hpp"
+#include "../../Engine/Engine.hpp"
 
 #include <fstream>
-#include <iostream>
 
-Tiles::Tiles()
+TilesManager::TilesManager()
 {
-	tileSize = sf::Vector2u(80, 80);
-	tilesCount = sf::Vector2u(75, 75);
+	TileSize = new const short int(80);
+	tilesCountWidth = new const short int(75);
+	tilesCountHeigth = new const short int(75);
+
+	countOfTilesType = new const unsigned(78);
+	std::string line;
+
+	std::ifstream file("data/Map/Tileset/Tiles.txt"); // binary soon
+
+	for (int i = 0; i< *tilesCountHeigth; i++)
+	{
+		std::vector<Tile*>buf;
+		std::vector<sf::Sprite*>MapBuf;
+		std::vector<sf::Sprite*>MiniMapBuf;
+		std::vector<sf::Sprite*>GrassBuf;
+		for (int j = 0; j < *tilesCountWidth; j++)
+		{
+			int a;
+			file >> a;
+
+			MapBuf.push_back(new sf::Sprite(*TextureManager::get(std::to_string(a))));
+			MapBuf[MapBuf.size() - 1]->setPosition(sf::Vector2f(static_cast<float>(j * *TileSize), static_cast<float>(i * *TileSize)));
+
+			MiniMapBuf.push_back(new sf::Sprite(*TextureManager::get(std::to_string(a) + "_Minimap")));
+			MiniMapBuf[MiniMapBuf.size() - 1]->setPosition(sf::Vector2f(static_cast<float>(j * *TileSize), static_cast<float>(i * *TileSize)));
+
+			GrassBuf.push_back(new sf::Sprite(*TextureManager::get(std::to_string(a) + "_Hitbox")));
+			GrassBuf[GrassBuf.size() - 1]->setPosition(sf::Vector2f(static_cast<float>(j * *TileSize), static_cast<float>(i * *TileSize)));
+
+			buf.push_back(new Tile(a, sf::Vector2f(static_cast<float>(j * *TileSize), static_cast<float>(i * *TileSize))));
+		}
+		Tiles.push_back(buf);
+
+		TilesMap.push_back(MapBuf);
+		TilesMiniMap.push_back(MiniMapBuf);
+		TilesHitboxGrass.push_back(GrassBuf);
+	}
+
+	file.clear();
+	file.close();
 }
 
-Tiles::~Tiles()
+TilesManager::~TilesManager()
 {
+	delete TileSize;
+	delete tilesCountHeigth;
+	delete tilesCountWidth;
+
+	for (const auto &i : TilesMap)
+		for(const auto &j:i)
+			delete j;
+
+	for (const auto &i : TilesMiniMap)
+		for (const auto &j : i)
+			delete j;
 	
+	for (const auto &i : TilesHitboxGrass)
+		for (const auto &j : i)
+			delete j;
 }
 
-std::string Tiles::getTypeAsString(const Types &type)
+std::vector<std::vector<sf::Sprite*>> TilesManager::getTileMapVector()
 {
-	std::string Types[]{
-		"asphalt",
-		"asphalt_grass_corner_in_BL",
-		"asphalt_grass_corner_in_BR",
-		"asphalt_grass_corner_in_TL",
-		"asphalt_grass_corner_in_TR",
-		"asphalt_grass_corner_out_BL",
-		"asphalt_grass_corner_out_BR",
-		"asphalt_grass_corner_out_TL",
-		"asphalt_grass_corner_out_TR",
-		"asphalt_grass_hor_border_BOTT",
-		"asphalt_grass_hor_border_LEFT",
-		"asphalt_grass_hor_border_RIGHT",
-		"asphalt_grass_hor_border_TOP",
-		"asphalt_grass_hor_pedlanes_BL",
-		"asphalt_grass_hor_pedlanes_BR",
-		"asphalt_grass_hor_pedlanes_TL",
-		"asphalt_grass_hor_pedlanes_TR",
-		"asphalt_grass_pvmt_hor_border_BL",
-		"asphalt_grass_pvmt_hor_border_BR",
-		"asphalt_grass_pvmt_hor_border_TL",
-		"asphalt_grass_pvmt_hor_border_TR",
-		"asphalt_grass_pvmt_vert_border_BL",
-		"asphalt_grass_pvmt_vert_border_BR",
-		"asphalt_grass_pvmt_vert_border_TL",
-		"asphalt_grass_pvmt_vert_border_TR",
-		"asphalt_grass_vert_pedlanes_BL",
-		"asphalt_grass_vert_pedlanes_BR",
-		"asphalt_grass_vert_pedlanes_TL",
-		"asphalt_grass_vert_pedlanes_TR",
-		"asphalt_hor_lane_LEFT",
-		"asphalt_hor_lane_RIGHT",
-		"asphalt_hor_pedlanes",
-		"asphalt_hor_pedlanes_LEFT",
-		"asphalt_hor_pedlanes_RIGHT",
-		"asphalt_manhole",
-		"asphalt_pavement_corner_in_BL",
-		"asphalt_pavement_corner_in_BR",
-		"asphalt_pavement_corner_in_TL",
-		"asphalt_pavement_corner_in_TR",
-		"asphalt_pavement_corner_out_BL",
-		"asphalt_pavement_corner_out_BR",
-		"asphalt_pavement_corner_out_TL",
-		"asphalt_pavement_corner_out_TR",
-		"asphalt_pavement_hor_border_BOTT",
-		"asphalt_pavement_hor_border_pedlanes_BOTT",
-		"asphalt_pavement_hor_border_pedlanes_TL",
-		"asphalt_pavement_hor_border_pedlanes_TOP",
-		"asphalt_pavement_hor_border_TOP",
-		"asphalt_pavement_hor_pedlanes_BL",
-		"asphalt_pavement_hor_pedlanes_BR",
-		"asphalt_pavement_hor_pedlanes_TR",
-		"asphalt_pavement_vert_border_LEFT",
-		"asphalt_pavement_vert_border_pedlanes_LEFT",
-		"asphalt_pavement_vert_border_pedlanes_RIGHT",
-		"asphalt_pavement_vert_border_RIGHT",
-		"asphalt_pavement_vert_pedlanes_BL",
-		"asphalt_pavement_vert_pedlanes_BR",
-		"asphalt_pavement_vert_pedlanes_TL",
-		"asphalt_pavement_vert_pedlanes_TR",
-		"asphalt_vert_lane_BOTT",
-		"asphalt_vert_lane_TOP",
-		"asphalt_vert_pedlanes",
-		"asphalt_vert_pedlanes_BOTT",
-		"asphalt_vert_pedlanes_TOP",
-		"grass",
-		"grass_pavement_corner_in_BL",
-		"grass_pavement_corner_in_BR",
-		"grass_pavement_corner_in_TL",
-		"grass_pavement_corner_in_TR",
-		"grass_pavement_corner_out_BL",
-		"grass_pavement_corner_out_BR",
-		"grass_pavement_corner_out_TL",
-		"grass_pavement_corner_out_TR",
-		"grass_pavement_hor_border_BOTT",
-		"grass_pavement_hor_border_TOP",
-		"grass_pavement_vert_border_LEFT",
-		"grass_pavement_vert_border_RIGHT",
-		"pavement",
-	};
-
-	return Types[static_cast<size_t>(type)];
+	return Instance().TilesMap;
 }
 
-sf::Vector2u Tiles::getTilesCount()
+std::vector<std::vector<sf::Sprite*>> TilesManager::getTileMiniMapVector()
 {
-	return Instance().tilesCount;
+	return Instance().TilesMiniMap;
 }
 
-sf::Vector2u Tiles::getTileSize()
+std::vector<std::vector<sf::Sprite*>> TilesManager::getTileHitboxGrassVector()
 {
-	return Instance().tileSize;
+	return Instance().TilesHitboxGrass;
+}
+
+std::vector<std::vector<Tile*>>& TilesManager::getTilesVector()
+{
+	return Instance().Tiles;
 }

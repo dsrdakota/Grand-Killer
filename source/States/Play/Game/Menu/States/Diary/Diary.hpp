@@ -5,7 +5,7 @@
 #include "../../States.hpp"
 #include "../../../../../../Engine/Engine.hpp"
 
-class Diary : public menuStates
+class Diary : public MenuStates
 {
 public:
 

@@ -1,6 +1,6 @@
 #include "carWithWall.hpp"
 
-#include "../../Map/MapsManager.hpp"
+#include "../../Map/Map.hpp"
 
 Hitbox::collisionSide carWithWall::checkCollisions(Car *car, bool react)
 {
@@ -101,7 +101,7 @@ Hitbox::collisionSide carWithWall::whereIsCollision()
 bool carWithWall::checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>&hitbox, bool &isCollision)
 {
 	for (const auto &i : hitbox)
-		if (MapsManager::getMainmap()->isPointInCollisionArea(Hitbox::getCenterOfHitbox(*i)))
+		if (Map::Instance().isPointInCollisionArea(Hitbox::getCenterOfHitbox(*i)))
 			return true;
 
 	isCollision = false;

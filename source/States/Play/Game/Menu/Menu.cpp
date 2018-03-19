@@ -2,7 +2,7 @@
 
 #include <ctime>
 
-MenuInGame::MenuInGame() : window(Game::Instance().getWindow())
+Menu::Menu() : window(Game::Instance().getWindow())
 {
 	state = new States(States::Mapa);
 
@@ -25,12 +25,12 @@ MenuInGame::MenuInGame() : window(Game::Instance().getWindow())
 	headersButton.push_back(new Button(sf::Vector2f((window->getSize().x - window->getSize().x * 0.4f) / 5.f, leftArrow->getGlobalBounds().height + 8.f), 15, "USTAWIENIA", Button::State::header));
 	headersButton.push_back(new Button(sf::Vector2f((window->getSize().x - window->getSize().x * 0.4f) / 5.f, leftArrow->getGlobalBounds().height + 8.f), 15, "GRA", Button::State::header));
 
-	map = new mapInMenu;
+	map = new MapInMenu;
 	options.push_back(map);
 	options.push_back(new Diary());
 	options.push_back(new Statistics());
 	options.push_back(new Steerage());
-	options.push_back(new gameInMenu());
+	options.push_back(new GameInMenu());
 
 	headersButton[0]->setEnabled();
 
@@ -54,7 +54,7 @@ MenuInGame::MenuInGame() : window(Game::Instance().getWindow())
 	escapeWasRelased = true;
 }
 
-MenuInGame::~MenuInGame()
+Menu::~Menu()
 {
 	delete leftArrow;
 	delete rightArrow;
@@ -74,7 +74,7 @@ MenuInGame::~MenuInGame()
 	}
 }
 
-void MenuInGame::updateCooldown()
+void Menu::updateCooldown()
 {
 	if (cooldownEscapeButton && timeEscapeButton.time->asSeconds() >= 0.5f)
 	{
@@ -91,14 +91,14 @@ void MenuInGame::updateCooldown()
 	}
 }
 
-void MenuInGame::restartCooldownValue()
+void Menu::restartCooldownValue()
 {
 	cooldownEscapeButton = 2;
 	timeEscapeButton.clock->restart();
 	*timeEscapeButton.time = sf::Time::Zero;
 }
 
-void MenuInGame::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &playerPos, const float &playerRot)
+void Menu::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &playerPos, const float &playerRot)
 {
 	background->setPosition(menuPos);
 
@@ -147,10 +147,12 @@ void MenuInGame::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &p
 
 	auto firstButton = headersButton[0]->getButtonSprite();
 
-	const auto &allTiles = MapsManager::getMainmap()->getTiles();
-	sf::Sprite* tile = allTiles[static_cast<size_t>(playerPos.x / Tiles::getTileSize().y)][static_cast<size_t>(playerPos.y / Tiles::getTileSize().x)];
+	const auto &allTiles = TilesManager::getTilesVector();
+	Tile* tile = allTiles[static_cast<size_t>(playerPos.x / TilesManager::getTileSize())][static_cast<size_t>(playerPos.y / TilesManager::getTileSize())];
 
-	sf::Vector2f lenght = playerPos - tile->getPosition();
+	sf::Vector2f lenght = playerPos - tile->getTileSprite()->getPosition();
+	
+	//Minimap::Instance().setPlayerPosition(tile, lenght, playerRot);
 
 	map->setPlayerPosition(tile, lenght, playerRot);
 
@@ -161,17 +163,17 @@ void MenuInGame::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &p
 				firstButton->getPosition().y + firstButton->getGlobalBounds().height + window->getSize().y * 0.6f));
 }
 
-const int & MenuInGame::getCooldownValue()
+const int & Menu::getCooldownValue()
 {
 	return cooldownEscapeButton;
 }
 
-bool MenuInGame::canExitMenu()
+bool Menu::canExitMenu()
 {
 	return escapeWasRelased && wsk->exit();
 }
 
-void MenuInGame::draw()
+void Menu::draw()
 {
 	update();
 
@@ -203,21 +205,7 @@ void MenuInGame::draw()
 	}
 }
 
-const bool MenuInGame::isTargetSet()
-{
-	if (wsk == map)
-		return map->isTargetSet();
-	return false;
-}
-
-const sf::Vector2f MenuInGame::getTargetPos()
-{
-	if (wsk == map)
-		return map->getTargetPos();
-	return sf::Vector2f(0,0);
-}
-
-void MenuInGame::update()
+void Menu::update()
 {
 	optionIsActive = wsk->isActive();
 
@@ -254,7 +242,7 @@ void MenuInGame::update()
 	}
 }
 
-std::string MenuInGame::updateTime()
+std::string Menu::updateTime()
 {
 #pragma warning(disable : 4996)
 
@@ -296,7 +284,7 @@ std::string MenuInGame::updateTime()
 	return dni[function(day)] + ' ' + time;
 }
 
-void MenuInGame::checkArrowIsPressed(const int &side)
+void Menu::checkArrowIsPressed(const int &side)
 {
 	States first, last;
 	sf::Keyboard::Key keyQE; // Q or E
@@ -346,14 +334,14 @@ void MenuInGame::checkArrowIsPressed(const int &side)
 	}
 }
 
-bool MenuInGame::mouseOnClickArrow(sf::Sprite * arrow)
+bool Menu::mouseOnClickArrow(sf::Sprite * arrow)
 {
 	if (mouseOnArrow(arrow) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		return true;
 	return false;
 }
 
-bool MenuInGame::mouseOnArrow(sf::Sprite * arrow)
+bool Menu::mouseOnArrow(sf::Sprite * arrow)
 {
 	if (arrow->getGlobalBounds().contains(window->mapPixelToCoords(sf::Mouse::getPosition())))
 	{

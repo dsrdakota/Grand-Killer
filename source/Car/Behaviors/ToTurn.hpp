@@ -21,12 +21,6 @@ public:
 		Right
 	};
 
-	enum class keyStatus
-	{
-		Pressed,
-		Released
-	};
-
 	enum class Status
 	{
 		TurningLeft,
@@ -37,7 +31,6 @@ public:
 	ToTurn(Car *car);
 	~ToTurn();
 
-	keyStatus* getStatusKeyToTurn(const Direction &direction);
 	Slide *getSlidePhycics();
 	void turning(const Direction &direction);
 	void updatePosition();
@@ -63,9 +56,6 @@ private:
 
 	double *actualValueRotateLeftTire;
 	double *actualValueRotateRightTire;
-
-	keyStatus *keyToLeftTurn;
-	keyStatus *keyToRightTurn;
 
 	Status *drivingStatus;
 

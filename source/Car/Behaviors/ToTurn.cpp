@@ -7,7 +7,7 @@
 
 #include "../Car.hpp"
 
-#include "../../Map/Mainmap/Mainmap.hpp"
+#include "../../Map/Map.hpp"
 
 #include <fstream>
 
@@ -29,9 +29,6 @@ ToTurn::ToTurn(Car *car)
 
 	drivingStatus = new Status(Status::Straight);
 	slide = new Slide(car);
-
-	keyToLeftTurn = new keyStatus(keyStatus::Released);
-	keyToRightTurn = new keyStatus(keyStatus::Released);
 	
 	this->tiresFront = std::make_pair(car->getTireClass()->getTires(0), car->getTireClass()->getTires(1));
 	this->tiresBack = std::make_pair(car->getTireClass()->getTires(2), car->getTireClass()->getTires(3));
@@ -45,9 +42,6 @@ ToTurn::~ToTurn()
 	delete MAX_ROTATE_CAR;
 	delete MAX_ROTATE_TIRE;
 
-	delete keyToLeftTurn;
-	delete keyToRightTurn;
-
 	delete actualValueRotateLeftCar;
 	delete actualValueRotateRightCar;
 
@@ -55,13 +49,6 @@ ToTurn::~ToTurn()
 	delete actualValueRotateRightTire;
 
 	delete drivingStatus;
-}
-
-ToTurn::keyStatus* ToTurn::getStatusKeyToTurn(const Direction & direction)
-{
-	if (direction == Direction::Left)
-		return keyToLeftTurn;
-	return keyToRightTurn;
 }
 
 Slide * ToTurn::getSlidePhycics()
@@ -72,17 +59,17 @@ Slide * ToTurn::getSlidePhycics()
 void ToTurn::turning(const Direction & direction)
 {
 	if (direction == Direction::Left)
-		*keyToLeftTurn = keyStatus::Pressed;
+		car->getDriver()->getStateKeyLeftTurn() = true;
 	else
-		*keyToRightTurn = keyStatus::Pressed;
+		car->getDriver()->getStateKeyRightTurn() = true;
 
-	if (*keyToLeftTurn == keyStatus::Pressed && *actualValueRotateRightTire <= 0)
+	if (car->getDriver()->getStateKeyLeftTurn() && *actualValueRotateRightTire <= 0)
 	{
 		turn(tiresFront.first, tiresFront.second, actualValueRotateLeftTire, -*SPEED_ROTATE_TIRE, actualValueRotateLeftCar, SPEED_ROTATE_CAR);
 		resetValue(2, actualValueRotateRightTire, actualValueRotateRightCar);
 	}
 
-	else if (*keyToRightTurn == keyStatus::Pressed && *actualValueRotateLeftTire <= 0)
+	else if (car->getDriver()->getStateKeyRightTurn() && *actualValueRotateLeftTire <= 0)
 	{
 		turn(tiresFront.second, tiresFront.first, actualValueRotateRightTire, *SPEED_ROTATE_TIRE, actualValueRotateRightCar, SPEED_ROTATE_CAR);
 		resetValue(2, actualValueRotateLeftTire, actualValueRotateLeftCar);
@@ -91,19 +78,36 @@ void ToTurn::turning(const Direction & direction)
 
 void ToTurn::updatePosition()
 {
-	if (*keyToLeftTurn == keyStatus::Released && *actualValueRotateLeftTire > 0)
+	if (car->getDriver())
 	{
-		straight(tiresFront.first, tiresFront.second, actualValueRotateLeftTire, *SPEED_ROTATE_TIRE, actualValueRotateLeftCar, SPEED_ROTATE_CAR);
-		resetValue(2, actualValueRotateRightTire, actualValueRotateRightCar);
-	}
+		if (!car->getDriver()->getStateKeyLeftTurn() && *actualValueRotateLeftTire > 0)
+		{
+			straight(tiresFront.first, tiresFront.second, actualValueRotateLeftTire, *SPEED_ROTATE_TIRE, actualValueRotateLeftCar, SPEED_ROTATE_CAR);
+			resetValue(2, actualValueRotateRightTire, actualValueRotateRightCar);
+		}
 
-	else if (*keyToRightTurn == keyStatus::Released && *actualValueRotateRightTire > 0)
-	{
-		straight(tiresFront.second, tiresFront.first, actualValueRotateRightTire, -*SPEED_ROTATE_TIRE, actualValueRotateRightCar, SPEED_ROTATE_CAR);
-		resetValue(2, actualValueRotateLeftTire, actualValueRotateLeftCar);
+		else if (!car->getDriver()->getStateKeyRightTurn() && *actualValueRotateRightTire > 0)
+		{
+			straight(tiresFront.second, tiresFront.first, actualValueRotateRightTire, -*SPEED_ROTATE_TIRE, actualValueRotateRightCar, SPEED_ROTATE_CAR);
+			resetValue(2, actualValueRotateLeftTire, actualValueRotateLeftCar);
+		}
+		else if (!car->getDriver()->getStateKeyLeftTurn() && !car->getDriver()->getStateKeyRightTurn())
+			resetValue(4, actualValueRotateLeftCar, actualValueRotateLeftTire, actualValueRotateRightCar, actualValueRotateRightTire);
 	}
-	else if(*keyToLeftTurn == keyStatus::Released && *keyToRightTurn == keyStatus::Released)
-		resetValue(4, actualValueRotateLeftCar, actualValueRotateLeftTire, actualValueRotateRightCar, actualValueRotateRightTire);
+	else
+	{
+		if (*actualValueRotateLeftTire > 0)
+		{
+			straight(tiresFront.first, tiresFront.second, actualValueRotateLeftTire, *SPEED_ROTATE_TIRE, actualValueRotateLeftCar, SPEED_ROTATE_CAR);
+			resetValue(2, actualValueRotateRightTire, actualValueRotateRightCar);
+		}
+
+		else if (*actualValueRotateRightTire > 0)
+		{
+			straight(tiresFront.second, tiresFront.first, actualValueRotateRightTire, -*SPEED_ROTATE_TIRE, actualValueRotateRightCar, SPEED_ROTATE_CAR);
+			resetValue(2, actualValueRotateLeftTire, actualValueRotateLeftCar);
+		}
+	}
 
 	if (*actualValueRotateLeftCar > 0)
 		*drivingStatus = Status::TurningLeft;
@@ -118,7 +122,7 @@ void ToTurn::updatePosition()
 	else if (*actualValueRotateRightTire)
 		rotateCar(static_cast<float>(-*actualValueRotateRightCar), Hitbox::collisionSide::Right, Hitbox::collisionSide::Left, std::make_pair(car->getHitboxClass()->getCollisionHitbox(Hitbox::hitboxPosition::upRight), car->getHitboxClass()->getCollisionHitbox(Hitbox::hitboxPosition::downRight)));
 
-	//slide->setOverSteer(static_cast<int>(*drivingStatus));
+	slide->setOverSteer(static_cast<int>(*drivingStatus));
 }
 
 void ToTurn::turn(sf::Sprite *tire, sf::Sprite *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar)
@@ -171,7 +175,7 @@ bool ToTurn::checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>& hi
 {
 	Hitbox::rotateOneHitbox(hitbox, angle);
 	for (const auto &i : hitbox)
-		if (MapsManager::getMainmap()->isPointInCollisionArea(Hitbox::getCenterOfHitbox(*i)))
+		if (Map::isPointInCollisionArea(Hitbox::getCenterOfHitbox(*i)))
 		{
 			car->getMovementClass()->setSpeed(static_cast<float>(*car->getMovementClass()->getSpeed() / 1.03f));
 			Hitbox::rotateOneHitbox(hitbox, -angle);
@@ -183,6 +187,7 @@ bool ToTurn::checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>& hi
 	for (const auto &i : cars)
 		if (carWithCar::checkCollisions(car, i, false) != Hitbox::collisionSide::None)
 		{
+			//car->setSpeed(static_cast<float>(car->getSpeed() / 1.03f));
 			Hitbox::rotateOneHitbox(hitbox, -angle);
 			return true;
 		}

@@ -5,27 +5,28 @@
 #include "../../Physics/Collision/carWithWall.hpp"
 #include "../../Physics/Collision/carWithCar.hpp"
 
-#include "../../Map/Mainmap/Mainmap.hpp"
+#include "../../Map/Map.hpp"
 
 #include "../Car.hpp"
 
-#include <fstream>
+#include <iostream>
 
 #define PI 3.14159265359f
 
 Movement::Movement(Car *car) : car(car)
 {
+	speedf = new double(0);
+	speedb = new double(0);
+
+	movingState = new stateMoving(stateMoving::stop);
+
 	MAX_SPEED = new double(CarConfig::getValue(car->getName(), "MAX_SPEED"));
 	acceleration = new double(CarConfig::getValue(car->getName(), "acceleration"));
 	breakingForce = new double(CarConfig::getValue(car->getName(), "breakingForce"));
 	drive = static_cast<TypeOfDrive>(static_cast<int>(CarConfig::getValue(car->getName(), "typeOfDrive")));
 
-	speedf = new double(0);
-	speedb = new double(0);
-
 	if (drive != TypeOfDrive::Back)
 		tiresDrive = std::make_pair(car->getTireClass()->getTiresPos(0), car->getTireClass()->getTiresPos(1));
-
 	else
 		tiresDrive = std::make_pair(car->getTireClass()->getTiresPos(2), car->getTireClass()->getTiresPos(3));
 }
@@ -34,8 +35,7 @@ Movement::~Movement()
 {
 	delete speedf;
 	delete speedb;
-
-	delete acceleration; // not const cuz can do car tuning ;d
+	delete acceleration;
 	delete breakingForce;
 	delete MAX_SPEED;
 
@@ -92,21 +92,39 @@ void Movement::updatePosition()
 
 void Movement::gas()
 {
-	if (!car->getToTurnClass()->getSlidePhycics()->isSlideBool())
-		acceleratingFunction(speedf, speedb, *MAX_SPEED);
+	if (!car->getHitboxClass()->getBoolIsCollision(Hitbox::collisionSide::Front))
+	{
+		if (!car->getToTurnClass()->getSlidePhycics()->getSlideBool() && !sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+			acceleratingFunction(speedf, speedb, *MAX_SPEED, car->getDriver()->getStateKeyGas());
+		else
+			breakingFunction(speedf, 0.1, 5);
+	}
 	else
-		breakingFunction(speedf, 0.1, 5);
+		car->getDriver()->getStateKeyGas() = false;
 }
 
 void Movement::brake()
 {
-	if(*speedf <= 0)
-		acceleratingFunction(speedb, speedf, *MAX_SPEED / 2);
+	if (!car->getHitboxClass()->getBoolIsCollision(Hitbox::collisionSide::Back))
+	{
+		if (*speedf <= 0 && !sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+			acceleratingFunction(speedb, speedf, *MAX_SPEED / 2, car->getDriver()->getStateKeyGas());
+		else
+		{
+			if (!Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*tiresDrive.first)) ||
+				!Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*tiresDrive.second)))
+				breakingFunction(speedf, *breakingForce, 0);
+			else
+				breakingFunction(speedf, *breakingForce / 3, 0); // grass
+		}
+	}
+	else
+		car->getDriver()->getStateKeyBrake() = false;
 }
 
 void Movement::slack()
 {
-	if (!car->getToTurnClass()->getSlidePhycics()->isSlideBool())
+	if (!car->getToTurnClass()->getSlidePhycics()->getSlideBool())
 	{
 		if (*speedf)
 			breakingFunction(speedf);
@@ -123,12 +141,12 @@ void Movement::slack()
 }
 
 void Movement::handBrake()
-{
-	if (!MapsManager::getMainmap()->isPointOnGrass(Hitbox::getCenterOfHitbox(*tiresDrive.first)) ||
-		!MapsManager::getMainmap()->isPointOnGrass(Hitbox::getCenterOfHitbox(*tiresDrive.second))) // asphalt
-		breakingFunction(speedf, *breakingForce, 0);
+{		
+	if (!Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*tiresDrive.first)) ||
+		!Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*tiresDrive.second)))
+		breakingFunction(speedf, 0.18, 0); // asphalt
 	else
-		breakingFunction(speedf, *breakingForce / 3, 0); // grass
+		breakingFunction(speedf, 0.1, 0); // grass
 }
 
 void Movement::setStateMoving()
@@ -143,7 +161,7 @@ void Movement::setStateMoving()
 
 void Movement::move()
 {
-	sf::Vector2f v(0,0);
+	sf::Vector2f v(0, 0);
 	sf::Vector2f w = getMovementVector(car->getSprite()->getRotation() - static_cast<float>(*car->getToTurnClass()->getSlidePhycics()->getOverSteer()));
 
 	double SPEED = 0;
@@ -191,10 +209,12 @@ void Movement::move()
 		if (resultWithWall != Hitbox::collisionSide::None)
 			powerOfCrashMove = std::make_pair(sf::Vector2f(0, 0), 0.f);
 
-		if (powerOfCrashRotate.second != 0 &&
-			(resultWithWall == firstCheckingSide ||
-			resultWithWall == secondCheckingSide))
+		if (powerOfCrashRotate.second != 0)
+		{
+			if (resultWithWall == firstCheckingSide ||
+				resultWithWall == secondCheckingSide)
 				rotateAble = false;
+		}
 
 		for (const auto &j : allCars)
 		{
@@ -265,8 +285,9 @@ void Movement::move()
 	}
 }
 
-void Movement::acceleratingFunction(double *speed, double *counterSpeed, const double MAX_SPEED)
+void Movement::acceleratingFunction(double *speed, double *counterSpeed, const double MAX_SPEED, bool &stateKey)
 {
+	stateKey = true;
 	if (*counterSpeed)
 	{
 		if (*counterSpeed - *breakingForce >= 0)
@@ -300,9 +321,6 @@ void Movement::breakingFunction(double * speed, double breakValue, double minSpe
 
 sf::Vector2f Movement::getMovementVector(float rotation)
 {
-	if (rotation == 361) 
-		rotation = car->getSprite()->getRotation() - static_cast<float>(*car->getToTurnClass()->getSlidePhycics()->getOverSteer());
-
 	sf::Vector2f v;
 	float rad = toRad(rotation);
 

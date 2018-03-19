@@ -6,11 +6,78 @@
 
 #include <fstream>
 
-Hitbox::Hitbox(const std::string &carName)
+Hitbox::Hitbox(Car *car)
 {
-	allHitboxes = CarConfig::getHitboxes(carName);
-	allHitboxInOneVector = CarConfig::getHitboxVectors(carName);
-	spliteToVectors();
+	this->sprite = car->getSprite();
+
+	for (auto &i : isCollision)
+		i = false;
+
+	std::string lowerCarName = car->getName();
+	std::transform(lowerCarName.begin(), lowerCarName.end(), lowerCarName.begin(), ::tolower);
+	std::ifstream file("data/Models/Cars/" + car->getName() + '/' + lowerCarName + ".hitbox", std::ios::binary);
+
+	unsigned count;
+	sf::Vector2f position;
+	unsigned side;
+
+	file.read((char*)&count, sizeof(count));
+
+	for (size_t i = 0;i < count;++i)
+	{
+		file.read((char*)&position.x, sizeof(position.x));
+		file.read((char*)&position.y, sizeof(position.y));
+		file.read((char*)&side, sizeof(side));
+
+		sf::CircleShape *hitbox = new sf::CircleShape(2);
+		hitbox->setOrigin(car->getSprite()->getOrigin() - position + sf::Vector2f(hitbox->getRadius(), hitbox->getRadius()));
+		hitbox->setPosition(car->getSprite()->getPosition());
+
+		allHitboxes.push_back(hitbox);
+
+		switch (side)
+		{
+		case 0:
+			frontHitboxes.push_back(hitbox);
+			break;
+		case 1:
+			upRightHitboxes.push_back(hitbox);
+			break;
+		case 2:
+			rightHitboxes.push_back(hitbox);
+			break;
+		case 3:
+			downRightHitboxes.push_back(hitbox);
+			break;
+		case 4:
+			backHitboxes.push_back(hitbox);
+			break;
+		case 5:
+			downLeftHitboxes.push_back(hitbox);
+			break;
+		case 6:
+			leftHitboxes.push_back(hitbox);
+			break;
+		case 7:
+			upLeftHitboxes.push_back(hitbox);
+			break;
+		}
+	}
+
+	allHitboxInOneVector.push_back(frontHitboxes);
+	allHitboxInOneVector.push_back(upRightHitboxes);
+	allHitboxInOneVector.push_back(rightHitboxes);
+	allHitboxInOneVector.push_back(downRightHitboxes);
+	allHitboxInOneVector.push_back(backHitboxes);
+	allHitboxInOneVector.push_back(downLeftHitboxes);
+	allHitboxInOneVector.push_back(leftHitboxes);
+	allHitboxInOneVector.push_back(upLeftHitboxes);
+}
+
+Hitbox::~Hitbox()
+{
+	for (auto &i : allHitboxes)
+		delete i;
 }
 
 bool & Hitbox::getBoolIsCollision(const collisionSide & side)
@@ -74,18 +141,6 @@ void Hitbox::update()
 
 void Hitbox::draw()
 {
-	//for (const auto &i : allHitboxes)
-		//renderSprites::Instance().addToRender(i);
-}
-
-void Hitbox::spliteToVectors()
-{
-	frontHitboxes = allHitboxInOneVector[0];
-	upRightHitboxes = allHitboxInOneVector[1];
-	rightHitboxes = allHitboxInOneVector[2];
-	downRightHitboxes = allHitboxInOneVector[3];
-	backHitboxes = allHitboxInOneVector[4];
-	downLeftHitboxes = allHitboxInOneVector[5];
-	leftHitboxes = allHitboxInOneVector[6];
-	upLeftHitboxes = allHitboxInOneVector[7];
+	for (const auto &i : allHitboxes)
+		Painter::Instance().addToDraw(i);
 }

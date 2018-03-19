@@ -2,22 +2,14 @@
 
 #include <SFML/Graphics.hpp>
 
-class Tiles
+#include "../Objects/Tile.hpp"
+
+class TilesManager
 {
 public:
 
-	~Tiles();
-	
-	Tiles(const Tiles &) = delete;
-	void operator=(const Tiles &) = delete;
-
-	inline static Tiles& Instance()
+	enum class Types
 	{
-		static Tiles tiles;
-		return tiles;
-	}
-
-	enum class Types{
 		asphalt,
 		asphalt_grass_corner_in_BL,
 		asphalt_grass_corner_in_BR,
@@ -98,15 +90,38 @@ public:
 		pavement,
 	};
 
-	static std::string getTypeAsString(const Types &type);
-	static sf::Vector2u getTilesCount();
-	static sf::Vector2u getTileSize();
+	~TilesManager();
+
+	TilesManager(const TilesManager &) = delete;
+	void operator=(const TilesManager &) = delete;
+
+	inline static TilesManager& Instance()
+	{
+		static TilesManager tiles;
+		return tiles;
+	}
+
+	static std::vector<std::vector<sf::Sprite*>> getTileMapVector();
+	static std::vector<std::vector<sf::Sprite*>> getTileMiniMapVector();
+	static std::vector<std::vector<sf::Sprite*>> getTileHitboxGrassVector();
+
+	static const short int getTileSize() { return *Instance().TileSize; }
+	static const sf::Vector2f getCountTile() { return sf::Vector2f(*Instance().tilesCountWidth, *Instance().tilesCountHeigth); }
+	static std::vector<std::vector<Tile*>> &getTilesVector();
 
 private:
 
-	Tiles();
+	const unsigned *countOfTilesType;
 
-	sf::Vector2u tileSize;
-	sf::Vector2u tilesCount;
+	std::vector<std::vector<sf::Sprite*>>TilesMap;
+	std::vector<std::vector<sf::Sprite*>>TilesMiniMap;
+	std::vector<std::vector<sf::Sprite*>>TilesHitboxGrass;
 
+	std::vector<std::vector<Tile*>>Tiles;
+
+	const short int *TileSize;
+	const short int *tilesCountWidth;
+	const short int *tilesCountHeigth;
+
+	TilesManager();
 };

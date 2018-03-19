@@ -22,6 +22,11 @@ void IObject::getOutOfCar()
 {
 	car->setDriver(nullptr);
 	this->car = nullptr;
+
+	stateKeyGas = false;
+	stateKeyBrake = false;
+	stateKeyLeftTurn = false;
+	stateKeyRightTurn = false;
 }
 
 const sf::Vector2f & IObject::getPosition()
@@ -38,4 +43,24 @@ const float IObject::getRotation()
 		return car->getSprite()->getRotation();
 	else
 		return sprite->getRotation();
+}
+
+bool & IObject::getStateKeyGas()
+{
+	return stateKeyGas;
+}
+
+bool & IObject::getStateKeyBrake()
+{
+	return stateKeyBrake;
+}
+
+bool & IObject::getStateKeyLeftTurn()
+{
+	return stateKeyLeftTurn;
+}
+
+bool & IObject::getStateKeyRightTurn()
+{
+	return stateKeyRightTurn;
 }

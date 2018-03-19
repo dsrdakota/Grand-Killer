@@ -23,6 +23,9 @@ public:
 
 	inline sf::Sprite* getTires(const size_t &index) { return &tires[index]; }
 	inline sf::CircleShape* getTiresPos(const size_t &index) { return &tiresPos[index]; }
+
+	void updatePosition();
+
 	void move(const sf::Vector2f &offset);
 	void rotate(const double &angle);
 
@@ -30,6 +33,10 @@ public:
 	void draw();
 
 private:
+
+	Car * car;
+
+	unsigned countTires;
 
 	sf::Sprite *tires;
 

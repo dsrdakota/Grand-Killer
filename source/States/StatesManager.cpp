@@ -38,7 +38,7 @@ void GameStatesManager::changeState()
 	case States::mGame:
 		delete states[0];
 		states.pop_back();
-		states.push_back(new mGame());
+		states.push_back(&mGame::Instance());
 		break;
 	}
 }

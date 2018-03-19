@@ -30,8 +30,10 @@ public:
 	const unsigned &getWeight();
 
 	const unsigned &getCountDoors();
+	const unsigned &getCountTires();
 
 	void setDriver(IObject *driver);
+	IObject* getDriver();
 
 	void control();
 	void move(const sf::Vector2f &offset);
@@ -55,6 +57,7 @@ protected:
 	int *damageCondition;
 
 	unsigned countDoors;
+	unsigned countTires;
 
 	sf::Sprite *sprite;
 	sf::Sprite *shadow;

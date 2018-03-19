@@ -4,20 +4,20 @@
 
 #include "../../../../Engine/Engine.hpp"
 
+#include "../../../../Map/ObjectsManager/Tiles.hpp"
+
 #include "States/MapInMenu/mapInMenu.hpp"
 #include "States/Diary/Diary.hpp"
 #include "States/GameInMenu/GameInMenu.hpp"
 #include "States/Statistics/Statistics.hpp"
 #include "States/Steerage/Steerage.hpp"
 
-#include "../../../../Map/MapsManager.hpp"
-
-class MenuInGame
+class Menu
 {
 public:
 
-	MenuInGame();
-	~MenuInGame();
+	Menu();
+	~Menu();
 
 	void updateCooldown();
 	void restartCooldownValue();
@@ -25,9 +25,6 @@ public:
 	const int &getCooldownValue();
 	bool canExitMenu();
 	void draw();
-
-	const bool isTargetSet();
-	const sf::Vector2f getTargetPos();
 
 	enum class States
 	{
@@ -44,10 +41,10 @@ private:
 
 	States *state;
 
-	menuStates * wsk;
-	mapInMenu *map;
+	MenuStates * wsk;
+	MapInMenu *map;
 
-	std::vector<menuStates*>options;
+	std::vector<MenuStates*>options;
 
 	Time timeEscapeButton;
 	Time timeChangeStates;

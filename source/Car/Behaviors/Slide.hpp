@@ -13,10 +13,10 @@ public:
 
 	const double* getOverSteer();
 	const int getOverSteerSide();
-	const bool isSlideBool();
+	const bool getSlideBool();
 	double *getBreakingForceOfSlide();
 	void breakSlide();
-	void setOverSteer(const int &drivingStatus, const bool canDoSlide);
+	void setOverSteer(const int &drivingStatus);
 	void setPowerOfSlide(std::pair<sf::CircleShape*, sf::CircleShape*>hitbox);
 
 private:

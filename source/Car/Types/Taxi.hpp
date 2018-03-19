@@ -10,4 +10,7 @@ public:
 
 private:
 
+	void setDoorPosition();
+	void setTirePosition();
+
 };

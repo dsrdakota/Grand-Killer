@@ -4,6 +4,8 @@
 
 #include "../Engine/Engine.hpp"
 
+#include <iostream>
+
 Car::Car() 
 { 
 	sprite = new sf::Sprite();
@@ -72,9 +74,19 @@ const unsigned & Car::getCountDoors()
 	return countDoors;
 }
 
+const unsigned & Car::getCountTires()
+{
+	return countTires;
+}
+
 void Car::setDriver(IObject * driver)
 {
 	this->driver = driver;
+}
+
+IObject * Car::getDriver()
+{
+	return driver;
 }
 
 void Car::control()
@@ -103,7 +115,7 @@ void Car::setAttributes()
 {
 	door = new Door(this);
 	tire = new Tire(this);
-	hitbox = new Hitbox(name);
+	hitbox = new Hitbox(this);
 
 	movement = new Movement(this);
 	toTurn = new ToTurn(this);
@@ -117,21 +129,25 @@ void Car::noneDriver()
 
 void Car::draw()
 {
-	if (!View::isOutSideView(shadow->getGlobalBounds()) &&
-		!View::isOutSideView(sprite->getGlobalBounds()))
+	hitbox->update();
+
+	if (!Camera::isOutSideView(shadow->getGlobalBounds()) &&
+		!Camera::isOutSideView(sprite->getGlobalBounds()))
 	{
 		door->drawCenter();
 
 		Painter::Instance().addToDraw(sprite);
 
 		door->drawDoors();
+
+		hitbox->draw();
 	}
 }
 
 void Car::drawShadow()
 {
-	if (!View::isOutSideView(shadow->getGlobalBounds()) &&
-		!View::isOutSideView(sprite->getGlobalBounds()))
+	if (!Camera::isOutSideView(shadow->getGlobalBounds()) &&
+		!Camera::isOutSideView(sprite->getGlobalBounds()))
 	{
 		Painter::Instance().addToDraw(shadow);
 		tire->draw();

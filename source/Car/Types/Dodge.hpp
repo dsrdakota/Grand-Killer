@@ -9,4 +9,8 @@ public:
 	Dodge(const sf::Vector2f &startPos, const float &startRot);
 
 private:
+
+	void setDoorPosition();
+	void setTirePosition();
+
 };

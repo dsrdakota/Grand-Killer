@@ -11,7 +11,7 @@
 #include "Rendering/Painter.hpp"
 #include "Sound/Sound.hpp"
 #include "Textures/Texture.hpp"
-#include "View/View.hpp"
+#include "Camera/Camera.hpp"
 #include "Time/Time.hpp"
 #include "GlobalSettings/GlobalSettings.hpp"
 #include "GlobalSettings/GlobalSteerage.hpp"

@@ -1,8 +1,8 @@
 #include "GlobalSteerage.hpp"
 
-const sf::Keyboard::Key & GlobalSteerage::getKey(const Sections & section, const Rodzaj & rodzaj)
+const sf::Keyboard::Key & GlobalSteerage::getKey(const Sections & section, const Type & type)
 {
-	return Instance().steerage[section][rodzaj];
+	return Instance().steerage[section][type];
 }
 
 GlobalSteerage::GlobalSteerage()
@@ -15,7 +15,11 @@ GlobalSteerage::GlobalSteerage()
 
 void GlobalSteerage::loadDefaultCarSteerage()
 {
-	steerage[Sections::Car][Rodzaj::Gas] = sf::Keyboard::W;
+	steerage[Sections::Car][Type::Gas] = sf::Keyboard::W;
+	steerage[Sections::Car][Type::Break] = sf::Keyboard::S;
+	steerage[Sections::Car][Type::HandBreak] = sf::Keyboard::Space;
+	steerage[Sections::Car][Type::TurnLeft] = sf::Keyboard::A;
+	steerage[Sections::Car][Type::TurnRight] = sf::Keyboard::D;
 }
 
 void GlobalSteerage::loadDefaultWalkSteerage()

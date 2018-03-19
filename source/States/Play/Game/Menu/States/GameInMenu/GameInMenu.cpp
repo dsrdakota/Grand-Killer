@@ -1,6 +1,6 @@
 #include "gameInMenu.hpp"
 
-gameInMenu::gameInMenu()
+GameInMenu::GameInMenu()
 {
 	buttons.push_back(new Button(sf::Vector2f(225, 30), 15, "Szybki zapis"));
 	buttons.push_back(new Button(sf::Vector2f(225, 30), 15, "Wczytaj gre"));
@@ -31,7 +31,7 @@ gameInMenu::gameInMenu()
 	centerTextOfOption = new Text(sf::Color::White, 70, "Wkrotce");
 }
 
-gameInMenu::~gameInMenu()
+GameInMenu::~GameInMenu()
 {
 	delete state;
 
@@ -47,7 +47,7 @@ gameInMenu::~gameInMenu()
 	delete centerTextOfOption;
 }
 
-void gameInMenu::setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange)
+void GameInMenu::setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange)
 {
 	hitboxClick->setSize(sf::Vector2f(borderXrange.y - borderXrange.x, borderYrange.y - borderYrange.x));
 	hitboxClick->setPosition(borderXrange.x, borderYrange.x);
@@ -74,17 +74,17 @@ void gameInMenu::setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &bo
 		navigation[2].second->getPosition().y + navigation[2].second->getGlobalBounds().height / 2 - navigation[2].first->text->getGlobalBounds().height);
 }
 
-bool gameInMenu::exit()
+bool GameInMenu::exit()
 {
 	return !active;
 }
 
-bool gameInMenu::isActive()
+bool GameInMenu::isActive()
 {
 	return active;
 }
 
-void gameInMenu::drawActive()
+void GameInMenu::drawActive()
 {
 	buttons[static_cast<int>(*state)]->setEnabled();
 
@@ -113,7 +113,7 @@ void gameInMenu::drawActive()
 	}
 }
 
-void gameInMenu::drawUnactive()
+void GameInMenu::drawUnactive()
 {
 	for (const auto &i : buttons)
 	{
@@ -134,7 +134,7 @@ void gameInMenu::drawUnactive()
 	}
 }
 
-void gameInMenu::toControl()
+void GameInMenu::toControl()
 {
 	for (size_t i = 0;i < buttons.size();++i)
 	{
@@ -183,14 +183,14 @@ void gameInMenu::toControl()
 	}
 }
 
-bool gameInMenu::isMouseClickOnHitbox()
+bool GameInMenu::isMouseClickOnHitbox()
 {
 	if (hitboxClick->getGlobalBounds().contains(window->mapPixelToCoords(sf::Mouse::getPosition())))
 		return true;
 	return false;
 }
 
-void gameInMenu::resertCooldown()
+void GameInMenu::resertCooldown()
 {
 	cooldownChangeStates = 1;
 	timeChangeStates.clock->restart();

@@ -1,7 +1,5 @@
 #include "Loader.hpp"
 
-#include "../../Map/MapsManager.hpp"
-
 #include <fstream>
 
 // i think its to change, too many repeted
@@ -10,7 +8,7 @@ bool Loader::play()
 {
 	isError = false;
 
-	unsigned amountOfFiles = carsName.size() * carTextures1.size() + carTextures2.size() + carDoors.size() * carsName.size() + textureWithName.size() + otherTextures.size() + mapTiles.size() + /* minimapTiles*/56 + carsName.size() * carsConfigFiles.size();
+	unsigned amountOfFiles = carsName.size() * carTextures1.size() + carTextures2.size() + carDoors.size() * carsName.size() + textureWithName.size() + otherTextures.size() + 113 + /* minimapTiles*/56 + carsName.size() * carsConfigFiles.size();
 
 	text = new Text(sf::Color::White, 50, "Loader ( to change ), files to load: " + std::to_string(amountOfFiles));
 
@@ -23,10 +21,10 @@ bool Loader::play()
 
 	loadCarTextures1();
 
-	if (!isError)
+	//if (!isError)
 	{
-		drawLoadingText("Creating map...");
-		MapsManager::Instance().init();
+		//drawLoadingText("Creating map...");
+		//MapsManager::Instance().init();
 	}
 
 	return !isError;
@@ -99,55 +97,97 @@ void Loader::loadCarDoors()
 
 void Loader::loadMapTiles()
 {
-	unsigned count = 0;
-	for (const auto &i : mapTiles)
+	std::ifstream file("data/Map/Tileset/TilesPath.txt"); // binary soon
+
+	unsigned countOfTilesType = 78;
+	std::string line;
+
+	for (unsigned i = 0;i<countOfTilesType;++i)
 	{
-		if (i.find("_G") == std::string::npos)
+		file >> line;
+
+		drawLoadingText(line);
+
+		auto result = TextureManager::load(std::to_string(i), line);
+
+		if (!result)
 		{
-			drawLoadingText(i);
-			auto result = TextureManager::load(std::to_string(count), i);
+			error(line);
+			return;
+		}
+
+		std::string pathToTileMinimap = "data/Map/Minimap/" + line.substr(line.find_last_of('/') + 1);
+
+		if (i == 0 ||
+			(i >= 29 && i <= 34) ||
+			(i >= 59 && i <= 63))
+		{
+			drawLoadingText("data/Map/Minimap/asphalt.gk");
+
+			result = TextureManager::load(std::to_string(i) + "_Minimap", "data/Map/Minimap/asphalt.gk");
 
 			if (!result)
 			{
-				error(i);
+				error("data/Map/Minimap/asphalt.gk");
 				return;
 			}
-			// only asphalt or grass tile
-			if (count == 0 ||
-				count == 64 || 
-				!((count >= 29 && count <= 34) ||
-				(count >= 59 && count <= 63) ||
-				count > 64))
-			{
-
-				std::string pathToMinimap = i;
-				pathToMinimap.replace(pathToMinimap.find("Tileset"), 7, "Minimap");
-				drawLoadingText("Loading: " + pathToMinimap);
-
-				result = TextureManager::load(std::to_string(count) + "_Minimap", pathToMinimap);
-
-				if (!result)
-				{
-					error(pathToMinimap);
-					return;
-				}
-			}
-
-			count++;
 		}
-		else // its a grass hitbox
-		{
-			drawLoadingText("Loading: " + i);
 
-			auto result = TextureManager::load(std::to_string(count) + "_Hitbox", i);
+		else if (i >= 64)
+		{
+			drawLoadingText("data/Map/Minimap/grass.gk");
+
+			result = TextureManager::load(std::to_string(i) + "_Minimap", "data/Map/Minimap/grass.gk");
 
 			if (!result)
 			{
-				error(i);
+				error("data/Map/Minimap/grass.gk");
+				return;
+			}
+		}
+
+		else
+		{
+			drawLoadingText(pathToTileMinimap);
+
+			result = TextureManager::load(std::to_string(i) + "_Minimap", pathToTileMinimap);
+
+			if (!result)
+			{
+				error(pathToTileMinimap);
+				return;
+			}
+		}
+
+		if (line.find("grass") != std::string::npos)
+		{
+			drawLoadingText(line.substr(0, line.find(".")) + "_G.gk");
+
+			result = TextureManager::load(std::to_string(i) + "_Hitbox", line.substr(0, line.find(".")) + "_G.gk");
+
+			if (!result)
+			{
+				error(line.substr(0, line.find(".")) + "_G.gk");
+				return;
+			}
+		}
+
+		else
+		{
+			drawLoadingText("data/Map/Tileset/asphalt_G.gk");
+
+			result = TextureManager::load(std::to_string(i) + "_Hitbox", "data/Map/Tileset/asphalt_G.gk");
+
+			if (!result)
+			{
+				error("data/Map/Tileset/asphalt_G.gk");
 				return;
 			}
 		}
 	}
+
+	file.clear();
+	file.close();
 
 	loadOtherTextures();
 }
@@ -215,6 +255,26 @@ void Loader::checkCarsConfigFiles()
 			file.close();
 		}
 		CarConfig::loadCarConfig(i);
+	}
+	checkMapFiles();
+}
+
+void Loader::checkMapFiles()
+{
+	for (const auto &j : mapFiles)
+	{
+		drawLoadingText("Checking... " + j);
+
+		std::fstream file(j);
+
+		if (!file.good())
+		{
+			error(j);
+			return;
+		}
+
+		file.clear();
+		file.close();
 	}
 }
 

@@ -4,11 +4,11 @@
 
 #include "../../../../Game.hpp"
 
-class menuStates
+class MenuStates
 {
 public:
 
-	menuStates() : window(Game::Instance().getWindow()) {}
+	MenuStates() : window(Game::Instance().getWindow()) {}
 
 	virtual void setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange) = 0;
 	virtual bool exit() = 0;

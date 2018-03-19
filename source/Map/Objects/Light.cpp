@@ -133,8 +133,8 @@ void Light::playAnimation()
 	}
 
 	if (speedAnimation <= 0 && timeOfAnimation <= 0 &&
-		View::isOutSideView(stake->getGlobalBounds()) && // left-down corner
-		View::isOutSideView(startPosition))
+		Camera::isOutSideView(stake->getGlobalBounds()) && // left-down corner
+		Camera::isOutSideView(startPosition))
 	{
 		state = drawState::On;
 		animation = false;

@@ -1,7 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 
-#include "../../Map/MapsManager.hpp"
+#include "../../Map/Map.hpp"
 
 class Car;
 class Traces

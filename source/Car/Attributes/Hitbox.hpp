@@ -33,7 +33,8 @@ public:
 		upLeft
 	};
 
-	Hitbox(const std::string &carName);
+	Hitbox(Car *car);
+	~Hitbox();
 
 	bool &getBoolIsCollision(const collisionSide &side);
 
@@ -70,6 +71,4 @@ private:
 
 	bool isCollision[9];
 	collisionSide lastCollisionSide;
-
-	void spliteToVectors();
 };

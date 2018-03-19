@@ -33,7 +33,7 @@ void TrafficSigns::drawUnder()
 	{
 		signs[i].checkCollision();
 		if (signs[i].getDrawState() == -1 &&
-			!View::isOutSideView(signs[i].getSignSprite()->getGlobalBounds()))
+			!Camera::isOutSideView(signs[i].getSignSprite()->getGlobalBounds()))
 				Painter::Instance().addToDraw(signs[i].getSignSprite());
 	}
 }
@@ -42,6 +42,6 @@ void TrafficSigns::drawOn()
 {
 	for (auto i = 0;i<5;++i)
 		if (signs[i].getDrawState() == 1 &&
-			!View::isOutSideView(signs[i].getSignSprite()->getGlobalBounds()))
+			!Camera::isOutSideView(signs[i].getSignSprite()->getGlobalBounds()))
 				Painter::Instance().addToDraw(signs[i].getSignSprite());
 }

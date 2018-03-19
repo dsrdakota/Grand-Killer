@@ -3,6 +3,8 @@
 #include "../../Engine/Engine.hpp"
 #include "../../Car/Car.hpp"
 
+#include <iostream>
+
 Player::Player(const sf::Vector2f &startPos, const float &startRot)
 {
 	sprite = new sf::Sprite;
@@ -20,16 +22,31 @@ void Player::controlBody()
 
 void Player::controlCar()
 {
-	if (!sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Rodzaj::Break)) && sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Rodzaj::Gas)))
+	if (!sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Type::Break)) && sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Type::Gas)))
 		car->getMovementClass()->gas();
-	else if (sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Rodzaj::Break)))
-		car->getMovementClass()->brake();
+	else
+		stateKeyGas = false;
 
-	else if (sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Rodzaj::HandBreak)))
+	if (sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Type::Break)))
+		car->getMovementClass()->brake();
+	else
+		stateKeyBrake = false;
+
+	if (sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Type::HandBreak)))
 		car->getMovementClass()->handBrake();
 
-	if (sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Rodzaj::TurnLeft)))
+	if(!stateKeyGas && !stateKeyBrake)
+		car->getMovementClass()->slack();
+
+	if (sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Type::TurnLeft)))
 		car->getToTurnClass()->turning(ToTurn::Direction::Left);
-	else if (sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Rodzaj::TurnRight)))
+	else
+		stateKeyLeftTurn = false;
+
+	if (sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Type::TurnRight)))
 		car->getToTurnClass()->turning(ToTurn::Direction::Right);
+	else
+		stateKeyRightTurn = false;
+
+	car->getToTurnClass()->updatePosition();
 }

@@ -5,12 +5,12 @@
 #include "../../States.hpp"
 #include "../../../../../../Engine/Engine.hpp"
 
-class gameInMenu : public menuStates
+class GameInMenu : public MenuStates
 {
 public:
 
-	gameInMenu();
-	~gameInMenu();
+	GameInMenu();
+	~GameInMenu();
 
 	void setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange) override;
 	bool exit() override;
