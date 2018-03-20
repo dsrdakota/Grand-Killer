@@ -4,12 +4,12 @@
 
 void Engine::init()
 {
-	//Config *config = new Config;
-	//int status = config->parseFile();
+	Config *config = new Config;
+	int status = config->parseFile();
 
-	//if (status == 1)
-		//getValuesFromFile(config);
-	//else
+	if (status == 1)
+		getValuesFromFile(config);
+	else
 		setDefault();
 
 	saveSettings();
@@ -19,7 +19,7 @@ void Engine::init()
 	window->setVerticalSyncEnabled(verticalSync);
 	window->setMouseCursorVisible(false);
 
-	//delete config;
+	delete config;
 }
 
 void Engine::shutDown()

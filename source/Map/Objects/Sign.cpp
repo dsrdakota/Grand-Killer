@@ -117,8 +117,8 @@ void Sign::playAnimation()
 	}
 
 	if (speedAnimation <= 0 && timeOfAnimation <=0 &&
-		Camera::isOutSideView(sign->getGlobalBounds()) && 
-		Camera::isOutSideView(startPosition))
+		Camera::isOutsideView(sign->getGlobalBounds()) && 
+		Camera::isOutsideView(startPosition))
 	{
 		state = drawState::On;
 		animation = false;

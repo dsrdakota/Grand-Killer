@@ -1,79 +1,85 @@
 #include "Camera.hpp"
 
 #include "../../Map/Map.hpp"
+#include "../../Map/Radar.hpp"
 #include "../GlobalSettings/GlobalSettings.hpp"
+#include "../Rendering/Painter.hpp"
 
 Camera::Camera()
 {
 	view = new sf::View(sf::Vector2f(100, 100), sf::Vector2f(static_cast<float>(GlobalSettings::getWidth()), static_cast<float>(GlobalSettings::getHeight())));
+	viewBox = new sf::RectangleShape(view->getSize());
+	viewBox->setOrigin(view->getSize().x / 2.f, view->getSize().y / 2.f);
 }
 
 Camera::~Camera()
 {
 	delete view;
+	delete viewBox;
 }
 
-/*sf::View * View::getView()
+sf::View * Camera::getView() const
 {
-	return Instance().view;
+	return view;
 }
 
-sf::Vector2u View::getSize()
+void Camera::updateView(IObject *player)
 {
-	return static_cast<sf::Vector2u>(Instance().view->getSize());
-}
+	Instance().setView(player);
 
-void View::updateView(IObject *player)
-{
-	Instance().setView(player->getPosition());
-
-	if (Instance().view->getCenter().x - Instance().view->getSize().x / 2 < 0)
+	if (Instance().viewBox->getGlobalBounds().left < 0)
 		Instance().setView(sf::Vector2f(Instance().view->getSize().x / 2, Instance().view->getCenter().y));
 
-	else if (Instance().view->getCenter().x + Instance().view->getSize().x / 2 > MapsManager::getMainmap()->getSize().x)
-		Instance().setView(sf::Vector2f(MapsManager::getMainmap()->getSize().x - Instance().view->getSize().x / 2, Instance().view->getCenter().y));
+	else if (Instance().view->getCenter().x + Instance().view->getSize().x / 2 > Map::getMapSize().x)
+		Instance().setView(sf::Vector2f(Map::getMapSize().x - Instance().view->getSize().x / 2, Instance().view->getCenter().y));
 
 	if (Instance().view->getCenter().y - Instance().view->getSize().y / 2 < 0)
 		Instance().setView(sf::Vector2f(Instance().view->getCenter().x, Instance().view->getSize().y / 2));
 
-	else if (Instance().view->getCenter().y + Instance().view->getSize().y / 2.f > MapsManager::getMainmap()->getSize().y)
-		Instance().setView(sf::Vector2f(Instance().view->getCenter().x, MapsManager::getMainmap()->getSize().y - Instance().view->getSize().y / 2));
+	else if (Instance().view->getCenter().y + Instance().view->getSize().y / 2.f > Map::getMapSize().y)
+		Instance().setView(sf::Vector2f(Instance().view->getCenter().x, Map::getMapSize().y - Instance().view->getSize().y / 2));
 
-	//MapsManager::getMainmap()->getMap()->setTextureRect(sf::IntRect(sf::Vector2i(Instance().view->getCenter().x - Instance().view->getSize().x / 2 - 10, Instance().view->getCenter().y - Instance().view->getSize().y / 2 - 10),
-		//sf::Vector2i(Instance().view->getSize().x + 10, Instance().view->getSize().y + 10)));
+	Map::getMap()->setTextureRect(sf::IntRect(sf::Vector2i(Instance().view->getCenter().x - Instance().view->getSize().x / 2 - 10, Instance().view->getCenter().y - Instance().view->getSize().y / 2 - 10),
+		sf::Vector2i(Instance().view->getSize().x + 10, Instance().view->getSize().y + 10)));
 	
-	//MapsManager::getMainmap()->getMap()->setPosition(sf::Vector2f(Instance().view->getCenter().x - Instance().view->getSize().x / 2 - 10, Instance().view->getCenter().y - Instance().view->getSize().y / 2 - 10));
-	MapsManager::getRadar()->update(player);
-}*/
-
-bool Camera::isOutSideView(const sf::Vector2f & position)
-{
-	return !Instance().getViewBox().contains(position);
+	Map::getMap()->setPosition(sf::Vector2f(Instance().view->getCenter().x - Instance().view->getSize().x / 2 - 10, Instance().view->getCenter().y - Instance().view->getSize().y / 2 - 10));
+	
+	Radar::Instance().update(player);
 }
 
-bool Camera::isOutSideView(const sf::FloatRect & box)
+bool Camera::isOutsideView(const sf::Vector2f & position)
 {
-	return !Instance().getViewBox().intersects(box);
+	return !Instance().viewBox->getGlobalBounds().contains(position);
 }
 
-/*sf::Vector2f View::getUpLeftCornerPosOfCurrentView()
+bool Camera::isOutsideView(const sf::FloatRect & box)
+{
+	return !Instance().viewBox->getGlobalBounds().intersects(box);
+}
+
+void Camera::draw()
+{
+	Painter::Instance().addToDraw(Instance().viewBox);
+}
+
+sf::Vector2f Camera::getUpLeftCornerPosOfCurrentView()
 {
 	auto &view = Instance();
 
 	return sf::Vector2f(view.view->getCenter().x - view.view->getSize().x / 2.f,
 		view.view->getCenter().y - view.view->getSize().y / 2.f);
-}*/
+}
 
-sf::FloatRect Camera::getViewBox()
+void Camera::setView(IObject * player)
 {
-	const sf::Vector2f viewSize = Map::Instance().getView()->getSize();
-	const sf::Vector2f viewPos = Map::Instance().getUpLeftCornerPosOfCurrentView();
-
-	return sf::FloatRect(viewPos, viewSize);
+	view->setCenter(player->getPosition());
+	viewBox->setPosition(player->getPosition());
+	Game::Instance().getWindow()->setView(*Instance().view);
 }
 
 void Camera::setView(const sf::Vector2f & center)
 {
 	view->setCenter(center);
+	viewBox->setPosition(center);
 	Game::Instance().getWindow()->setView(*Instance().view);
 }

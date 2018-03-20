@@ -19,7 +19,7 @@ private:
 	void loadOtherTextures();
 	void loadTexturesWithName();
 	void checkCarsConfigFiles();
-	void checkMapFiles();
+	void checkTxtFiles();
 
 	void drawLoadingText(const std::string &text);
 
@@ -107,8 +107,8 @@ private:
 		"data/Models/Cars/CARNAME/carname.hitbox"
 	};
 
-	std::vector<std::string> mapFiles = {
+	std::vector<std::string> txtFiles = {
 		"data/Map/Tileset/Tiles.txt",
-		"data/Map/Tileset/GPS.txt"
+		"data/Map/Tileset/GPS.txt",
 	};
 };

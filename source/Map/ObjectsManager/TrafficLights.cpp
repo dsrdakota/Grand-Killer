@@ -173,7 +173,7 @@ void TrafficLights::draw(const std::vector<Light*>& lights, const int &drawState
 		{
 			lights[i]->checkCollision();
 
-			if (!Camera::isOutSideView(lights[i]->getStakeSprite()->getGlobalBounds()))
+			if (!Camera::isOutsideView(lights[i]->getStakeSprite()->getGlobalBounds()))
 			{
 				Painter::Instance().addToDraw(lights[i]->getStakeSprite());
 				Painter::Instance().addToDraw(lights[i]->getLightSprite());

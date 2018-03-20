@@ -20,28 +20,18 @@ public:
 		return map;
 	}
 
-	void init();
+	std::vector<std::pair<sf::Sprite*, int*>> &getAllCarTraces();
 
-	std::vector<std::pair<sf::Sprite*, int*>> &getAllCarTraces() { return allCarSingleTraces; }
-
-	sf::View* getView() { return view; }
-	void setView(const sf::Vector2f &center);
-	void setRotation(const float &angle);
-	void updateView(const sf::Vector2f &newerView);
+	static sf::Sprite *getMap();
 
 	void drawUnder();
 	void drawOn();
 
-	static sf::Vector2f getMapSize(){ return *Instance().mapSize; }
-	static bool isOutsideView(const sf::Vector2f & pos);
+	static sf::Vector2f getMapSize();
 	static bool isPointOnGrass(const sf::Vector2f & pos);
 	static bool isPointInCollisionArea(const sf::Vector2f & pos);
-	static sf::Vector2f getUpLeftCornerPosOfCurrentView();
 
 private:
-	Map();
-
-	sf::RenderWindow *window;
 
 	sf::Sprite *map;
 	sf::Sprite *radar;
@@ -56,7 +46,7 @@ private:
 
 	std::vector<std::pair<sf::Sprite*, int*>>allCarSingleTraces;
 
-	sf::View *view;
+	Map();
 
 	void updateTimeInTrace();
 };

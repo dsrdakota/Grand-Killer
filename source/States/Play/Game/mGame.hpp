@@ -44,7 +44,6 @@ private:
 
 	Menu *menu;
 
-	Map *map;
 	Player *player;
 
 	void draw();

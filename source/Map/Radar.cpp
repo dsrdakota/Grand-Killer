@@ -78,13 +78,13 @@ sf::Sprite * Radar::getRadarSprite()
 	return Instance().radar;
 }
 
-void Radar::update(Player *player)
+void Radar::update(IObject *player)
 {
 	radarView->setTexture(*radar->getTexture());
 	radarView2->setTexture(*radar->getTexture());
 
-	radarArea->setPosition(sf::Vector2f(Map::getUpLeftCornerPosOfCurrentView().x + 40,
-		Map::getUpLeftCornerPosOfCurrentView().y + window->getSize().y - radarArea->getSize().y - 80));
+	radarArea->setPosition(sf::Vector2f(Camera::getUpLeftCornerPosOfCurrentView().x + 40,
+		Camera::getUpLeftCornerPosOfCurrentView().y + window->getSize().y - radarArea->getSize().y - 80));
 
 	playerIco->setPosition(player->getPosition().x * (radar->getGlobalBounds().width / Map::getMapSize().x), player->getPosition().y * (radar->getGlobalBounds().height / Map::getMapSize().y));
 

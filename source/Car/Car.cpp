@@ -131,8 +131,8 @@ void Car::draw()
 {
 	hitbox->update();
 
-	if (!Camera::isOutSideView(shadow->getGlobalBounds()) &&
-		!Camera::isOutSideView(sprite->getGlobalBounds()))
+	if (!Camera::isOutsideView(shadow->getGlobalBounds()) &&
+		!Camera::isOutsideView(sprite->getGlobalBounds()))
 	{
 		door->drawCenter();
 
@@ -146,8 +146,8 @@ void Car::draw()
 
 void Car::drawShadow()
 {
-	if (!Camera::isOutSideView(shadow->getGlobalBounds()) &&
-		!Camera::isOutSideView(sprite->getGlobalBounds()))
+	if (!Camera::isOutsideView(shadow->getGlobalBounds()) &&
+		!Camera::isOutsideView(sprite->getGlobalBounds()))
 	{
 		Painter::Instance().addToDraw(shadow);
 		tire->draw();

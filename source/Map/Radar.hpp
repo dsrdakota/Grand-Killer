@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Map.hpp"
-#include "../IObject/Player/Player.hpp"
+#include "../IObject/IObject.hpp"
 
 class Radar
 {
@@ -21,7 +21,7 @@ public:
 	}
 
 	static sf::Sprite *getRadarSprite();
-	void update(Player *player);
+	void update(IObject *player);
 	void draw();
 
 private:

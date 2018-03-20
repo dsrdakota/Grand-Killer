@@ -20,18 +20,22 @@ public:
 		return view;
 	}
 
-	static sf::View* getView();
-	static sf::Vector2u getSize();
+	sf::View* getView() const;
 	static void updateView(IObject *player);
-	static bool isOutSideView(const sf::Vector2f &position);
-	static bool isOutSideView(const sf::FloatRect &box);
+	static bool isOutsideView(const sf::Vector2f &position);
+	static bool isOutsideView(const sf::FloatRect &box);
 	static sf::Vector2f getUpLeftCornerPosOfCurrentView();
+
+	static void draw();
 
 private:
 
 	sf::View *view;
+	sf::RectangleShape *viewBox;
 
 	Camera();
-	sf::FloatRect getViewBox();
+
+	void setView(IObject *player);
+
 	void setView(const sf::Vector2f & center);
 };

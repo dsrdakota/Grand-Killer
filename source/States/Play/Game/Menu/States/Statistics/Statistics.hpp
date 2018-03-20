@@ -49,5 +49,5 @@ private:
 	void toControl();
 
 	bool isMouseClickOnHitbox();
-	void resertCooldown();
+	void resetCooldown();
 };

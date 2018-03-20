@@ -1,5 +1,11 @@
 #include "Loader.hpp"
 
+#include "../../Map/ObjectsManager/Tiles.hpp"
+
+#include "../../Map/Map.hpp"
+#include "../../Map/Radar.hpp"
+#include "../../Map/Minimap.hpp"
+
 #include <fstream>
 
 // i think its to change, too many repeted
@@ -21,10 +27,14 @@ bool Loader::play()
 
 	loadCarTextures1();
 
-	//if (!isError)
+	if (!isError)
 	{
-		//drawLoadingText("Creating map...");
-		//MapsManager::Instance().init();
+		drawLoadingText("Creating map...");
+
+		TilesManager::Instance();
+		Map::Instance();
+		Radar::Instance();
+		Minimap::Instance();
 	}
 
 	return !isError;
@@ -256,12 +266,12 @@ void Loader::checkCarsConfigFiles()
 		}
 		CarConfig::loadCarConfig(i);
 	}
-	checkMapFiles();
+	checkTxtFiles();
 }
 
-void Loader::checkMapFiles()
+void Loader::checkTxtFiles()
 {
-	for (const auto &j : mapFiles)
+	for (const auto &j : txtFiles)
 	{
 		drawLoadingText("Checking... " + j);
 
@@ -276,6 +286,7 @@ void Loader::checkMapFiles()
 		file.clear();
 		file.close();
 	}
+
 }
 
 void Loader::drawLoadingText(const std::string & text)

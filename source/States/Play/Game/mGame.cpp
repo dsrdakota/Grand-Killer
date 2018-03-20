@@ -1,6 +1,7 @@
 #include "mGame.hpp"
 #include "../../../Engine/Engine.hpp"
 #include "../../../Map/Radar.hpp"
+#include "../../../Map/Minimap.hpp"
 
 #include "../../../Car/Types/Ambulance.hpp"
 #include "../../../Car/Types/Audi.hpp"
@@ -17,12 +18,9 @@ mGame::mGame()
 	gameState = new state(state::MainGame);
 	menu = new Menu();
 
-	map = &Map::Instance();
-	map->init();
-
-	cars.push_back(new Audi(sf::Vector2f(500, 500), 0));
+	cars.push_back(new Audi(sf::Vector2f(500, 500), 50));
 	cars.push_back(new Taxi(sf::Vector2f(2500, 2500), 0));
-	cars.push_back(new Audi(sf::Vector2f(5200, 5200), 0));
+	cars.push_back(new Dodge(sf::Vector2f(5200, 5200), 0));
 }
 
 mGame::~mGame()
@@ -44,16 +42,11 @@ bool mGame::play()
 		{
 		case state::MainGame:
 
-			Map::Instance().updateView(player->getPosition());
+			Camera::updateView(player);
 
 			switchCars(carIndex);
 
 			player->control();
-
-			for (const auto &i : cars)
-			{
-				i->getMovementClass()->updatePosition();
-			}
 
 			draw();
 
@@ -65,6 +58,10 @@ bool mGame::play()
 
 			break;
 		case state::Map:
+
+			draw();
+			Minimap::Instance().show();
+
 			break;
 		}
 
@@ -85,7 +82,7 @@ std::vector<Car*> &mGame::getAllCars()
 
 void mGame::draw()
 {
-	map->drawUnder();
+	Map::Instance().drawUnder();
 
 	for (const auto &i : cars)
 		i->drawShadow();
@@ -95,7 +92,10 @@ void mGame::draw()
 		i->draw();
 
 		if (*gameState == state::MainGame)
+		{
+			i->getMovementClass()->updatePosition();
 			i->control();
+		}
 	}
 
 	if (*gameState == state::MainGame)
@@ -104,14 +104,16 @@ void mGame::draw()
 		Radar::Instance().draw();
 	}
 
-	map->drawOn();
+	Map::Instance().drawOn();
+
+	//Camera::draw();
 }
 
 void mGame::switchState()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::MainGame && menu->getCooldownValue() <= 0)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::MainGame && menu->getCooldownValue() <= 0 && Minimap::Instance().canRunMinimap())
 	{
-		menu->setPosition(Map::getUpLeftCornerPosOfCurrentView(), player->getPosition(), player->getRotation());
+		menu->setPosition(Camera::getUpLeftCornerPosOfCurrentView(), player->getPosition(), player->getRotation());
 		menu->restartCooldownValue();
 		window->setMouseCursorVisible(true);
 		*gameState = state::Menu;
@@ -123,10 +125,24 @@ void mGame::switchState()
 		*gameState = state::MainGame;
 	}
 
-	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && *gameState == state::MainGame)
-	*gameState = state::Map;
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && *gameState == state::Map)
-	*gameState = state::MainGame;*/
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && *gameState == state::MainGame && Minimap::Instance().canRunMinimap())
+	{
+		const auto &allTiles = TilesManager::getTilesVector();
+		Tile* tile = allTiles[static_cast<size_t>(player->getPosition().x / TilesManager::getTileSize())][static_cast<size_t>(player->getPosition().y / TilesManager::getTileSize())];
+		sf::Vector2f lenght = player->getPosition() - tile->getTileSprite()->getPosition();
+
+		Minimap::Instance().setPosition(Camera::getUpLeftCornerPosOfCurrentView());
+		Minimap::Instance().setPlayerPosition(tile, lenght, player->getRotation());
+
+		window->setMouseCursorVisible(true);
+		*gameState = state::Map;
+	}
+	else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::M) || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) && *gameState == state::Map && Minimap::Instance().canExitMinimap())
+	{
+		Minimap::Instance().resetCooldown();
+		window->setMouseCursorVisible(false);
+		*gameState = state::MainGame;
+	}
 }
 
 void mGame::switchCars(size_t &index)

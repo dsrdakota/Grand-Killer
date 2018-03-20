@@ -163,7 +163,7 @@ void Diary::toControl()
 		else
 			*state = static_cast<optionState>(static_cast<int>(*state) - 1);
 
-		resertCooldown();
+		resetCooldown();
 	}
 
 	else if (!cooldownChangeStates && (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)))
@@ -174,7 +174,7 @@ void Diary::toControl()
 		else
 			*state = static_cast<optionState>(static_cast<int>(*state) + 1);
 
-		resertCooldown();
+		resetCooldown();
 	}
 
 	if (isMousePressed && !sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -204,7 +204,7 @@ bool Diary::isMouseClickOnHitbox()
 	return false;
 }
 
-void Diary::resertCooldown()
+void Diary::resetCooldown()
 {
 	cooldownChangeStates = 1;
 	timeChangeStates.clock->restart();

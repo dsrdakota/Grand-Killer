@@ -141,6 +141,6 @@ void Hitbox::update()
 
 void Hitbox::draw()
 {
-	for (const auto &i : allHitboxes)
-		Painter::Instance().addToDraw(i);
+	//for (const auto &i : allHitboxes)
+		//Painter::Instance().addToDraw(i);
 }

@@ -1,5 +1,7 @@
 #include "Menu.hpp"
 
+#include "../../../../Map/Minimap.hpp"
+
 #include <ctime>
 
 Menu::Menu() : window(Game::Instance().getWindow())
@@ -76,7 +78,7 @@ Menu::~Menu()
 
 void Menu::updateCooldown()
 {
-	if (cooldownEscapeButton && timeEscapeButton.time->asSeconds() >= 0.5f)
+	if (cooldownEscapeButton && timeEscapeButton.time->asSeconds() >= 0.25f)
 	{
 		cooldownEscapeButton--;
 		timeEscapeButton.clock->restart();
@@ -149,12 +151,10 @@ void Menu::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &playerP
 
 	const auto &allTiles = TilesManager::getTilesVector();
 	Tile* tile = allTiles[static_cast<size_t>(playerPos.x / TilesManager::getTileSize())][static_cast<size_t>(playerPos.y / TilesManager::getTileSize())];
-
 	sf::Vector2f lenght = playerPos - tile->getTileSprite()->getPosition();
 	
-	//Minimap::Instance().setPlayerPosition(tile, lenght, playerRot);
-
-	map->setPlayerPosition(tile, lenght, playerRot);
+	Minimap::Instance().setPosition(background->getPosition());
+	Minimap::Instance().setPlayerPosition(tile, lenght, playerRot);
 
 	for (const auto &i : options)
 		i->setPosition(background->getPosition(), sf::Vector2f(firstButton->getPosition().x,
