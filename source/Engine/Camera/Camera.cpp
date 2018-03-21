@@ -66,7 +66,7 @@ bool Camera::isOutsideView(const sf::FloatRect & box)
 const sf::FloatRect Camera::getViewRect() const
 {
 	return sf::FloatRect(sf::Vector2f(Instance().view->getCenter().x - Instance().view->getSize().x / 2, Instance().view->getCenter().y - Instance().view->getSize().y / 2),
-		sf::Vector2f(Instance().view->getSize().x, Instance().view->getSize().y));
+		sf::Vector2f(Instance().view->getSize().x + 20, Instance().view->getSize().y + 20));
 }
 
 void Camera::setViewScale(IObject * player)
