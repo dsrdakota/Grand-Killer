@@ -9,9 +9,9 @@ class TextureManager
 public:
 	~TextureManager();
 
-	TextureManager(const TextureManager &Other) = delete;
+	TextureManager(const TextureManager &) = delete;
 
-	void operator=(const TextureManager &Other) = delete;
+	void operator=(const TextureManager &) = delete;
 
 	static sf::Texture* load(const std::string &textureName, const std::string &texturePath);
 

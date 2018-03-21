@@ -49,7 +49,7 @@ Steerage::~Steerage()
 	delete centerTextOfOption;
 }
 
-void Steerage::setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange)
+void Steerage::setPosition(const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange)
 {
 	hitboxClick->setSize(sf::Vector2f(borderXrange.y - borderXrange.x, borderYrange.y - borderYrange.x));
 	hitboxClick->setPosition(borderXrange.x, borderYrange.x);
@@ -62,8 +62,8 @@ void Steerage::setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &bord
 
 	backgroundRight->setPosition(buttons[0]->getButtonSprite()->getPosition().x + buttons[0]->getButtonSprite()->getGlobalBounds().width + 8, buttons[0]->getButtonSprite()->getPosition().y);
 
-	navigation[0].second->setPosition(menuPos.x + window->getSize().x - navigation[0].second->getGlobalBounds().width - 40,
-		menuPos.y + window->getSize().y - navigation[0].second->getGlobalBounds().height - 15);
+	navigation[0].second->setPosition(window->getSize().x - navigation[0].second->getGlobalBounds().width - 40,
+		window->getSize().y - navigation[0].second->getGlobalBounds().height - 15);
 	navigation[0].first->text->setPosition(navigation[0].second->getPosition().x - navigation[0].first->text->getGlobalBounds().width,
 		navigation[0].second->getPosition().y + navigation[0].second->getGlobalBounds().height / 2 - navigation[0].first->text->getGlobalBounds().height);
 
@@ -90,7 +90,7 @@ void Steerage::drawActive()
 {
 	buttons[static_cast<int>(*state)]->setEnabled();
 
-	Painter::Instance().addToDraw(backgroundRight);
+	Painter::Instance().addToInterfaceDraw(backgroundRight);
 
 	toControl();
 
@@ -102,8 +102,8 @@ void Steerage::drawActive()
 
 	for (const auto &i : navigation)
 	{
-		Painter::Instance().addToDraw(i.first->text);
-		Painter::Instance().addToDraw(i.second);
+		Painter::Instance().addToInterfaceDraw(i.first->text);
+		Painter::Instance().addToInterfaceDraw(i.second);
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) ||
@@ -123,11 +123,11 @@ void Steerage::drawUnactive()
 		i->draw();
 	}
 
-	Painter::Instance().addToDraw(backgroundRight);
+	Painter::Instance().addToInterfaceDraw(backgroundRight);
 
 	centerTextOfOption->text->setPosition(backgroundRight->getPosition().x + 25, backgroundRight->getPosition().y + 25);
 
-	Painter::Instance().addToDraw(centerTextOfOption->text);
+	Painter::Instance().addToInterfaceDraw(centerTextOfOption->text);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) || (sf::Mouse::isButtonPressed(sf::Mouse::Left) && isMouseClickOnHitbox()))
 	{
@@ -175,7 +175,7 @@ void Steerage::toControl()
 
 	centerTextOfOption->text->setPosition(backgroundRight->getPosition().x + 25, backgroundRight->getPosition().y + 25);
 
-	Painter::Instance().addToDraw(centerTextOfOption->text);
+	Painter::Instance().addToInterfaceDraw(centerTextOfOption->text);
 
 	if (cooldownChangeStates && timeChangeStates.time->asSeconds() >= 0.2f)
 	{
@@ -187,7 +187,7 @@ void Steerage::toControl()
 
 bool Steerage::isMouseClickOnHitbox()
 {
-	if (hitboxClick->getGlobalBounds().contains(window->mapPixelToCoords(sf::Mouse::getPosition())))
+	if (hitboxClick->getGlobalBounds().contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition())))
 		return true;
 	return false;
 }

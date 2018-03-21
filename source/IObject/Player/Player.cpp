@@ -3,8 +3,6 @@
 #include "../../Engine/Engine.hpp"
 #include "../../Car/Car.hpp"
 
-#include <iostream>
-
 Player::Player(const sf::Vector2f &startPos, const float &startRot)
 {
 	sprite = new sf::Sprite;

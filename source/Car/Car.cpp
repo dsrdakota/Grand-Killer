@@ -4,8 +4,6 @@
 
 #include "../Engine/Engine.hpp"
 
-#include <iostream>
-
 Car::Car() 
 { 
 	sprite = new sf::Sprite();
@@ -62,7 +60,7 @@ const sf::FloatRect Car::getGlobalBounds()
 {
 	const auto &boundingBox = sprite->getGlobalBounds();
 	return sf::FloatRect(sf::Vector2f(boundingBox.left - 10.f, boundingBox.top - 10.f),
-		sf::Vector2f(boundingBox.width + 10.f, boundingBox.height + 10.f));
+		sf::Vector2f(boundingBox.width + 20.f, boundingBox.height + 20.f));
 }
 const unsigned& Car::getWeight()
 {
@@ -132,7 +130,7 @@ void Car::draw()
 	hitbox->update();
 
 	if (!Camera::isOutsideView(shadow->getGlobalBounds()) &&
-		!Camera::isOutsideView(sprite->getGlobalBounds()))
+		!Camera::isOutsideView(this->getGlobalBounds()))
 	{
 		door->drawCenter();
 
@@ -147,7 +145,7 @@ void Car::draw()
 void Car::drawShadow()
 {
 	if (!Camera::isOutsideView(shadow->getGlobalBounds()) &&
-		!Camera::isOutsideView(sprite->getGlobalBounds()))
+		!Camera::isOutsideView(this->getGlobalBounds()))
 	{
 		Painter::Instance().addToDraw(shadow);
 		tire->draw();

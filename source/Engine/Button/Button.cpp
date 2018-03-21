@@ -81,7 +81,7 @@ bool Button::mouseOnClick()
 
 bool Button::cursorIsOnButton()
 {
-	if (button->getGlobalBounds().contains(Game::Instance().getWindow()->mapPixelToCoords(sf::Mouse::getPosition())))
+	if (button->getGlobalBounds().contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition())))
 		return true;
 	return false;
 }
@@ -98,8 +98,8 @@ const sf::RectangleShape * Button::getButtonSprite()
 
 void Button::draw()
 {
-	Painter::Instance().addToDraw(button);
-	Painter::Instance().addToDraw(text->text);
+	Painter::Instance().addToInterfaceDraw(button);
+	Painter::Instance().addToInterfaceDraw(text->text);
 	if (*enabled == Enabled::True && *state == State::header)
-		Painter::Instance().addToDraw(enabledSign);
+		Painter::Instance().addToInterfaceDraw(enabledSign);
 }

@@ -18,7 +18,7 @@ mGame::mGame()
 	gameState = new state(state::MainGame);
 	menu = new Menu();
 
-	cars.push_back(new Audi(sf::Vector2f(500, 500), 50));
+	cars.push_back(new Audi(sf::Vector2f(5800, 200), 50));
 	cars.push_back(new Taxi(sf::Vector2f(2500, 2500), 0));
 	cars.push_back(new Dodge(sf::Vector2f(5200, 5200), 0));
 }
@@ -113,7 +113,7 @@ void mGame::switchState()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && *gameState == state::MainGame && menu->getCooldownValue() <= 0 && Minimap::Instance().canRunMinimap())
 	{
-		menu->setPosition(Camera::getUpLeftCornerPosOfCurrentView(), player->getPosition(), player->getRotation());
+		menu->setPosition(player->getPosition(), player->getRotation());
 		menu->restartCooldownValue();
 		window->setMouseCursorVisible(true);
 		*gameState = state::Menu;
@@ -131,7 +131,7 @@ void mGame::switchState()
 		Tile* tile = allTiles[static_cast<size_t>(player->getPosition().x / TilesManager::getTileSize())][static_cast<size_t>(player->getPosition().y / TilesManager::getTileSize())];
 		sf::Vector2f lenght = player->getPosition() - tile->getTileSprite()->getPosition();
 
-		Minimap::Instance().setPosition(Camera::getUpLeftCornerPosOfCurrentView());
+		Minimap::Instance().setPosition();
 		Minimap::Instance().setPlayerPosition(tile, lenght, player->getRotation());
 
 		window->setMouseCursorVisible(true);

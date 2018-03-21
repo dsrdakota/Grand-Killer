@@ -21,7 +21,7 @@ public:
 
 	void updateCooldown();
 	void restartCooldownValue();
-	void setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &playerPos, const float &playerRot);
+	void setPosition(const sf::Vector2f &playerPos, const float &playerRot);
 	const int &getCooldownValue();
 	bool canExitMenu();
 	void draw();

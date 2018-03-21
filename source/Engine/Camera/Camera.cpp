@@ -2,20 +2,21 @@
 
 #include "../../Map/Map.hpp"
 #include "../../Map/Radar.hpp"
-#include "../GlobalSettings/GlobalSettings.hpp"
-#include "../Rendering/Painter.hpp"
+#include "../Engine.hpp"
+
+#include "../../IObject/Player/Player.hpp"
+#include "../../Car/Car.hpp"
 
 Camera::Camera()
 {
-	view = new sf::View(sf::Vector2f(100, 100), sf::Vector2f(static_cast<float>(GlobalSettings::getWidth()), static_cast<float>(GlobalSettings::getHeight())));
-	viewBox = new sf::RectangleShape(view->getSize());
-	viewBox->setOrigin(view->getSize().x / 2.f, view->getSize().y / 2.f);
+	scale = 0.9f;
+
+	view = new sf::View(sf::Vector2f(100, 100), sf::Vector2f(static_cast<float>(GlobalSettings::getWidth()) * scale, static_cast<float>(GlobalSettings::getHeight() * scale)));
 }
 
 Camera::~Camera()
 {
 	delete view;
-	delete viewBox;
 }
 
 sf::View * Camera::getView() const
@@ -25,61 +26,80 @@ sf::View * Camera::getView() const
 
 void Camera::updateView(IObject *player)
 {
-	Instance().setView(player);
+	sf::Vector2f moveOffset = player->getPosition() - Instance().view->getCenter();
+	Instance().view->move(moveOffset * 0.085f);
 
-	if (Instance().viewBox->getGlobalBounds().left < 0)
-		Instance().setView(sf::Vector2f(Instance().view->getSize().x / 2, Instance().view->getCenter().y));
+	Instance().setViewScale(player);
+
+	if (Instance().view->getCenter().x - Instance().view->getSize().x / 2 < 0)
+		Instance().view->setCenter(sf::Vector2f(Instance().view->getSize().x / 2, Instance().view->getCenter().y));
 
 	else if (Instance().view->getCenter().x + Instance().view->getSize().x / 2 > Map::getMapSize().x)
-		Instance().setView(sf::Vector2f(Map::getMapSize().x - Instance().view->getSize().x / 2, Instance().view->getCenter().y));
+		Instance().view->setCenter(sf::Vector2f(Map::getMapSize().x - Instance().view->getSize().x / 2, Instance().view->getCenter().y));
 
 	if (Instance().view->getCenter().y - Instance().view->getSize().y / 2 < 0)
-		Instance().setView(sf::Vector2f(Instance().view->getCenter().x, Instance().view->getSize().y / 2));
+		Instance().view->setCenter(sf::Vector2f(Instance().view->getCenter().x, Instance().view->getSize().y / 2));
 
 	else if (Instance().view->getCenter().y + Instance().view->getSize().y / 2.f > Map::getMapSize().y)
-		Instance().setView(sf::Vector2f(Instance().view->getCenter().x, Map::getMapSize().y - Instance().view->getSize().y / 2));
+		Instance().view->setCenter(sf::Vector2f(Instance().view->getCenter().x, Map::getMapSize().y - Instance().view->getSize().y / 2));
 
 	Map::getMap()->setTextureRect(sf::IntRect(sf::Vector2i(Instance().view->getCenter().x - Instance().view->getSize().x / 2 - 10, Instance().view->getCenter().y - Instance().view->getSize().y / 2 - 10),
 		sf::Vector2i(Instance().view->getSize().x + 10, Instance().view->getSize().y + 10)));
-	
+
 	Map::getMap()->setPosition(sf::Vector2f(Instance().view->getCenter().x - Instance().view->getSize().x / 2 - 10, Instance().view->getCenter().y - Instance().view->getSize().y / 2 - 10));
 	
 	Radar::Instance().update(player);
+
+	Game::Instance().getWindow()->setView(*Instance().view);
 }
 
 bool Camera::isOutsideView(const sf::Vector2f & position)
 {
-	return !Instance().viewBox->getGlobalBounds().contains(position);
+	return !Instance().getViewRect().contains(position);
 }
 
 bool Camera::isOutsideView(const sf::FloatRect & box)
 {
-	return !Instance().viewBox->getGlobalBounds().intersects(box);
+	return !Instance().getViewRect().intersects(box);
 }
 
-void Camera::draw()
+const sf::FloatRect Camera::getViewRect() const
 {
-	Painter::Instance().addToDraw(Instance().viewBox);
+	return sf::FloatRect(sf::Vector2f(Instance().view->getCenter().x - Instance().view->getSize().x / 2, Instance().view->getCenter().y - Instance().view->getSize().y / 2),
+		sf::Vector2f(Instance().view->getSize().x, Instance().view->getSize().y));
 }
 
-sf::Vector2f Camera::getUpLeftCornerPosOfCurrentView()
+void Camera::setViewScale(IObject * player)
 {
-	auto &view = Instance();
+	float newScale;
+	const float SPEED_SCALING = 0.3f;
 
-	return sf::Vector2f(view.view->getCenter().x - view.view->getSize().x / 2.f,
-		view.view->getCenter().y - view.view->getSize().y / 2.f);
-}
+	if (player->getCar() != nullptr &&
+		*player->getCar()->getMovementClass()->getSpeed() > 5.f)
+	{
+		newScale = 0.9f + ((static_cast<float>(*player->getCar()->getMovementClass()->getSpeed()) - 5.f) * 0.1f) / (static_cast<float>(*player->getCar()->getMovementClass()->getMaxSpeed()) / 3.f);
 
-void Camera::setView(IObject * player)
-{
-	view->setCenter(player->getPosition());
-	viewBox->setPosition(player->getPosition());
-	Game::Instance().getWindow()->setView(*Instance().view);
-}
+		if (scale != newScale)
+		{
+			if (scale > newScale)
+			{
+				if (scale - SPEED_SCALING >= newScale)
+					scale -= SPEED_SCALING;
+				else
+					scale = newScale;
+			}
+			else
+			{
+				if (scale + SPEED_SCALING <= newScale)
+					scale += SPEED_SCALING;
+				else
+					scale = newScale;
+			}
 
-void Camera::setView(const sf::Vector2f & center)
-{
-	view->setCenter(center);
-	viewBox->setPosition(center);
-	Game::Instance().getWindow()->setView(*Instance().view);
+			sf::Vector2f newSize = sf::Vector2f(static_cast<float>(GlobalSettings::getWidth())* scale, static_cast<float>(GlobalSettings::getHeight()) * scale);
+
+			view->setSize(newSize);
+			Game::Instance().getWindow()->setView(*Instance().view);
+		}
+	}
 }

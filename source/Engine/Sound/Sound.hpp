@@ -9,7 +9,7 @@ class soundManager
 public:
 	~soundManager();
 
-	void operator=(const soundManager &Other) = delete;
+	void operator=(const soundManager &) = delete;
 
 	static sf::SoundBuffer* load(const std::string &soundName, const std::string &soundPath);
 

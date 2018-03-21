@@ -98,16 +98,14 @@ Minimap::~Minimap()
 	delete maxScale;
 }
 
-void Minimap::setPosition(const sf::Vector2f &menuPos)
+void Minimap::setPosition()
 {
-	background->setPosition(menuPos);
 	map->setTexture(*Radar::getRadarSprite()->getTexture());
 
 	mapArea->setSize(static_cast<sf::Vector2f>(window->getSize()));
-	mapArea->setPosition(Camera::getUpLeftCornerPosOfCurrentView());
 
-	navigation[0].second->setPosition(menuPos.x + window->getSize().x - navigation[0].second->getGlobalBounds().width - 40,
-		menuPos.y + window->getSize().y - navigation[0].second->getGlobalBounds().height - 15);
+	navigation[0].second->setPosition(window->getSize().x - navigation[0].second->getGlobalBounds().width - 40,
+		window->getSize().y - navigation[0].second->getGlobalBounds().height - 15);
 	navigation[0].first->text->setPosition(navigation[0].second->getPosition().x - navigation[0].first->text->getGlobalBounds().width,
 		navigation[0].second->getPosition().y + navigation[0].second->getGlobalBounds().height / 2 - navigation[0].first->text->getGlobalBounds().height);
 
@@ -137,40 +135,40 @@ void Minimap::setPosition(const sf::Vector2f &menuPos)
 	canSetTarget = false;
 	scale = sf::Vector2f(0.4f, 0.4f);
 
-	tag[0]->setPosition(menuPos.x + window->getSize().x / 2.f, menuPos.y + window->getSize().y / 2.f + 6.f);
-	tag[1]->setPosition(menuPos.x + window->getSize().x / 2.f - 6.f, menuPos.y + window->getSize().y / 2.f);
-	tag[2]->setPosition(menuPos.x + window->getSize().x / 2.f, menuPos.y + window->getSize().y / 2.f - 6.f);
-	tag[3]->setPosition(menuPos.x + window->getSize().x / 2.f + 6.f, menuPos.y + window->getSize().y / 2.f);
+	tag[0]->setPosition(window->getSize().x / 2.f, window->getSize().y / 2.f + 6.f);
+	tag[1]->setPosition(window->getSize().x / 2.f - 6.f, window->getSize().y / 2.f);
+	tag[2]->setPosition(window->getSize().x / 2.f, window->getSize().y / 2.f - 6.f);
+	tag[3]->setPosition(window->getSize().x / 2.f + 6.f, window->getSize().y / 2.f);
 
 	centerOfTag->setPosition(tag[3]->getPosition().x - 6.f, tag[3]->getPosition().y);
 
 	resetCooldown();
 }
 
-void Minimap::show(bool fromMinimap)
+void Minimap::show(bool fromMenu)
 {
 	toControl();
 	setPlayerVisible();
 
-	if (!fromMinimap)
-		Painter::Instance().addToDraw(background);
+	if (!fromMenu)
+		Painter::Instance().addToInterfaceDraw(background);
 
-	Painter::Instance().addToDraw(map);
+	Painter::Instance().addToInterfaceDraw(map);
 
 	if (mapArea->getGlobalBounds().contains(player->getPosition()) && playerIsVisible)
-		Painter::Instance().addToDraw(player);
+		Painter::Instance().addToInterfaceDraw(player);
 
 	if (mapArea->getGlobalBounds().contains(target->getPosition()) && targetIsSet)
-		Painter::Instance().addToDraw(target);
+		Painter::Instance().addToInterfaceDraw(target);
 
 	for (const auto &i : navigation)
 	{
-		Painter::Instance().addToDraw(i.first->text);
-		Painter::Instance().addToDraw(i.second);
+		Painter::Instance().addToInterfaceDraw(i.first->text);
+		Painter::Instance().addToInterfaceDraw(i.second);
 	}
 
 	for (const auto &i : tag)
-		Painter::Instance().addToDraw(i);
+		Painter::Instance().addToInterfaceDraw(i);
 }
 
 bool Minimap::canExitMinimap()
@@ -259,7 +257,7 @@ void Minimap::toControl()
 			targetIsSet = true;
 
 			targetTile = getTileUnderMouse();
-			lengthTargetFromTileOrigin = static_cast<sf::Vector2f>(window->mapPixelToCoords(sf::Mouse::getPosition())) - targetTile->getTileMapSprite()->getPosition();
+			lengthTargetFromTileOrigin = static_cast<sf::Vector2f>(static_cast<sf::Vector2f>(sf::Mouse::getPosition())) - targetTile->getTileMapSprite()->getPosition();
 
 			setTarget();
 
@@ -307,7 +305,7 @@ void Minimap::toControl()
 
 bool Minimap::mouseOnMap()
 {
-	if (mapArea->getGlobalBounds().contains(window->mapPixelToCoords(sf::Mouse::getPosition())))
+	if (mapArea->getGlobalBounds().contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition())))
 		return true;
 	return false;
 }
@@ -319,7 +317,7 @@ Tile * Minimap::getCenterTileOnWindow()
 
 Tile * Minimap::getTileUnderMouse()
 {
-	return getTileUnderPosition(window->mapPixelToCoords(sf::Mouse::getPosition()));
+	return getTileUnderPosition(static_cast<sf::Vector2f>(sf::Mouse::getPosition()));
 }
 
 Tile * Minimap::getTileUnderPosition(const sf::Vector2f & position)

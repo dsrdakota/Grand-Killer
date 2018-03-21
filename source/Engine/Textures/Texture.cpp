@@ -23,15 +23,13 @@ sf::Texture * TextureManager::load(const std::string & textureName, const std::s
 
 bool TextureManager::unload(const std::string & textureName)
 {
-	auto &instance = Instance();
+	auto textureIt = Instance().textures.find(textureName);
 
-	auto textureIt = instance.textures.find(textureName);
-
-	if (textureIt != instance.textures.end())
+	if (textureIt != Instance().textures.end())
 	{
 		delete (textureIt->second);
 
-		instance.textures.erase(textureIt);
+		Instance().textures.erase(textureIt);
 
 		return true;
 	}
@@ -40,11 +38,9 @@ bool TextureManager::unload(const std::string & textureName)
 
 std::size_t TextureManager::cleanUp()
 {
-	auto &instance = Instance();
+	std::size_t textureCount = Instance().textures.size();
 
-	std::size_t textureCount = instance.textures.size();
-
-	for (auto textureData : instance.textures)
+	for (auto textureData : Instance().textures)
 		delete (textureData.second);
 
 	return textureCount;
@@ -52,11 +48,9 @@ std::size_t TextureManager::cleanUp()
 
 sf::Texture * TextureManager::get(const std::string & textureName)
 {
-	auto &instance = Instance();
+	auto textureIt = Instance().textures.find(textureName);
 
-	auto textureIt = instance.textures.find(textureName);
-
-	if (textureIt == instance.textures.end())
+	if (textureIt == Instance().textures.end())
 		return nullptr;
 
 	return textureIt->second;

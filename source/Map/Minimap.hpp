@@ -24,9 +24,9 @@ public:
 	const bool isTargetSet();
 	const sf::Vector2f &getTargetPos();
 
-	void setPosition(const sf::Vector2f &menuPos);
+	void setPosition();
 	void setPlayerPosition(Tile *playerTile, const sf::Vector2f &lengthPlayerFromTileOrigin, const float &rot);
-	void show(bool fromMinimap = false);
+	void show(bool fromMenu = false);
 
 	bool canExitMinimap();
 	bool canRunMinimap();

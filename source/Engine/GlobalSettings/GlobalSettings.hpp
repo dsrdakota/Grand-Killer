@@ -17,13 +17,13 @@ public:
 		return settings;
 	}
 
-	inline static unsigned &getWidth() { return Instance().width; }
-	inline static unsigned &getHeight() { return Instance().height; }
-	inline static unsigned &getColors() { return Instance().colors; }
-	inline static unsigned &getFps() { return Instance().fps; }
-	inline static sf::ContextSettings &getSettings() { return Instance().settings; }
-	inline static sf::Uint32 &getWindowMode() { return Instance().windowMode; }
-	inline static bool &getVerticalSync() { return Instance().verticalSync; }
+	static unsigned &getWidth();
+	static unsigned &getHeight();
+	static unsigned &getColors();
+	static unsigned &getFps();
+	static sf::ContextSettings &getSettings();
+	static sf::Uint32 &getWindowMode();
+	static bool &getVerticalSync();
 
 private:
 

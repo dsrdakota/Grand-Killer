@@ -24,18 +24,17 @@ public:
 	static void updateView(IObject *player);
 	static bool isOutsideView(const sf::Vector2f &position);
 	static bool isOutsideView(const sf::FloatRect &box);
-	static sf::Vector2f getUpLeftCornerPosOfCurrentView();
-
-	static void draw();
 
 private:
 
 	sf::View *view;
-	sf::RectangleShape *viewBox;
+
+	float scale;
 
 	Camera();
 
-	void setView(IObject *player);
+	const sf::FloatRect getViewRect() const;
 
-	void setView(const sf::Vector2f & center);
+	void setViewScale(IObject *player);
+
 };

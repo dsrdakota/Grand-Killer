@@ -18,6 +18,7 @@ public:
 	}
 
 	void addToDraw(sf::Drawable *object);
+	void addToInterfaceDraw(sf::Drawable *object);
 
 	void run();
 
@@ -25,6 +26,7 @@ private:
 	~Painter() {  }
 
 	std::vector<sf::Drawable*> objects;
+	std::vector<sf::Drawable*> interface;
 
 	sf::RenderWindow* window;
 };

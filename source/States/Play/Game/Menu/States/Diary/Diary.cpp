@@ -51,7 +51,7 @@ Diary::~Diary()
 	}
 }
 
-void Diary::setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange)
+void Diary::setPosition(const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange)
 {
 	hitboxClick->setSize(sf::Vector2f(borderXrange.y - borderXrange.x, borderYrange.y - borderYrange.x));
 	hitboxClick->setPosition(borderXrange.x,borderYrange.x);
@@ -64,8 +64,8 @@ void Diary::setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &borderX
 
 	backgroundRight->setPosition(buttons[0]->getButtonSprite()->getPosition().x + buttons[0]->getButtonSprite()->getGlobalBounds().width + 8, buttons[0]->getButtonSprite()->getPosition().y);
 
-	navigation[0].second->setPosition(menuPos.x + window->getSize().x - navigation[0].second->getGlobalBounds().width - 40,
-		menuPos.y + window->getSize().y - navigation[0].second->getGlobalBounds().height - 15);
+	navigation[0].second->setPosition(window->getSize().x - navigation[0].second->getGlobalBounds().width - 40,
+		window->getSize().y - navigation[0].second->getGlobalBounds().height - 15);
 	navigation[0].first->text->setPosition(navigation[0].second->getPosition().x - navigation[0].first->text->getGlobalBounds().width,
 		navigation[0].second->getPosition().y + navigation[0].second->getGlobalBounds().height / 2 - navigation[0].first->text->getGlobalBounds().height);
 
@@ -94,7 +94,7 @@ void Diary::drawActive()
 {
 	buttons[static_cast<int>(*state)]->setEnabled();
 
-	Painter::Instance().addToDraw(backgroundRight);
+	Painter::Instance().addToInterfaceDraw(backgroundRight);
 
 	toControl();
 
@@ -106,8 +106,8 @@ void Diary::drawActive()
 
 	for (const auto &i : navigation)
 	{
-		Painter::Instance().addToDraw(i.first->text);
-		Painter::Instance().addToDraw(i.second);
+		Painter::Instance().addToInterfaceDraw(i.first->text);
+		Painter::Instance().addToInterfaceDraw(i.second);
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || 
@@ -126,15 +126,15 @@ void Diary::drawUnactive()
 		i->draw();
 	}
 
-	Painter::Instance().addToDraw(backgroundRight);
+	Painter::Instance().addToInterfaceDraw(backgroundRight);
 
 	centerTextOfOption[0].first->text->setPosition(backgroundRight->getPosition().x + 25, backgroundRight->getPosition().y + 25);
 
 	centerTextOfOption[0].second->text->setPosition(centerTextOfOption[0].first->text->getPosition().x,
 		centerTextOfOption[0].first->text->getPosition().y + /*centerTextOfOption[index].first->text->getGlobalBounds().height*/ 50 + 50);
 
-	Painter::Instance().addToDraw(centerTextOfOption[static_cast<int>(*state)].first->text);
-	Painter::Instance().addToDraw(centerTextOfOption[static_cast<int>(*state)].second->text);
+	Painter::Instance().addToInterfaceDraw(centerTextOfOption[static_cast<int>(*state)].first->text);
+	Painter::Instance().addToInterfaceDraw(centerTextOfOption[static_cast<int>(*state)].second->text);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) || (sf::Mouse::isButtonPressed(sf::Mouse::Left) && isMouseClickOnHitbox()))
 	{
@@ -186,8 +186,8 @@ void Diary::toControl()
 	centerTextOfOption[index].second->text->setPosition(centerTextOfOption[index].first->text->getPosition().x,
 		centerTextOfOption[index].first->text->getPosition().y + /*centerTextOfOption[index].first->text->getGlobalBounds().height*/ 50 + 50);
 
-	Painter::Instance().addToDraw(centerTextOfOption[index].first->text);
-	Painter::Instance().addToDraw(centerTextOfOption[index].second->text);
+	Painter::Instance().addToInterfaceDraw(centerTextOfOption[index].first->text);
+	Painter::Instance().addToInterfaceDraw(centerTextOfOption[index].second->text);
 
 	if (cooldownChangeStates && timeChangeStates.time->asSeconds() >= 0.2f)
 	{
@@ -199,7 +199,7 @@ void Diary::toControl()
 
 bool Diary::isMouseClickOnHitbox()
 {
-	if (hitboxClick->getGlobalBounds().contains(window->mapPixelToCoords(sf::Mouse::getPosition())))
+	if (hitboxClick->getGlobalBounds().contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition())))
 		return true;
 	return false;
 }

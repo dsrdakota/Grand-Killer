@@ -1,12 +1,12 @@
 #include "Game.hpp"
 #include "Engine/Engine.hpp"
 
-#include "Engine/Font/Font.hpp"
-#include "Engine/Textures/Texture.hpp"
+#if defined(_WIN32) || defined(WIN32) 
 
+#define OS_Windows
 #include <Windows.h>
 
-#include <iostream>
+#endif
 
 Game::Game() : m_status(status::Initializing), window(Engine::Instance().window)
 {
@@ -76,7 +76,11 @@ bool Game::checkExistFont(const std::string & pathToFont, const std::string &fon
 	if (!font->loadFromFile(pathToFont))
 	{
 		communicate = "Can't open " + pathToFont;
+
+#ifdef OS_Windows
 		MessageBox(NULL, communicate.c_str(), "Grand Killer - Error !", MB_ICONERROR | MB_OK);
+#endif
+
 		delete font;
 		return false;
 	}

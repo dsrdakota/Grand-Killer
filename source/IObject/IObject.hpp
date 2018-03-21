@@ -10,11 +10,15 @@ public:
 
 	void control();
 
+	Car* getCar();
 	void getInCar(Car *car);
 	void getOutOfCar();
 
 	const sf::Vector2f& getPosition();
 	const float getRotation();
+
+	void setHP(const int &hp);
+	const int &getHP() const;
 
 	bool &getStateKeyGas();
 	bool &getStateKeyBrake();

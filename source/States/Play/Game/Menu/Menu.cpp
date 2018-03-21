@@ -100,14 +100,12 @@ void Menu::restartCooldownValue()
 	*timeEscapeButton.time = sf::Time::Zero;
 }
 
-void Menu::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &playerPos, const float &playerRot)
+void Menu::setPosition(const sf::Vector2f &playerPos, const float &playerRot)
 {
-	background->setPosition(menuPos);
-
 	this->playerPos = playerPos;
 	this->playerRot = playerRot;
 
-	grandKillerText->text->setPosition(menuPos.x + window->getSize().x *0.2f, menuPos.y + window->getSize().y * 0.1f);
+	grandKillerText->text->setPosition(window->getSize().x *0.2f,window->getSize().y * 0.1f);
 
 	leftArrow->setPosition(grandKillerText->text->getPosition().x - leftArrow->getGlobalBounds().width - 5, grandKillerText->text->getPosition().y + grandKillerText->text->getGlobalBounds().height + leftArrow->getGlobalBounds().height + 10.f);
 
@@ -129,8 +127,8 @@ void Menu::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &playerP
 	rightArrow->setPosition(headersButton[headersButton.size() - 1]->getButtonSprite()->getPosition().x + headersButton[headersButton.size() - 1]->getButtonSprite()->getGlobalBounds().width + 5.f,
 		leftArrow->getPosition().y);
 
-	navigation[0].second->setPosition(menuPos.x + window->getSize().x - navigation[0].second->getGlobalBounds().width - 40,
-		menuPos.y + window->getSize().y - navigation[0].second->getGlobalBounds().height - 15);
+	navigation[0].second->setPosition(window->getSize().x - navigation[0].second->getGlobalBounds().width - 40,
+		window->getSize().y - navigation[0].second->getGlobalBounds().height - 15);
 	navigation[0].first->text->setPosition(navigation[0].second->getPosition().x - navigation[0].first->text->getGlobalBounds().width,
 		navigation[0].second->getPosition().y + navigation[0].second->getGlobalBounds().height / 2 - navigation[0].first->text->getGlobalBounds().height);
 
@@ -153,11 +151,11 @@ void Menu::setPosition(const sf::Vector2f & menuPos, const sf::Vector2f &playerP
 	Tile* tile = allTiles[static_cast<size_t>(playerPos.x / TilesManager::getTileSize())][static_cast<size_t>(playerPos.y / TilesManager::getTileSize())];
 	sf::Vector2f lenght = playerPos - tile->getTileSprite()->getPosition();
 	
-	Minimap::Instance().setPosition(background->getPosition());
+	Minimap::Instance().setPosition();
 	Minimap::Instance().setPlayerPosition(tile, lenght, playerRot);
 
 	for (const auto &i : options)
-		i->setPosition(background->getPosition(), sf::Vector2f(firstButton->getPosition().x,
+		i->setPosition(sf::Vector2f(firstButton->getPosition().x,
 			firstButton->getPosition().x + window->getSize().x * 0.8f - window->getSize().x * 0.2f + 10),
 			sf::Vector2f(firstButton->getPosition().y + firstButton->getGlobalBounds().height + 10,
 				firstButton->getPosition().y + firstButton->getGlobalBounds().height + window->getSize().y * 0.6f));
@@ -177,19 +175,19 @@ void Menu::draw()
 {
 	update();
 
-	Painter::Instance().addToDraw(background);
+	Painter::Instance().addToInterfaceDraw(background);
 
 	if (!(wsk == options[static_cast<int>(States::Mapa)] && optionIsActive))
 	{
-		Painter::Instance().addToDraw(grandKillerText->text);
-		Painter::Instance().addToDraw(leftArrow);
-		Painter::Instance().addToDraw(rightArrow);
+		Painter::Instance().addToInterfaceDraw(grandKillerText->text);
+		Painter::Instance().addToInterfaceDraw(leftArrow);
+		Painter::Instance().addToInterfaceDraw(rightArrow);
 		for (const auto &i : headersButton)
 			i->draw();
 
-		Painter::Instance().addToDraw(name->text);
-		Painter::Instance().addToDraw(time->text);
-		Painter::Instance().addToDraw(cash->text);
+		Painter::Instance().addToInterfaceDraw(name->text);
+		Painter::Instance().addToInterfaceDraw(time->text);
+		Painter::Instance().addToInterfaceDraw(cash->text);
 	}
 
 	if (optionIsActive)
@@ -198,8 +196,8 @@ void Menu::draw()
 	{
 		for (const auto &i : navigation)
 		{
-			Painter::Instance().addToDraw(i.first->text);
-			Painter::Instance().addToDraw(i.second);
+			Painter::Instance().addToInterfaceDraw(i.first->text);
+			Painter::Instance().addToInterfaceDraw(i.second);
 		}
 		wsk->drawUnactive();
 	}
@@ -343,7 +341,7 @@ bool Menu::mouseOnClickArrow(sf::Sprite * arrow)
 
 bool Menu::mouseOnArrow(sf::Sprite * arrow)
 {
-	if (arrow->getGlobalBounds().contains(window->mapPixelToCoords(sf::Mouse::getPosition())))
+	if (arrow->getGlobalBounds().contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition())))
 	{
 		arrow->setScale(sf::Vector2f(1.1f, 1.1f));
 		return true;

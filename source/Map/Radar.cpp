@@ -21,6 +21,8 @@ Radar::Radar() : window(Game::Instance().getWindow())
 
 	textureOfRadar->display();
 
+	textureOfRadar->setSmooth(true);
+
 	radar = new sf::Sprite(textureOfRadar->getTexture());
 
 	playerIco = new sf::Sprite(*TextureManager::get("playerMinimap"));
@@ -83,8 +85,7 @@ void Radar::update(IObject *player)
 	radarView->setTexture(*radar->getTexture());
 	radarView2->setTexture(*radar->getTexture());
 
-	radarArea->setPosition(sf::Vector2f(Camera::getUpLeftCornerPosOfCurrentView().x + 40,
-		Camera::getUpLeftCornerPosOfCurrentView().y + window->getSize().y - radarArea->getSize().y - 80));
+	radarArea->setPosition(sf::Vector2f(40, window->getSize().y - radarArea->getSize().y - 80));
 
 	playerIco->setPosition(player->getPosition().x * (radar->getGlobalBounds().width / Map::getMapSize().x), player->getPosition().y * (radar->getGlobalBounds().height / Map::getMapSize().y));
 
@@ -156,17 +157,17 @@ void Radar::centerMapOnPlayer()
 
 void Radar::draw()
 {
-	Painter::Instance().addToDraw(radarView);
-	Painter::Instance().addToDraw(radarView2);
+	Painter::Instance().addToInterfaceDraw(radarView);
+	Painter::Instance().addToInterfaceDraw(radarView2);
 
-	Painter::Instance().addToDraw(playerIco);
+	Painter::Instance().addToInterfaceDraw(playerIco);
 
-	Painter::Instance().addToDraw(hpBackground);
-	Painter::Instance().addToDraw(hp);
+	Painter::Instance().addToInterfaceDraw(hpBackground);
+	Painter::Instance().addToInterfaceDraw(hp);
 
-	Painter::Instance().addToDraw(armorBackground);
-	Painter::Instance().addToDraw(armor);
+	Painter::Instance().addToInterfaceDraw(armorBackground);
+	Painter::Instance().addToInterfaceDraw(armor);
 
-	Painter::Instance().addToDraw(thirdBackground);
-	Painter::Instance().addToDraw(third);
+	Painter::Instance().addToInterfaceDraw(thirdBackground);
+	Painter::Instance().addToInterfaceDraw(third);
 }

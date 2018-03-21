@@ -10,6 +10,11 @@ void IObject::control()
 		controlBody();
 }
 
+Car* IObject::getCar()
+{
+	return car;
+}
+
 // finding the closest car in player area
 // finding path to the door
 void IObject::getInCar(Car * car)
@@ -43,6 +48,19 @@ const float IObject::getRotation()
 		return car->getSprite()->getRotation();
 	else
 		return sprite->getRotation();
+}
+
+void IObject::setHP(const int & hp)
+{
+	if (hp < 0)
+		this->hp = 0;
+	else if (hp <= 100)
+		this->hp = hp;
+}
+
+const int & IObject::getHP() const
+{
+	return hp;
 }
 
 bool & IObject::getStateKeyGas()

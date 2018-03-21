@@ -12,7 +12,7 @@ public:
 	Steerage();
 	~Steerage();
 
-	void setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange) override;
+	void setPosition(const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange) override;
 	bool exit() override;
 	bool isActive() override;
 	void drawActive() override;

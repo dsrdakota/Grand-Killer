@@ -3,8 +3,6 @@
 #include "../../../../../../Map/Radar.hpp"
 #include "../../../../../../Map/Minimap.hpp"
 
-#include <iostream>
-
 MapInMenu::MapInMenu()
 {
 	map = new sf::Sprite;
@@ -23,7 +21,7 @@ MapInMenu::~MapInMenu()
 	delete cuttedMap;
 }
 
-void MapInMenu::setPosition(const sf::Vector2f &menuPos, const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange)
+void MapInMenu::setPosition(const sf::Vector2f &borderXrange, const sf::Vector2f &borderYrange)
 {
 	map->setTexture(*Radar::getRadarSprite()->getTexture());
 
@@ -75,13 +73,13 @@ void MapInMenu::drawUnactive()
 		Minimap::Instance().canSetTarget = false;
 	}
 
-	Painter::Instance().addToDraw(cuttedMap);
+	Painter::Instance().addToInterfaceDraw(cuttedMap);
 
 	if (mapArea->getGlobalBounds().contains(player->getPosition()))
-		Painter::Instance().addToDraw(player);
+		Painter::Instance().addToInterfaceDraw(player);
 
 	if (mapArea->getGlobalBounds().contains(target->getPosition()) && Minimap::Instance().targetIsSet)
-		Painter::Instance().addToDraw(target);
+		Painter::Instance().addToInterfaceDraw(target);
 }
 
 bool MapInMenu::isActive()
@@ -91,7 +89,7 @@ bool MapInMenu::isActive()
 
 bool MapInMenu::mouseOnMap()
 {
-	if (mapArea->getGlobalBounds().contains(window->mapPixelToCoords(sf::Mouse::getPosition())))
+	if (mapArea->getGlobalBounds().contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition())))
 		return true;
 	return false;
 }

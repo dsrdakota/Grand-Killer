@@ -34,6 +34,8 @@ Map::Map()
 	textureOfMap->display();
 	textureOfHitboxGrass.display();
 
+	textureOfMap->setSmooth(true);
+
 	map = new sf::Sprite(textureOfMap->getTexture());
 	hitboxGrass = new sf::Image(textureOfHitboxGrass.getTexture().copyToImage());
 }
