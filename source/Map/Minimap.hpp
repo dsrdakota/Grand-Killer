@@ -85,4 +85,5 @@ private:
 	void setTarget();
 
 	friend class MapInMenu;
+	friend class GPS;
 };

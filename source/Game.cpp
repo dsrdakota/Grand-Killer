@@ -57,9 +57,6 @@ bool Game::checkFilesToLoadingScreen()
 {
 	if (!checkExistFont("data/Font/arial.ttf", "arial"))
 		return false;
-	
-	if (!checkExistFont("data/Font/curlz.ttf", "curlz"))
-		return false;
 
 	if (!checkExistFont("data/Font/italic.ttf", "italic"))
 		return false;

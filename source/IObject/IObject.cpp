@@ -2,25 +2,17 @@
 
 #include "../Car/Car.hpp"
 
-void IObject::control()
-{
-	if (car)
-		controlCar();
-	else
-		controlBody();
-}
-
 Car* IObject::getCar()
 {
 	return car;
 }
 
-// finding the closest car in player area
-// finding path to the door
 void IObject::getInCar(Car * car)
 {
 	car->setDriver(this);
 	this->car = car;
+
+	getBehaviors()->getInCar(car);
 }
 
 void IObject::getOutOfCar()
@@ -28,10 +20,7 @@ void IObject::getOutOfCar()
 	car->setDriver(nullptr);
 	this->car = nullptr;
 
-	stateKeyGas = false;
-	stateKeyBrake = false;
-	stateKeyLeftTurn = false;
-	stateKeyRightTurn = false;
+	getBehaviors()->getOutOfCar();
 }
 
 const sf::Vector2f & IObject::getPosition()
@@ -61,24 +50,4 @@ void IObject::setHP(const int & hp)
 const int & IObject::getHP() const
 {
 	return hp;
-}
-
-bool & IObject::getStateKeyGas()
-{
-	return stateKeyGas;
-}
-
-bool & IObject::getStateKeyBrake()
-{
-	return stateKeyBrake;
-}
-
-bool & IObject::getStateKeyLeftTurn()
-{
-	return stateKeyLeftTurn;
-}
-
-bool & IObject::getStateKeyRightTurn()
-{
-	return stateKeyRightTurn;
 }

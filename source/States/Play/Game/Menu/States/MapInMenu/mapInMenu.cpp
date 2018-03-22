@@ -96,22 +96,18 @@ bool MapInMenu::mouseOnMap()
 
 void MapInMenu::cutMap()
 {
-	auto &mapTiles = TilesManager::getTilesVector();
+	map->setTexture(*Radar::getRadarSprite()->getTexture());
 
 	cuttedMapTexture->create(static_cast<unsigned>(mapArea->getGlobalBounds().width), static_cast<unsigned>(mapArea->getGlobalBounds().height));
 
 	cuttedMapTexture->clear(sf::Color(0,0,0,0));
-	
-	for (size_t i = 0;i < TilesManager::getCountTile().y;++i)
-		for (size_t j = 0;j < TilesManager::getCountTile().x;++j)
-		{
-			sf::Vector2f savedPosition = mapTiles[i][j]->getTileMapSprite()->getPosition();
-			mapTiles[i][j]->getTileMapSprite()->move(-mapArea->getPosition());
-			cuttedMapTexture->draw(*mapTiles[i][j]->getTileMapSprite());
-			mapTiles[i][j]->getTileMapSprite()->setPosition(savedPosition);
-		}
+
+	map->move(-mapArea->getPosition());
+	cuttedMapTexture->draw(*map);
 
 	cuttedMapTexture->display();
+
+	cuttedMapTexture->setSmooth(true);
 
 	cuttedMap->setTexture(cuttedMapTexture->getTexture());
 	cuttedMap->setPosition(mapArea->getPosition());

@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../../../../Game.hpp"
+#include "../../../../Engine/Engine.hpp"
 
 class MenuStates
 {

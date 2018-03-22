@@ -441,7 +441,7 @@ sf::Vector2f carWithCar::moveFromCar(Car *car1,Car *car2,const std::pair<Hitbox:
 	{
 	case Hitbox::collisionSide::Front:
 	case Hitbox::collisionSide::Back:
-		multiplier *= 1.2f;
+		multiplier *= 1.5f;
 		break;
 	}
 
@@ -473,10 +473,6 @@ void carWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Hitbox::col
 			if (*car1->getMovementClass()->getSpeed() > 1)
 			{
 				v = instance.moveFromCar(car2, car1, std::make_pair(side.second, side.first));
-
-				if (car2->getMovementClass()->isMoveAble())
-					car2->move(v);
-
 				car2->getMovementClass()->setPowerOfCrashMove(std::make_pair(v, fabs(powerFirst - powerSecond)));
 
 				if (v != sf::Vector2f(0, 0) && car2->getMovementClass()->isMoveAble())
@@ -525,10 +521,6 @@ void carWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Hitbox::col
 		case Hitbox::collisionSide::Right:
 
 			v = instance.moveFromCar(car2, car1, std::make_pair(side.second, side.first));
-
-			if (car2->getMovementClass()->isMoveAble())
-				car2->move(v);
-
 			car2->getMovementClass()->setPowerOfCrashMove(std::make_pair(v, fabs(powerFirst - powerSecond)));
 
 			if (v != sf::Vector2f(0, 0) && car2->getMovementClass()->isMoveAble())
@@ -577,10 +569,6 @@ void carWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Hitbox::col
 			}
 
 			v = instance.moveFromCar(car2, car1, std::make_pair(side.second, side.first));
-
-			if (car2->getMovementClass()->isMoveAble())
-				car2->move(v);
-
 			car2->getMovementClass()->setPowerOfCrashMove(std::make_pair(v, fabs(powerFirst - powerSecond)));
 
 			if(v != sf::Vector2f(0,0))
@@ -612,7 +600,7 @@ void carWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Hitbox::col
 			if (angle != 0)
 				car2->getMovementClass()->setSpeed(0.f);
 
-			car1->getMovementClass()->setSpeed(static_cast<float>(*car1->getMovementClass()->getSpeed()) / 1.05f);
+			car1->getMovementClass()->setSpeed(static_cast<float>(*car1->getMovementClass()->getSpeed()) / 1.01f);
 
 			break;
 		}
@@ -641,10 +629,6 @@ void carWithCar::collisionIs(Car * car1, Car * car2, const std::pair<Hitbox::col
 			}
 
 			v = instance.moveFromCar(car2, car1, std::make_pair(side.second, side.first));
-
-			if(car2->getMovementClass()->isMoveAble())
-				car2->move(v);
-
 			car2->getMovementClass()->setPowerOfCrashMove(std::make_pair(v, fabs(powerFirst - powerSecond)));
 
 			if (v != sf::Vector2f(0, 0))

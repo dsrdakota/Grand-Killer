@@ -5,6 +5,7 @@
 #include "../../Map/Map.hpp"
 #include "../../Map/Radar.hpp"
 #include "../../Map/Minimap.hpp"
+#include "../../Map/GPS/GPS.hpp"
 
 #include <fstream>
 
@@ -35,6 +36,7 @@ bool Loader::play()
 		Map::Instance();
 		Radar::Instance();
 		Minimap::Instance();
+		GPS::Instance();
 	}
 
 	return !isError;

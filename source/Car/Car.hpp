@@ -27,7 +27,11 @@ public:
 	const sf::Sprite* getSprite();
 
 	const sf::FloatRect getGlobalBounds();
+
 	const unsigned &getWeight();
+	
+	void setDamageCondition(const int &newDamageCondition);
+	const int *getDamageCondition();
 
 	const unsigned &getCountDoors();
 	const unsigned &getCountTires();

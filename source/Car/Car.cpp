@@ -10,7 +10,7 @@ Car::Car()
 	shadow = new sf::Sprite();
 
 	weight = new unsigned;
-	damageCondition = new int;
+	damageCondition = new int(100);
 }
 
 Car::~Car()
@@ -65,6 +65,19 @@ const sf::FloatRect Car::getGlobalBounds()
 const unsigned& Car::getWeight()
 {
 	return *weight;
+}
+
+void Car::setDamageCondition(const int & newDamageCondition)
+{
+	if (newDamageCondition < 0)
+		this->damageCondition = 0;
+	else if (newDamageCondition <= 100)
+		*this->damageCondition = newDamageCondition;
+}
+
+const int * Car::getDamageCondition()
+{
+	return damageCondition;
 }
 
 const unsigned & Car::getCountDoors()

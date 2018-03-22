@@ -24,6 +24,8 @@ public:
 	void update(IObject *player);
 	void draw();
 
+	void resetTexture();
+
 private:
 
 	Radar();

@@ -46,7 +46,7 @@ bool mGame::play()
 
 			switchCars(carIndex);
 
-			player->control();
+			player->getBehaviors()->control();
 
 			draw();
 
@@ -105,8 +105,6 @@ void mGame::draw()
 	}
 
 	Map::Instance().drawOn();
-
-	//Camera::draw();
 }
 
 void mGame::switchState()

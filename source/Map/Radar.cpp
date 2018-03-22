@@ -171,3 +171,11 @@ void Radar::draw()
 	Painter::Instance().addToInterfaceDraw(thirdBackground);
 	Painter::Instance().addToInterfaceDraw(third);
 }
+
+void Radar::resetTexture()
+{
+	radar = new sf::Sprite(textureOfRadar->getTexture());
+
+	scale = sf::Vector2f(0.1f, 0.1f);
+	radar->setScale(scale);
+}

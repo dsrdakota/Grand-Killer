@@ -9,8 +9,6 @@
 
 #include "../Car.hpp"
 
-#include <iostream>
-
 #define PI 3.14159265359f
 
 Movement::Movement(Car *car) : car(car)
@@ -95,12 +93,12 @@ void Movement::gas()
 	if (!car->getHitboxClass()->getBoolIsCollision(Hitbox::collisionSide::Front))
 	{
 		if (!car->getToTurnClass()->getSlidePhycics()->getSlideBool() && !sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-			acceleratingFunction(speedf, speedb, *MAX_SPEED, car->getDriver()->getStateKeyGas());
+			acceleratingFunction(speedf, speedb, *MAX_SPEED, car->getDriver()->getBehaviors()->getStateKeyGas());
 		else
 			breakingFunction(speedf, 0.1, 5);
 	}
 	else
-		car->getDriver()->getStateKeyGas() = false;
+		car->getDriver()->getBehaviors()->getStateKeyGas() = false;
 }
 
 void Movement::brake()
@@ -108,7 +106,7 @@ void Movement::brake()
 	if (!car->getHitboxClass()->getBoolIsCollision(Hitbox::collisionSide::Back))
 	{
 		if (*speedf <= 0 && !sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-			acceleratingFunction(speedb, speedf, *MAX_SPEED / 2, car->getDriver()->getStateKeyGas());
+			acceleratingFunction(speedb, speedf, *MAX_SPEED / 2, car->getDriver()->getBehaviors()->getStateKeyGas());
 		else
 		{
 			if (!Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*tiresDrive.first)) ||
@@ -119,7 +117,7 @@ void Movement::brake()
 		}
 	}
 	else
-		car->getDriver()->getStateKeyBrake() = false;
+		car->getDriver()->getBehaviors()->getStateKeyBrake() = false;
 }
 
 void Movement::slack()
@@ -252,7 +250,7 @@ void Movement::move()
 
 		if (rotateAble && fabs(powerOfCrashRotate.second) > fabs(powerOfCrashRotate.first))
 		{
-			float powerSingleRotate = 1.f * simulationStep;
+			float powerSingleRotate = 1.2f * simulationStep;
 
 			if (powerOfCrashRotate.second < 0)
 				powerSingleRotate = -powerSingleRotate;
@@ -267,8 +265,8 @@ void Movement::move()
 		car->getTireClass()->setTraces();
 	}
 
-	powerOfCrashMove.second *= 0.6f;
-	powerOfCrashMove.first *= 0.6f;
+	powerOfCrashMove.second *= 0.2f;
+	powerOfCrashMove.first *= 0.2f;
 
 	if (fabs(powerOfCrashMove.second) < 0.021f)
 	{

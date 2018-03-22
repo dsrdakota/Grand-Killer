@@ -27,8 +27,7 @@ Menu::Menu() : window(Game::Instance().getWindow())
 	headersButton.push_back(new Button(sf::Vector2f((window->getSize().x - window->getSize().x * 0.4f) / 5.f, leftArrow->getGlobalBounds().height + 8.f), 15, "USTAWIENIA", Button::State::header));
 	headersButton.push_back(new Button(sf::Vector2f((window->getSize().x - window->getSize().x * 0.4f) / 5.f, leftArrow->getGlobalBounds().height + 8.f), 15, "GRA", Button::State::header));
 
-	map = new MapInMenu;
-	options.push_back(map);
+	options.push_back(new MapInMenu());
 	options.push_back(new Diary());
 	options.push_back(new Statistics());
 	options.push_back(new Steerage());

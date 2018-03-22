@@ -59,17 +59,17 @@ Slide * ToTurn::getSlidePhycics()
 void ToTurn::turning(const Direction & direction)
 {
 	if (direction == Direction::Left)
-		car->getDriver()->getStateKeyLeftTurn() = true;
+		car->getDriver()->getBehaviors()->getStateKeyLeftTurn() = true;
 	else
-		car->getDriver()->getStateKeyRightTurn() = true;
+		car->getDriver()->getBehaviors()->getStateKeyRightTurn() = true;
 
-	if (car->getDriver()->getStateKeyLeftTurn() && *actualValueRotateRightTire <= 0)
+	if (car->getDriver()->getBehaviors()->getStateKeyLeftTurn() && *actualValueRotateRightTire <= 0)
 	{
 		turn(tiresFront.first, tiresFront.second, actualValueRotateLeftTire, -*SPEED_ROTATE_TIRE, actualValueRotateLeftCar, SPEED_ROTATE_CAR);
 		resetValue(2, actualValueRotateRightTire, actualValueRotateRightCar);
 	}
 
-	else if (car->getDriver()->getStateKeyRightTurn() && *actualValueRotateLeftTire <= 0)
+	else if (car->getDriver()->getBehaviors()->getStateKeyRightTurn() && *actualValueRotateLeftTire <= 0)
 	{
 		turn(tiresFront.second, tiresFront.first, actualValueRotateRightTire, *SPEED_ROTATE_TIRE, actualValueRotateRightCar, SPEED_ROTATE_CAR);
 		resetValue(2, actualValueRotateLeftTire, actualValueRotateLeftCar);
@@ -80,18 +80,18 @@ void ToTurn::updatePosition()
 {
 	if (car->getDriver())
 	{
-		if (!car->getDriver()->getStateKeyLeftTurn() && *actualValueRotateLeftTire > 0)
+		if (!car->getDriver()->getBehaviors()->getStateKeyLeftTurn() && *actualValueRotateLeftTire > 0)
 		{
 			straight(tiresFront.first, tiresFront.second, actualValueRotateLeftTire, *SPEED_ROTATE_TIRE, actualValueRotateLeftCar, SPEED_ROTATE_CAR);
 			resetValue(2, actualValueRotateRightTire, actualValueRotateRightCar);
 		}
 
-		else if (!car->getDriver()->getStateKeyRightTurn() && *actualValueRotateRightTire > 0)
+		else if (!car->getDriver()->getBehaviors()->getStateKeyRightTurn() && *actualValueRotateRightTire > 0)
 		{
 			straight(tiresFront.second, tiresFront.first, actualValueRotateRightTire, -*SPEED_ROTATE_TIRE, actualValueRotateRightCar, SPEED_ROTATE_CAR);
 			resetValue(2, actualValueRotateLeftTire, actualValueRotateLeftCar);
 		}
-		else if (!car->getDriver()->getStateKeyLeftTurn() && !car->getDriver()->getStateKeyRightTurn())
+		else if (!car->getDriver()->getBehaviors()->getStateKeyLeftTurn() && !car->getDriver()->getBehaviors()->getStateKeyRightTurn())
 			resetValue(4, actualValueRotateLeftCar, actualValueRotateLeftTire, actualValueRotateRightCar, actualValueRotateRightTire);
 	}
 	else

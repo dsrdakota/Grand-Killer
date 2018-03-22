@@ -2,6 +2,8 @@
 
 #include "../Game.hpp"
 
+#include "GPS/GPS.hpp"
+
 #include <fstream>
 
 Map::Map()
@@ -59,6 +61,8 @@ sf::Sprite * Map::getMap()
 
 void Map::drawUnder()
 {
+	GPS::Instance().findBestRoute();
+
 	Painter::Instance().addToDraw(map);
 
 	if (allCarSingleTraces.size() > 600 * allCarSingleTraces.size())

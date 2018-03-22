@@ -251,7 +251,11 @@ void Minimap::toControl()
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && canSetTarget)
 	{
 		if (targetIsSet)
+		{
 			targetIsSet = false;
+			Radar::Instance().resetTexture();
+			map->setTexture(*Radar::getRadarSprite()->getTexture());
+		}
 		else if (!targetIsSet)
 		{
 			targetIsSet = true;
@@ -260,7 +264,6 @@ void Minimap::toControl()
 			lengthTargetFromTileOrigin = static_cast<sf::Vector2f>(static_cast<sf::Vector2f>(sf::Mouse::getPosition())) - targetTile->getTileMapSprite()->getPosition();
 
 			setTarget();
-
 		}
 		canSetTarget = false;
 	}
@@ -268,7 +271,11 @@ void Minimap::toControl()
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && canSetTarget)
 	{
 		if (targetIsSet)
+		{
 			targetIsSet = false;
+			Radar::Instance().resetTexture();
+			map->setTexture(*Radar::getRadarSprite()->getTexture());
+		}
 		else if (!targetIsSet)
 		{
 			targetIsSet = true;
@@ -277,7 +284,6 @@ void Minimap::toControl()
 			lengthTargetFromTileOrigin = centerOfTag->getPosition() - targetTile->getTileMapSprite()->getPosition();
 
 			setTarget();
-
 		}
 		canSetTarget = false;
 	}

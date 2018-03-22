@@ -74,32 +74,49 @@ void Camera::setViewScale(IObject * player)
 	float newScale;
 	const float SPEED_SCALING = 0.3f;
 
-	if (player->getCar() != nullptr &&
-		*player->getCar()->getMovementClass()->getSpeed() > 5.f)
+	if (player->getCar() != nullptr)
 	{
-		newScale = 0.9f + ((static_cast<float>(*player->getCar()->getMovementClass()->getSpeed()) - 5.f) * 0.1f) / (static_cast<float>(*player->getCar()->getMovementClass()->getMaxSpeed()) / 3.f);
-
-		if (scale != newScale)
+		if (*player->getCar()->getMovementClass()->getSpeed() > 5.f)
 		{
+			newScale = 0.9f + ((static_cast<float>(*player->getCar()->getMovementClass()->getSpeed()) - 5.f) * 0.1f) / (static_cast<float>(*player->getCar()->getMovementClass()->getMaxSpeed()) / 3.f);
+
+			if (scale != newScale)
+			{
+				if (scale > newScale)
+				{
+					if (scale - SPEED_SCALING >= newScale)
+						scale -= SPEED_SCALING;
+					else
+						scale = newScale;
+				}
+				else
+				{
+					if (scale + SPEED_SCALING <= newScale)
+						scale += SPEED_SCALING;
+					else
+						scale = newScale;
+				}
+
+				sf::Vector2f newSize = sf::Vector2f(static_cast<float>(GlobalSettings::getWidth())* scale, static_cast<float>(GlobalSettings::getHeight()) * scale);
+
+				view->setSize(newSize);
+			}
+		}
+		else
+		{
+			newScale = 0.9f + (static_cast<float>(*player->getCar()->getMovementClass()->getSpeed()) * 0.1f) / (static_cast<float>(*player->getCar()->getMovementClass()->getMaxSpeed()) / 3.f);
+			
 			if (scale > newScale)
 			{
 				if (scale - SPEED_SCALING >= newScale)
 					scale -= SPEED_SCALING;
 				else
 					scale = newScale;
-			}
-			else
-			{
-				if (scale + SPEED_SCALING <= newScale)
-					scale += SPEED_SCALING;
-				else
-					scale = newScale;
-			}
 
-			sf::Vector2f newSize = sf::Vector2f(static_cast<float>(GlobalSettings::getWidth())* scale, static_cast<float>(GlobalSettings::getHeight()) * scale);
+				sf::Vector2f newSize = sf::Vector2f(static_cast<float>(GlobalSettings::getWidth())* scale, static_cast<float>(GlobalSettings::getHeight()) * scale);
 
-			view->setSize(newSize);
-			Game::Instance().getWindow()->setView(*Instance().view);
+				view->setSize(newSize);
+			}
 		}
 	}
 }
