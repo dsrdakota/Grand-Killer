@@ -1,4 +1,5 @@
 #include "GPS.hpp"
+#include "../../States/Play/Game/mGame.hpp"
 
 #include "../Minimap.hpp"
 #include "../Radar.hpp"
@@ -14,13 +15,16 @@ GPS::GPS()
 
 	sf::Vector2u point;
 	while (file >> point.x >> point.y)
-		crossing.push_back(new Point(sf::Vector2u(
-			tiles[point.y][point.x]->getTileSprite()->getPosition().x + TilesManager::getTileSize() / 2.f,
-			tiles[point.y][point.x]->getTileSprite()->getPosition().y + TilesManager::getTileSize() / 2.f
+		crossing.push_back(new Point(sf::Vector2f(
+			tiles[point.y][point.x]->getTileMapSprite()->getPosition().x + TilesManager::getTileSize() / 2.f,
+			tiles[point.y][point.x]->getTileMapSprite()->getPosition().y + TilesManager::getTileSize() / 2.f
 		), point));
 
 	for(const auto &i:crossing)
 		setAllPointsToMoveable(i);
+
+	playerPos = sf::Vector2f(0, 0);
+	targetPos = sf::Vector2f(0, 0);
 
 	radarTexture = new sf::Sprite(*Radar::Instance().getRadarSprite()->getTexture());
 
@@ -28,22 +32,18 @@ GPS::GPS()
 	gpsTexture->create(static_cast<unsigned>(Map::getMapSize().x), static_cast<unsigned>(Map::getMapSize().y));
 }
 
-void GPS::draw()
-{
-	Painter::Instance().addToDraw(crossing[1]->getTag());
-
-	auto vector = crossing[1]->getPointsToMoveable();
-
-	for (const auto &i : vector)
-		Painter::Instance().addToDraw(i->getTag());
-}
-
 void GPS::findBestRoute()
 {
 	if (Minimap::Instance().isTargetSet())
 	{
-		getTheClosestAsphaltTileFromTarget(Minimap::Instance().targetTile->getTileSprite()->getPosition());
-		//getTheClosestAsphaltTileFromTarget(Minimap::Instance().playerTile->getTileSprite()->getPosition());
+		targetPos = getTheClosestAsphaltPosFromTarget(Minimap::Instance().targetTile->getTileMapSprite()->getPosition());
+		//getTheClosestAsphaltPosFromTarget(Minimap::Instance().playerTile->getTileMapSprite()->getPosition());
+
+		if (targetPos == playerPos &&
+			mGame::Instance().getGameState() == mGame::state::MainGame)
+			Minimap::Instance().targetIsSet = false;
+
+		drawGpsTexture();
 	}
 }
 
@@ -54,14 +54,11 @@ void GPS::setAllPointsToMoveable(Point * point)
 			point->addPointToMoveable(i);
 }
 
-void GPS::getTheClosestAsphaltTileFromTarget(const sf::Vector2f & position)
+sf::Vector2f GPS::getTheClosestAsphaltPosFromTarget(const sf::Vector2f & position)
 {
-	sf::RectangleShape shape(sf::Vector2f(80, 80));
-	shape.setFillColor(sf::Color::Red);
-
-	shape.setOrigin(40, 40);
-
 	float smallestLength = -1.f;
+
+	sf::Vector2f pos = sf::Vector2f(0, 0);
 
 	for (const auto &i : crossing)
 	{
@@ -72,19 +69,26 @@ void GPS::getTheClosestAsphaltTileFromTarget(const sf::Vector2f & position)
 			smallestLength == -1.f)
 		{
 			smallestLength = lenght;
-
-			shape.setPosition(i->getTag()->getPosition());
+			pos = i->getTag()->getPosition();
 		}
 	}
 
+	return pos;
+}
+
+void GPS::drawGpsTexture()
+{
+	sf::RectangleShape shape(sf::Vector2f(80, 80));
+	shape.setFillColor(sf::Color::Red);
+	shape.setOrigin(40, 40);
+
 	gpsTexture->clear();
-	
 	gpsTexture->draw(*radarTexture);
 
+	shape.setPosition(targetPos);
 	gpsTexture->draw(shape);
 
 	gpsTexture->display();
-	
 	gpsTexture->setSmooth(true);
 
 	Radar::Instance().getRadarSprite()->setTexture(gpsTexture->getTexture());

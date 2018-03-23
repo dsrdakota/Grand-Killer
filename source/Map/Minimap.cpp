@@ -212,37 +212,37 @@ void Minimap::toControl()
 	const float movingValue = 10;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) &&
-		mapTiles[0][0]->getTileMapSprite()->getPosition().y < centerOfTag->getPosition().y)
+		mapTiles[0][0]->getTileMiniMapSprite()->getPosition().y < centerOfTag->getPosition().y)
 	{
-		if (centerOfTag->getPosition().y - movingValue >= mapTiles[0][0]->getTileMapSprite()->getPosition().y)
+		if (centerOfTag->getPosition().y - movingValue >= mapTiles[0][0]->getTileMiniMapSprite()->getPosition().y)
 			moveAllTiles(sf::Vector2f(0, movingValue));
 		else
-			moveAllTiles(sf::Vector2f(0, centerOfTag->getPosition().y - mapTiles[0][0]->getTileMapSprite()->getPosition().y));
+			moveAllTiles(sf::Vector2f(0, centerOfTag->getPosition().y - mapTiles[0][0]->getTileMiniMapSprite()->getPosition().y));
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
-		mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMapSprite()->getPosition().y + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMapSprite()->getGlobalBounds().height > centerOfTag->getPosition().y)
+		mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getPosition().y + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getGlobalBounds().height > centerOfTag->getPosition().y)
 	{
-		if (centerOfTag->getPosition().y + movingValue <= mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMapSprite()->getPosition().y + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMapSprite()->getGlobalBounds().height)
+		if (centerOfTag->getPosition().y + movingValue <= mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getPosition().y + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getGlobalBounds().height)
 			moveAllTiles(sf::Vector2f(0, -movingValue));
 		else
-			moveAllTiles(sf::Vector2f(0, -(mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMapSprite()->getPosition().y + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMapSprite()->getGlobalBounds().height - centerOfTag->getPosition().y)));
+			moveAllTiles(sf::Vector2f(0, -(mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getPosition().y + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getGlobalBounds().height - centerOfTag->getPosition().y)));
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
-		mapTiles[0][0]->getTileMapSprite()->getPosition().x < centerOfTag->getPosition().x)
+		mapTiles[0][0]->getTileMiniMapSprite()->getPosition().x < centerOfTag->getPosition().x)
 	{
-		if (centerOfTag->getPosition().x - movingValue >= mapTiles[0][0]->getTileMapSprite()->getPosition().x)
+		if (centerOfTag->getPosition().x - movingValue >= mapTiles[0][0]->getTileMiniMapSprite()->getPosition().x)
 			moveAllTiles(sf::Vector2f(movingValue, 0));
 		else
-			moveAllTiles(sf::Vector2f(centerOfTag->getPosition().x - mapTiles[0][0]->getTileMapSprite()->getPosition().x, 0));
+			moveAllTiles(sf::Vector2f(centerOfTag->getPosition().x - mapTiles[0][0]->getTileMiniMapSprite()->getPosition().x, 0));
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) &&
-		mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMapSprite()->getPosition().x + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMapSprite()->getGlobalBounds().width > centerOfTag->getPosition().x)
+		mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getPosition().x + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getGlobalBounds().width > centerOfTag->getPosition().x)
 	{
-		if (centerOfTag->getPosition().x + movingValue <= mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMapSprite()->getPosition().x + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMapSprite()->getGlobalBounds().width)
+		if (centerOfTag->getPosition().x + movingValue <= mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getPosition().x + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getGlobalBounds().width)
 			moveAllTiles(sf::Vector2f(-movingValue, 0));
 		else
-			moveAllTiles(sf::Vector2f(-(mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMapSprite()->getPosition().x + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMapSprite()->getGlobalBounds().width - centerOfTag->getPosition().x), 0));
+			moveAllTiles(sf::Vector2f(-(mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getPosition().x + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getGlobalBounds().width - centerOfTag->getPosition().x), 0));
 	}
 
 	if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
@@ -261,7 +261,7 @@ void Minimap::toControl()
 			targetIsSet = true;
 
 			targetTile = getTileUnderMouse();
-			lengthTargetFromTileOrigin = static_cast<sf::Vector2f>(static_cast<sf::Vector2f>(sf::Mouse::getPosition())) - targetTile->getTileMapSprite()->getPosition();
+			lengthTargetFromTileOrigin = static_cast<sf::Vector2f>(static_cast<sf::Vector2f>(sf::Mouse::getPosition())) - targetTile->getTileMiniMapSprite()->getPosition();
 
 			setTarget();
 		}
@@ -281,7 +281,7 @@ void Minimap::toControl()
 			targetIsSet = true;
 
 			targetTile = getCenterTileOnWindow();
-			lengthTargetFromTileOrigin = centerOfTag->getPosition() - targetTile->getTileMapSprite()->getPosition();
+			lengthTargetFromTileOrigin = centerOfTag->getPosition() - targetTile->getTileMiniMapSprite()->getPosition();
 
 			setTarget();
 		}
@@ -292,7 +292,7 @@ void Minimap::toControl()
 
 	if ((*Game::getScrollValue() > 0 || sf::Keyboard::isKeyPressed(sf::Keyboard::PageUp)) && scale.x < maxScale->x && scale.y < maxScale->y)
 	{
-		auto tileSprite = getCenterTileOnWindow()->getTileMapSprite();
+		auto tileSprite = getCenterTileOnWindow()->getTileMiniMapSprite();
 		sf::Vector2f lengthFromTile = centerOfTag->getPosition() - tileSprite->getPosition();
 		scale = sf::Vector2f(scale.x + zoomValue, scale.y + zoomValue);
 		setTilesScale();
@@ -300,7 +300,7 @@ void Minimap::toControl()
 	}
 	else if ((*Game::getScrollValue() < 0 || sf::Keyboard::isKeyPressed(sf::Keyboard::PageDown)) && scale.x > minScale->x && scale.y > minScale->y)
 	{
-		auto tileSprite = getCenterTileOnWindow()->getTileMapSprite();
+		auto tileSprite = getCenterTileOnWindow()->getTileMiniMapSprite();
 		sf::Vector2f lengthFromTile = centerOfTag->getPosition() - tileSprite->getPosition();
 		scale = sf::Vector2f(scale.x - zoomValue, scale.y - zoomValue);
 		setTilesScale();
@@ -330,14 +330,14 @@ Tile * Minimap::getTileUnderPosition(const sf::Vector2f & position)
 {
 	auto tileLeftUpCornerOfMap = TilesManager::getTilesVector()[0][0];
 
-	size_t y = static_cast<size_t>((position.y - tileLeftUpCornerOfMap->getTileMapSprite()->getPosition().y) / tileLeftUpCornerOfMap->getTileMapSprite()->getGlobalBounds().height);
+	size_t y = static_cast<size_t>((position.y - tileLeftUpCornerOfMap->getTileMiniMapSprite()->getPosition().y) / tileLeftUpCornerOfMap->getTileMiniMapSprite()->getGlobalBounds().height);
 
 	if (y > static_cast<size_t>(TilesManager::getCountTile().y) - 1)
 		y = static_cast<size_t>(TilesManager::getCountTile().y) - 1;
 	else if (y < 0)
 		y = 0;
 
-	size_t x = static_cast<size_t>((position.x - tileLeftUpCornerOfMap->getTileMapSprite()->getPosition().x) / tileLeftUpCornerOfMap->getTileMapSprite()->getGlobalBounds().width);
+	size_t x = static_cast<size_t>((position.x - tileLeftUpCornerOfMap->getTileMiniMapSprite()->getPosition().x) / tileLeftUpCornerOfMap->getTileMiniMapSprite()->getGlobalBounds().width);
 
 	if (x > static_cast<size_t>(TilesManager::getCountTile().x) - 1)
 		x = static_cast<size_t>(TilesManager::getCountTile().x) - 1;
@@ -357,8 +357,8 @@ void Minimap::centerMapOnTile(sf::Sprite *tileSprite, const sf::Vector2f &length
 
 void Minimap::centerMapOnPlayer()
 {
-	sf::Vector2f moveOffset = sf::Vector2f((mapArea->getPosition().x + mapArea->getGlobalBounds().width / 2.f) - (playerTile->getTileMapSprite()->getPosition().x + lengthPlayerFromTileOrigin.x * scale.x),
-		(mapArea->getPosition().y + mapArea->getGlobalBounds().height / 2.f) - (playerTile->getTileMapSprite()->getPosition().y + lengthPlayerFromTileOrigin.y * scale.y));
+	sf::Vector2f moveOffset = sf::Vector2f((mapArea->getPosition().x + mapArea->getGlobalBounds().width / 2.f) - (playerTile->getTileMiniMapSprite()->getPosition().x + lengthPlayerFromTileOrigin.x * scale.x),
+		(mapArea->getPosition().y + mapArea->getGlobalBounds().height / 2.f) - (playerTile->getTileMiniMapSprite()->getPosition().y + lengthPlayerFromTileOrigin.y * scale.y));
 
 	moveAllTiles(moveOffset);
 }
@@ -367,17 +367,17 @@ void Minimap::moveAllTiles(const sf::Vector2f & offset)
 {
 	for (size_t i = 0;i < TilesManager::getCountTile().y;++i)
 		for (size_t j = 0;j < TilesManager::getCountTile().x;++j)
-			mapTiles[i][j]->getTileMapSprite()->move(offset);
+			mapTiles[i][j]->getTileMiniMapSprite()->move(offset);
 
 	updateIcons();
 }
 
 void Minimap::updateIcons()
 {
-	map->setPosition(mapTiles[0][0]->getTileMapSprite()->getPosition());
+	map->setPosition(mapTiles[0][0]->getTileMiniMapSprite()->getPosition());
 
-	player->setPosition(sf::Vector2f(playerTile->getTileMapSprite()->getPosition().x + lengthPlayerFromTileOrigin.x * scale.x,
-		playerTile->getTileMapSprite()->getPosition().y + lengthPlayerFromTileOrigin.y * scale.y));
+	player->setPosition(sf::Vector2f(playerTile->getTileMiniMapSprite()->getPosition().x + lengthPlayerFromTileOrigin.x * scale.x,
+		playerTile->getTileMiniMapSprite()->getPosition().y + lengthPlayerFromTileOrigin.y * scale.y));
 	player->setRotation(playerRotation);
 
 	if (targetIsSet)
@@ -389,7 +389,7 @@ void Minimap::setTilesScale()
 	for (size_t i = 0;i < TilesManager::getCountTile().y;++i)
 		for (size_t j = 0;j < TilesManager::getCountTile().x;++j)
 		{
-			auto tile = mapTiles[i][j]->getTileMapSprite();
+			auto tile = mapTiles[i][j]->getTileMiniMapSprite();
 			tile->setScale(scale);
 			tile->setPosition(mapArea->getPosition().x + j * (TilesManager::getTileSize() * scale.x), mapArea->getPosition().y + i * (TilesManager::getTileSize() * scale.y));
 		}
@@ -414,6 +414,6 @@ void Minimap::setPlayerVisible()
 
 void Minimap::setTarget()
 {
-	target->setPosition(sf::Vector2f(targetTile->getTileMapSprite()->getPosition().x + lengthTargetFromTileOrigin.x,
-		targetTile->getTileMapSprite()->getPosition().y + lengthTargetFromTileOrigin.y));
+	target->setPosition(sf::Vector2f(targetTile->getTileMiniMapSprite()->getPosition().x + lengthTargetFromTileOrigin.x,
+		targetTile->getTileMiniMapSprite()->getPosition().y + lengthTargetFromTileOrigin.y));
 }

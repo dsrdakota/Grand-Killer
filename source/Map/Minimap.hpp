@@ -86,4 +86,5 @@ private:
 
 	friend class MapInMenu;
 	friend class GPS;
+	friend class Radar;
 };

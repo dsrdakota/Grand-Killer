@@ -32,6 +32,7 @@ public:
 
 	bool play() override;
 
+	state getGameState();
 	std::vector<Car*> &getAllCars();
 
 private:

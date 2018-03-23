@@ -33,7 +33,7 @@ void MapInMenu::setPosition(const sf::Vector2f &borderXrange, const sf::Vector2f
 	Minimap::Instance().centerMapOnPlayer();
 
 	map->setScale(Minimap::Instance().scale);
-	map->setPosition(TilesManager::getTilesVector()[0][0]->getTileMapSprite()->getPosition());
+	map->setPosition(TilesManager::getTilesVector()[0][0]->getTileMiniMapSprite()->getPosition());
 	cutMap();
 
 	player = Minimap::Instance().player;
@@ -57,7 +57,7 @@ void MapInMenu::drawActive()
 		target = Minimap::Instance().target;
 
 		map->setScale(Minimap::Instance().scale);
-		map->setPosition(TilesManager::getTilesVector()[0][0]->getTileMapSprite()->getPosition());
+		map->setPosition(TilesManager::getTilesVector()[0][0]->getTileMiniMapSprite()->getPosition());
 		cutMap();
 	}
 }

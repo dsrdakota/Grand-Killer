@@ -1,6 +1,6 @@
 #include "Point.hpp"
 
-Point::Point(const sf::Vector2u & point, const sf::Vector2u &tileIndex)
+Point::Point(const sf::Vector2f & point, const sf::Vector2u &tileIndex)
 {
 	this->point = point;
 	this->tileIndex = tileIndex;
@@ -19,7 +19,7 @@ Point::~Point()
 		delete i;
 }
 
-sf::Vector2u Point::getPointPosition()
+sf::Vector2f Point::getPointPosition()
 {
 	return point;
 }

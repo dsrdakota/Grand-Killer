@@ -22,12 +22,12 @@ Tile::~Tile()
 	delete sprite;
 }
 
-sf::Sprite * Tile::getTileSprite()
+sf::Sprite * Tile::getTileMapSprite()
 {
 	return sprite;
 }
 
-sf::Sprite * Tile::getTileMapSprite()
+sf::Sprite * Tile::getTileMiniMapSprite()
 {
 	return mapSprite;
 }

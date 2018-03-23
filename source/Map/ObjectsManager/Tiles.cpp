@@ -19,27 +19,27 @@ TilesManager::TilesManager()
 		std::vector<Tile*>buf;
 		std::vector<sf::Sprite*>MapBuf;
 		std::vector<sf::Sprite*>MiniMapBuf;
+		std::vector<sf::Sprite*>RadarBuf;
 		std::vector<sf::Sprite*>GrassBuf;
 		for (int j = 0; j < *tilesCountWidth; j++)
 		{
 			int a;
 			file >> a;
 
-			MapBuf.push_back(new sf::Sprite(*TextureManager::get(std::to_string(a))));
-			MapBuf[MapBuf.size() - 1]->setPosition(sf::Vector2f(static_cast<float>(j * *TileSize), static_cast<float>(i * *TileSize)));
-
-			MiniMapBuf.push_back(new sf::Sprite(*TextureManager::get(std::to_string(a) + "_Minimap")));
-			MiniMapBuf[MiniMapBuf.size() - 1]->setPosition(sf::Vector2f(static_cast<float>(j * *TileSize), static_cast<float>(i * *TileSize)));
-
 			GrassBuf.push_back(new sf::Sprite(*TextureManager::get(std::to_string(a) + "_Hitbox")));
 			GrassBuf[GrassBuf.size() - 1]->setPosition(sf::Vector2f(static_cast<float>(j * *TileSize), static_cast<float>(i * *TileSize)));
 
 			buf.push_back(new Tile(a, sf::Vector2f(static_cast<float>(j * *TileSize), static_cast<float>(i * *TileSize))));
+		
+			MapBuf.push_back(buf[buf.size() - 1]->getTileMapSprite());
+			MiniMapBuf.push_back(buf[buf.size() - 1]->getTileMiniMapSprite());
+			RadarBuf.push_back(buf[buf.size() - 1]->getTileRadarSprite());
 		}
 		Tiles.push_back(buf);
 
 		TilesMap.push_back(MapBuf);
 		TilesMiniMap.push_back(MiniMapBuf);
+		TilesRadar.push_back(RadarBuf);
 		TilesHitboxGrass.push_back(GrassBuf);
 	}
 
@@ -60,6 +60,10 @@ TilesManager::~TilesManager()
 	for (const auto &i : TilesMiniMap)
 		for (const auto &j : i)
 			delete j;
+
+	for (const auto &i : TilesRadar)
+		for (const auto &j : i)
+			delete j;
 	
 	for (const auto &i : TilesHitboxGrass)
 		for (const auto &j : i)
@@ -74,6 +78,11 @@ std::vector<std::vector<sf::Sprite*>> TilesManager::getTileMapVector()
 std::vector<std::vector<sf::Sprite*>> TilesManager::getTileMiniMapVector()
 {
 	return Instance().TilesMiniMap;
+}
+
+std::vector<std::vector<sf::Sprite*>> TilesManager::getTileRadarVector()
+{
+	return Instance().TilesRadar;
 }
 
 std::vector<std::vector<sf::Sprite*>> TilesManager::getTileHitboxGrassVector()

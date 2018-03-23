@@ -19,7 +19,6 @@ public:
 		return gps;
 	}
 
-	void draw();
 	void findBestRoute();
 
 private:
@@ -31,8 +30,13 @@ private:
 
 	std::vector<Point*>crossing;
 
+	sf::Vector2f targetPos;
+	sf::Vector2f playerPos;
+
 	void setAllPointsToMoveable(Point *point);
-	void getTheClosestAsphaltTileFromTarget(const sf::Vector2f &position);
+
+	sf::Vector2f getTheClosestAsphaltPosFromTarget(const sf::Vector2f &position);
+	void drawGpsTexture();
 
 	bool checkRoadBeetwen(Point *p1, Point *p2);
 };

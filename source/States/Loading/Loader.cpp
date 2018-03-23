@@ -34,8 +34,8 @@ bool Loader::play()
 
 		TilesManager::Instance();
 		Map::Instance();
-		Radar::Instance();
 		Minimap::Instance();
+		Radar::Instance();
 		GPS::Instance();
 	}
 

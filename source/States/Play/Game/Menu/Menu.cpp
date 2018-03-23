@@ -148,7 +148,7 @@ void Menu::setPosition(const sf::Vector2f &playerPos, const float &playerRot)
 
 	const auto &allTiles = TilesManager::getTilesVector();
 	Tile* tile = allTiles[static_cast<size_t>(playerPos.x / TilesManager::getTileSize())][static_cast<size_t>(playerPos.y / TilesManager::getTileSize())];
-	sf::Vector2f lenght = playerPos - tile->getTileSprite()->getPosition();
+	sf::Vector2f lenght = playerPos - tile->getTileMapSprite()->getPosition();
 	
 	Minimap::Instance().setPosition();
 	Minimap::Instance().setPlayerPosition(tile, lenght, playerRot);

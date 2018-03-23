@@ -2,6 +2,7 @@
 
 #include "../Game.hpp"
 #include "../Engine/Engine.hpp"
+#include "Minimap.hpp"
 
 Radar::Radar() : window(Game::Instance().getWindow())
 {
@@ -11,13 +12,18 @@ Radar::Radar() : window(Game::Instance().getWindow())
 	textureOfRadar = new sf::RenderTexture;
 	textureOfRadar->create(static_cast<unsigned>(Map::getMapSize().x), static_cast<unsigned>(Map::getMapSize().y));
 
-	auto radarTiles = TilesManager::getTileMiniMapVector();
+	radarTiles = TilesManager::getTileRadarVector();
+
+	scale = sf::Vector2f(0.1f, 0.1f);
 
 	textureOfRadar->clear();
 
 	for (int i = 0; i< TilesManager::getCountTile().y; i++)
 		for (int j = 0; j < TilesManager::getCountTile().x; j++)
+		{
 			textureOfRadar->draw(*radarTiles[i][j]);
+			radarTiles[i][j]->setScale(scale);
+		}
 
 	textureOfRadar->display();
 
@@ -28,7 +34,9 @@ Radar::Radar() : window(Game::Instance().getWindow())
 	playerIco = new sf::Sprite(*TextureManager::get("playerMinimap"));
 	playerIco->setOrigin(playerIco->getGlobalBounds().left + playerIco->getGlobalBounds().width / 2.f, playerIco->getGlobalBounds().top + playerIco->getGlobalBounds().height / 2.f);
 
-	scale = sf::Vector2f(0.1f, 0.1f);
+	target = new sf::Sprite(*TextureManager::get("targetMinimap"));
+	target->setOrigin(target->getGlobalBounds().left + target->getGlobalBounds().width / 2.f, target->getGlobalBounds().top + target->getGlobalBounds().height / 2.f);
+
 	radar->setScale(scale);
 
 	radarView = new sf::Sprite(*radar->getTexture());
@@ -95,6 +103,11 @@ void Radar::update(IObject *player)
 	playerIco->setPosition(playerIco->getPosition() + radarArea->getPosition());
 
 	centerMapOnPlayer();
+
+	for (int i = 0; i < TilesManager::getCountTile().y; i++)
+		for (int j = 0; j < TilesManager::getCountTile().x; j++)
+			radarTiles[i][j]->setPosition(radar->getPosition().x + j * static_cast<float>(TilesManager::getTileSize()) * scale.x,
+				radar->getPosition().y + i * static_cast<float>(TilesManager::getTileSize()) * scale.y);
 }
 
 void Radar::centerMapOnPlayer()
@@ -117,7 +130,6 @@ void Radar::centerMapOnPlayer()
 		radar->setPosition(radarArea->getPosition().x + radarArea->getGlobalBounds().width - radar->getGlobalBounds().width ,radar->getPosition().y);
 	}
 	
-
 	if (radar->getPosition().y + moveOffset.y < radarArea->getPosition().y &&
 		radar->getPosition().y + radar->getGlobalBounds().height + moveOffset.y > radarArea->getPosition().y + radarArea->getGlobalBounds().height)
 	{
@@ -159,6 +171,12 @@ void Radar::draw()
 {
 	Painter::Instance().addToInterfaceDraw(radarView);
 	Painter::Instance().addToInterfaceDraw(radarView2);
+
+	if (Minimap::Instance().isTargetSet())
+	{
+		target->setPosition(Minimap::Instance().targetTile->getTileRadarSprite()->getPosition());
+		Painter::Instance().addToInterfaceDraw(target);
+	}
 
 	Painter::Instance().addToInterfaceDraw(playerIco);
 

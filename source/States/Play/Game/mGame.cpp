@@ -75,6 +75,11 @@ bool mGame::play()
 	return true;
 }
 
+mGame::state mGame::getGameState()
+{
+	return *gameState;
+}
+
 std::vector<Car*> &mGame::getAllCars()
 {
 	return cars;
@@ -127,7 +132,7 @@ void mGame::switchState()
 	{
 		const auto &allTiles = TilesManager::getTilesVector();
 		Tile* tile = allTiles[static_cast<size_t>(player->getPosition().x / TilesManager::getTileSize())][static_cast<size_t>(player->getPosition().y / TilesManager::getTileSize())];
-		sf::Vector2f lenght = player->getPosition() - tile->getTileSprite()->getPosition();
+		sf::Vector2f lenght = player->getPosition() - tile->getTileMapSprite()->getPosition();
 
 		Minimap::Instance().setPosition();
 		Minimap::Instance().setPlayerPosition(tile, lenght, player->getRotation());

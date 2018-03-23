@@ -32,6 +32,8 @@ private:
 
 	sf::RenderWindow *window;
 
+	std::vector<std::vector<sf::Sprite*>> radarTiles;
+
 	sf::RenderTexture *textureOfRadar;
 
 	sf::Sprite *radar;

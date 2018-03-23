@@ -103,6 +103,7 @@ public:
 
 	static std::vector<std::vector<sf::Sprite*>> getTileMapVector();
 	static std::vector<std::vector<sf::Sprite*>> getTileMiniMapVector();
+	static std::vector<std::vector<sf::Sprite*>> getTileRadarVector();
 	static std::vector<std::vector<sf::Sprite*>> getTileHitboxGrassVector();
 
 	static const short int getTileSize() { return *Instance().TileSize; }
@@ -115,6 +116,7 @@ private:
 
 	std::vector<std::vector<sf::Sprite*>>TilesMap;
 	std::vector<std::vector<sf::Sprite*>>TilesMiniMap;
+	std::vector<std::vector<sf::Sprite*>>TilesRadar;
 	std::vector<std::vector<sf::Sprite*>>TilesHitboxGrass;
 
 	std::vector<std::vector<Tile*>>Tiles;
