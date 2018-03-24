@@ -4,6 +4,8 @@
 #include "../Engine/Engine.hpp"
 #include "Minimap.hpp"
 
+#include <iostream>
+
 Radar::Radar() : window(Game::Instance().getWindow())
 {
 	radarArea = new sf::RectangleShape(sf::Vector2f(300, 150));
@@ -12,7 +14,7 @@ Radar::Radar() : window(Game::Instance().getWindow())
 	textureOfRadar = new sf::RenderTexture;
 	textureOfRadar->create(static_cast<unsigned>(Map::getMapSize().x), static_cast<unsigned>(Map::getMapSize().y));
 
-	radarTiles = TilesManager::getTileRadarVector();
+	auto radarTiles = TilesManager::getTileRadarVector();
 
 	scale = sf::Vector2f(0.1f, 0.1f);
 
@@ -20,10 +22,7 @@ Radar::Radar() : window(Game::Instance().getWindow())
 
 	for (int i = 0; i< TilesManager::getCountTile().y; i++)
 		for (int j = 0; j < TilesManager::getCountTile().x; j++)
-		{
 			textureOfRadar->draw(*radarTiles[i][j]);
-			radarTiles[i][j]->setScale(scale);
-		}
 
 	textureOfRadar->display();
 
@@ -104,10 +103,9 @@ void Radar::update(IObject *player)
 
 	centerMapOnPlayer();
 
-	for (int i = 0; i < TilesManager::getCountTile().y; i++)
-		for (int j = 0; j < TilesManager::getCountTile().x; j++)
-			radarTiles[i][j]->setPosition(radar->getPosition().x + j * static_cast<float>(TilesManager::getTileSize()) * scale.x,
-				radar->getPosition().y + i * static_cast<float>(TilesManager::getTileSize()) * scale.y);
+	if (Minimap::Instance().targetIsSet)
+		target->setPosition(radar->getPosition().x + (Minimap::Instance().targetTile->getTileMapSprite()->getPosition().x + Minimap::Instance().lengthTargetFromTileOrigin.x) * (radar->getGlobalBounds().width / Map::getMapSize().x),
+			radar->getPosition().y + (Minimap::Instance().targetTile->getTileMapSprite()->getPosition().y + Minimap::Instance().lengthTargetFromTileOrigin.y) * (radar->getGlobalBounds().height / Map::getMapSize().y));
 }
 
 void Radar::centerMapOnPlayer()
@@ -172,11 +170,8 @@ void Radar::draw()
 	Painter::Instance().addToInterfaceDraw(radarView);
 	Painter::Instance().addToInterfaceDraw(radarView2);
 
-	if (Minimap::Instance().isTargetSet())
-	{
-		target->setPosition(Minimap::Instance().targetTile->getTileRadarSprite()->getPosition());
+	if (Minimap::Instance().isTargetSet() && radarView->getGlobalBounds().contains(target->getPosition()))
 		Painter::Instance().addToInterfaceDraw(target);
-	}
 
 	Painter::Instance().addToInterfaceDraw(playerIco);
 

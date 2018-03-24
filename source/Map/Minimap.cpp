@@ -5,6 +5,7 @@
 #include "../Engine/Engine.hpp"
 #include "../Map/ObjectsManager/Tiles.hpp"
 #include "../Map/Radar.hpp"
+#include "GPS/GPS.hpp"
 
 Minimap::Minimap()
 {
@@ -211,7 +212,7 @@ void Minimap::toControl()
 {
 	const float movingValue = 10;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) &&
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) &&
 		mapTiles[0][0]->getTileMiniMapSprite()->getPosition().y < centerOfTag->getPosition().y)
 	{
 		if (centerOfTag->getPosition().y - movingValue >= mapTiles[0][0]->getTileMiniMapSprite()->getPosition().y)
@@ -219,7 +220,7 @@ void Minimap::toControl()
 		else
 			moveAllTiles(sf::Vector2f(0, centerOfTag->getPosition().y - mapTiles[0][0]->getTileMiniMapSprite()->getPosition().y));
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) &&
 		mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getPosition().y + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getGlobalBounds().height > centerOfTag->getPosition().y)
 	{
 		if (centerOfTag->getPosition().y + movingValue <= mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getPosition().y + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getGlobalBounds().height)
@@ -228,7 +229,7 @@ void Minimap::toControl()
 			moveAllTiles(sf::Vector2f(0, -(mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getPosition().y + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getGlobalBounds().height - centerOfTag->getPosition().y)));
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) &&
 		mapTiles[0][0]->getTileMiniMapSprite()->getPosition().x < centerOfTag->getPosition().x)
 	{
 		if (centerOfTag->getPosition().x - movingValue >= mapTiles[0][0]->getTileMiniMapSprite()->getPosition().x)
@@ -236,7 +237,7 @@ void Minimap::toControl()
 		else
 			moveAllTiles(sf::Vector2f(centerOfTag->getPosition().x - mapTiles[0][0]->getTileMiniMapSprite()->getPosition().x, 0));
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) &&
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) &&
 		mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getPosition().x + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getGlobalBounds().width > centerOfTag->getPosition().x)
 	{
 		if (centerOfTag->getPosition().x + movingValue <= mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getPosition().x + mapTiles[static_cast<size_t>(TilesManager::getCountTile().y - 1)][static_cast<size_t>(TilesManager::getCountTile().x - 1)]->getTileMiniMapSprite()->getGlobalBounds().width)
@@ -261,9 +262,10 @@ void Minimap::toControl()
 			targetIsSet = true;
 
 			targetTile = getTileUnderMouse();
-			lengthTargetFromTileOrigin = static_cast<sf::Vector2f>(static_cast<sf::Vector2f>(sf::Mouse::getPosition())) - targetTile->getTileMiniMapSprite()->getPosition();
+			lengthTargetFromTileOrigin = static_cast<sf::Vector2f>(sf::Mouse::getPosition()) - targetTile->getTileMiniMapSprite()->getPosition();
 
 			setTarget();
+			GPS::Instance().setTarget();
 		}
 		canSetTarget = false;
 	}
@@ -276,6 +278,7 @@ void Minimap::toControl()
 			Radar::Instance().resetTexture();
 			map->setTexture(*Radar::getRadarSprite()->getTexture());
 		}
+
 		else if (!targetIsSet)
 		{
 			targetIsSet = true;
@@ -284,6 +287,7 @@ void Minimap::toControl()
 			lengthTargetFromTileOrigin = centerOfTag->getPosition() - targetTile->getTileMiniMapSprite()->getPosition();
 
 			setTarget();
+			GPS::Instance().setTarget();
 		}
 		canSetTarget = false;
 	}

@@ -5,6 +5,8 @@
 #include "../Car.hpp"
 #include "../Attributes/Hitbox.hpp"
 
+// need optimize it, but later
+
 Traces::Traces(Car *car, const sf::CircleShape *tiresPos)
 {
 	this->car = car;

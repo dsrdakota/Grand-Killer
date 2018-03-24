@@ -2,6 +2,7 @@
 #include "../../../Engine/Engine.hpp"
 #include "../../../Map/Radar.hpp"
 #include "../../../Map/Minimap.hpp"
+#include "../../../Map/GPS/GPS.hpp"
 
 #include "../../../Car/Types/Ambulance.hpp"
 #include "../../../Car/Types/Audi.hpp"
@@ -14,6 +15,7 @@
 mGame::mGame()
 {
 	player = new Player(sf::Vector2f(2500, 2500), 25);
+	GPS::Instance().setPlayer(player);
 
 	gameState = new state(state::MainGame);
 	menu = new Menu();

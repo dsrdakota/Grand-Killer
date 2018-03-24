@@ -6,9 +6,13 @@
 #include "../../Engine/Engine.hpp"
 #include "Point.hpp"
 
+#include <thread>
+
 class GPS
 {
 public:
+
+	~GPS();
 
 	GPS(const GPS &) = delete;
 	void operator=(const GPS &) = delete;
@@ -19,6 +23,8 @@ public:
 		return gps;
 	}
 
+	void setPlayer(IObject *player);
+	void setTarget();
 	void findBestRoute();
 
 private:
@@ -29,11 +35,22 @@ private:
 	sf::RenderTexture *gpsTexture;
 
 	std::vector<Point*>crossing;
+	std::vector<sf::Vector2f>linkCrossing;
 
-	sf::Vector2f targetPos;
-	sf::Vector2f playerPos;
+	std::vector<Point*>bestRoad;
 
-	void setAllPointsToMoveable(Point *point);
+	IObject *player;
+
+	Point *playerPos;
+	Point *targetPos;
+
+	float actualRoadLength;
+	bool isRoadFinded;
+
+	void doRoad();
+	void checkAvailablePoints(std::vector<Point*> &actualRoad);
+
+	void checkMoveablePoints(Point *point);
 
 	sf::Vector2f getTheClosestAsphaltPosFromTarget(const sf::Vector2f &position);
 	void drawGpsTexture();

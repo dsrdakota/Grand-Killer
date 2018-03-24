@@ -21,10 +21,42 @@ GPS::GPS()
 		), point));
 
 	for(const auto &i:crossing)
-		setAllPointsToMoveable(i);
+		checkMoveablePoints(i);
 
-	playerPos = sf::Vector2f(0, 0);
-	targetPos = sf::Vector2f(0, 0);
+	std::vector<Point*>linkedPoints;
+	
+	for (auto &i : crossing)
+	{
+		if (std::find(linkedPoints.begin(), linkedPoints.end(), i) == linkedPoints.end())
+		{
+			for (auto &j : i->getPointsToMoveable())
+			{
+				if (i->getPointPosition().x == j->getPointPosition().x)
+				{
+					if (i->getPointPosition().y > j->getPointPosition().y)
+						for (float k = i->getPointPosition().y; k > j->getPointPosition().y;k -= static_cast<float>(TilesManager::getTileSize()))
+							linkCrossing.push_back(sf::Vector2f(i->getPointPosition().x, k));
+					else
+						for (float k = i->getPointPosition().y; k < j->getPointPosition().y;k += static_cast<float>(TilesManager::getTileSize()))
+							linkCrossing.push_back(sf::Vector2f(i->getPointPosition().x, k));
+				}
+				else
+				{
+					if (i->getPointPosition().x > j->getPointPosition().x)
+						for (float k = i->getPointPosition().x; k > j->getPointPosition().x;k -= static_cast<float>(TilesManager::getTileSize()))
+							linkCrossing.push_back(sf::Vector2f(k, i->getPointPosition().y));
+
+					else
+						for (float k = i->getPointPosition().x; k < j->getPointPosition().x;k += static_cast<float>(TilesManager::getTileSize()))
+							linkCrossing.push_back(sf::Vector2f(k, i->getPointPosition().y));
+				}
+			}
+			linkedPoints.push_back(i);
+		}
+	}
+
+	playerPos = new Point(sf::Vector2f(0, 0));
+	targetPos = new Point(sf::Vector2f(0, 0));
 
 	radarTexture = new sf::Sprite(*Radar::Instance().getRadarSprite()->getTexture());
 
@@ -32,22 +64,126 @@ GPS::GPS()
 	gpsTexture->create(static_cast<unsigned>(Map::getMapSize().x), static_cast<unsigned>(Map::getMapSize().y));
 }
 
+GPS::~GPS()
+{
+	for (const auto &i : crossing)
+		delete i;
+}
+
+void GPS::setPlayer(IObject * player)
+{
+	this->player = player;
+}
+
+void GPS::setTarget()
+{
+	targetPos->setPosition(getTheClosestAsphaltPosFromTarget(Minimap::Instance().targetTile->getTileMapSprite()->getPosition()));
+	
+	for (const auto &i : crossing)
+		if (checkRoadBeetwen(targetPos, i))
+			targetPos->addPointToMoveable(i);
+}
+
 void GPS::findBestRoute()
 {
-	if (Minimap::Instance().isTargetSet())
+	if (Minimap::Instance().isTargetSet() && Minimap::Instance().map->getGlobalBounds().contains(Minimap::Instance().target->getPosition()))
 	{
-		targetPos = getTheClosestAsphaltPosFromTarget(Minimap::Instance().targetTile->getTileMapSprite()->getPosition());
-		//getTheClosestAsphaltPosFromTarget(Minimap::Instance().playerTile->getTileMapSprite()->getPosition());
+		playerPos->setPosition(getTheClosestAsphaltPosFromTarget(player->getPosition()));
 
-		if (targetPos == playerPos &&
+		if (targetPos->getPointPosition() == playerPos->getPointPosition() &&
 			mGame::Instance().getGameState() == mGame::state::MainGame)
+		{
 			Minimap::Instance().targetIsSet = false;
+			Radar::Instance().resetTexture();
+		}
+		else if(targetPos->getPointPosition() != playerPos->getPointPosition())
+		{
+			playerPos->resetPoint();
 
-		drawGpsTexture();
+			for (const auto &i : crossing)
+				if (checkRoadBeetwen(playerPos, i))
+					playerPos->addPointToMoveable(i);
+
+			doRoad();
+			drawGpsTexture();
+		}
 	}
 }
 
-void GPS::setAllPointsToMoveable(Point * point)
+void GPS::doRoad()
+{
+	std::vector<std::thread>threads;
+
+	isRoadFinded = false;
+	bestRoad.clear();
+
+	actualRoadLength = -1;
+
+	std::vector<Point*>road;
+	road.push_back(playerPos);
+
+	if (checkRoadBeetwen(playerPos, targetPos))
+	{
+		road.push_back(targetPos);
+		bestRoad = road;
+		return;
+	}
+
+	while(std::find(bestRoad.begin(), bestRoad.end(), targetPos) == bestRoad.end())
+		checkAvailablePoints(road);
+}
+
+void GPS::checkAvailablePoints(std::vector<Point*> &actualRoad)
+{
+	Point* point = nullptr;
+	float smallestLength = -1.f;
+
+	for (const auto &i : actualRoad[actualRoad.size() - 1]->getPointsToMoveable())
+	{
+		if (std::find(actualRoad.begin(), actualRoad.end(), i) != actualRoad.end())
+			continue;
+
+		if (checkRoadBeetwen(targetPos, i))
+		{
+			actualRoad.push_back(i);
+			actualRoad.push_back(targetPos);
+
+			float length = 0;
+			for (size_t i = 0; i < actualRoad.size() - 1; ++i)
+			{
+				sf::Vector2f len = actualRoad[i]->getPointPosition() - actualRoad[i + 1]->getPointPosition();
+				length += sqrt(len.x * len.x + len.y *len.y);
+			}
+
+			if (actualRoadLength == -1 ||
+				actualRoadLength > length)
+			{
+				actualRoadLength = length;
+				bestRoad = actualRoad;
+			}
+
+			actualRoad.pop_back();
+			actualRoad.pop_back();
+
+			continue;
+		}
+
+		sf::Vector2f vector = targetPos->getPointPosition() - i->getPointPosition();
+		float lenght = sqrt(vector.x * vector.x + vector.y * vector.y);
+
+		if (lenght < smallestLength ||
+			smallestLength == -1.f)
+		{
+			smallestLength = lenght;
+			point = i;
+		}
+	}
+
+	if (std::find(actualRoad.begin(), actualRoad.end(), targetPos) == actualRoad.end() && point)
+		actualRoad.push_back(point);
+}
+
+void GPS::checkMoveablePoints(Point * point)
 {
 	for (const auto &i : crossing)
 		if (checkRoadBeetwen(point, i))
@@ -60,16 +196,16 @@ sf::Vector2f GPS::getTheClosestAsphaltPosFromTarget(const sf::Vector2f & positio
 
 	sf::Vector2f pos = sf::Vector2f(0, 0);
 
-	for (const auto &i : crossing)
+	for (const auto &i : linkCrossing)
 	{
-		sf::Vector2f vector = position - i->getTag()->getPosition();
+		sf::Vector2f vector = position - i;
 		float lenght = sqrt(vector.x * vector.x + vector.y * vector.y);
 
 		if (lenght < smallestLength ||
 			smallestLength == -1.f)
 		{
 			smallestLength = lenght;
-			pos = i->getTag()->getPosition();
+			pos = i;
 		}
 	}
 
@@ -85,8 +221,14 @@ void GPS::drawGpsTexture()
 	gpsTexture->clear();
 	gpsTexture->draw(*radarTexture);
 
-	shape.setPosition(targetPos);
+	shape.setPosition(playerPos->getPointPosition());
 	gpsTexture->draw(shape);
+
+	for (const auto &i : bestRoad)
+	{
+		shape.setPosition(i->getPointPosition());
+		gpsTexture->draw(shape);
+	}
 
 	gpsTexture->display();
 	gpsTexture->setSmooth(true);

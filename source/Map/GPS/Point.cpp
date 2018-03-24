@@ -1,27 +1,16 @@
 #include "Point.hpp"
 
-Point::Point(const sf::Vector2f & point, const sf::Vector2u &tileIndex)
+#include "../ObjectsManager/Tiles.hpp"
+
+Point::Point(const sf::Vector2f & position, const sf::Vector2u &tileIndex)
 {
-	this->point = point;
+	this->position = position;
 	this->tileIndex = tileIndex;
-
-	shape = new sf::CircleShape(10);
-	shape->setOrigin(10, 10);
-	shape->setFillColor(sf::Color::Red);
-	shape->setPosition(static_cast<sf::Vector2f>(point));
-}
-
-Point::~Point()
-{
-	delete shape;
-	
-	for (const auto &i : pointsToMoveable)
-		delete i;
 }
 
 sf::Vector2f Point::getPointPosition()
 {
-	return point;
+	return position;
 }
 
 sf::Vector2u Point::getTileIndex()
@@ -34,12 +23,19 @@ std::vector<Point*> Point::getPointsToMoveable()
 	return pointsToMoveable;
 }
 
-sf::CircleShape * Point::getTag()
+void Point::setPosition(const sf::Vector2f & position)
 {
-	return shape;
+	this->position = position;
+	tileIndex.x = position.x / static_cast<float>(TilesManager::getTileSize());
+	tileIndex.y = position.y / static_cast<float>(TilesManager::getTileSize());
 }
 
 void Point::addPointToMoveable(Point *point)
 {
 	pointsToMoveable.push_back(point);
+}
+
+void Point::resetPoint()
+{
+	pointsToMoveable.clear();
 }
