@@ -4,6 +4,7 @@
 #include "../Minimap.hpp"
 #include "../Radar.hpp"
 
+#include <iostream>
 #include <fstream>
 
 #define M_PI 3.14159265359
@@ -25,6 +26,7 @@ GPS::GPS()
 		checkMoveablePoints(i);
 
 	std::vector<Point*>linkedPoints;
+	std::vector<sf::Vector2f > linkCrossing;
 
 	for (auto &i : crossing)
 	{
@@ -55,6 +57,26 @@ GPS::GPS()
 			linkedPoints.push_back(i);
 		}
 	}
+	
+	zoneSize = sf::Vector2f(1000, 1000);
+
+	for (size_t i = 0;i < Map::getMapSize().y / zoneSize.y;++i)
+	{
+		std::vector<std::vector<sf::Vector2f>>example;
+		zones.push_back(example);
+	}
+
+	for (size_t i = 0;i < Map::getMapSize().y / zoneSize.y;++i)
+	{
+		for (size_t j = 0;j < Map::getMapSize().y / zoneSize.y;++j)
+		{
+			std::vector<sf::Vector2f>example;
+			zones[i].push_back(example);
+		}
+	}
+
+	for (const auto &i : linkCrossing)
+		zones[i.y / zoneSize.y][i.x / zoneSize.x].push_back(i);
 
 	playerPos = new Point(sf::Vector2f(0, 0));
 	targetPos = new Point(sf::Vector2f(0, 0));
@@ -239,10 +261,37 @@ void GPS::checkMoveablePoints(Point * point)
 sf::Vector2f GPS::getTheClosestAsphaltPosFromTarget(const sf::Vector2f & position)
 {
 	float smallestLength = -1.f;
-
 	sf::Vector2f pos = sf::Vector2f(0, 0);
 
-	for (const auto &i : linkCrossing)
+	std::vector<sf::Vector2f>closestZone;
+	float lengthFromZone = -1.f;
+
+	closestZone = zones[position.y / zoneSize.y][position.x / zoneSize.x];
+
+	if (closestZone.size() < 1)
+	{
+		std::vector<sf::Vector2f>ZonesPosition;
+
+		for (size_t i = 0;i < Map::getMapSize().y; i += zoneSize.y)
+			for (size_t j = 0;j < Map::getMapSize().x; j += zoneSize.x)
+				ZonesPosition.push_back(sf::Vector2f(i, j));
+
+		for (const auto &i : ZonesPosition)
+		{
+			sf::Vector2f vector = position - i;
+			float lenght = sqrt(vector.x * vector.x + vector.y * vector.y);
+
+			if (zones[i.y / zoneSize.y][i.x / zoneSize.x].size() > 0 &&
+				(lenght < lengthFromZone ||
+					lengthFromZone == -1.f))
+			{
+				lengthFromZone = lenght;
+				closestZone = zones[i.y / zoneSize.y][i.x / zoneSize.x];
+			}
+		}
+	}
+
+	for (const auto &i : closestZone)
 	{
 		sf::Vector2f vector = position - i;
 		float lenght = sqrt(vector.x * vector.x + vector.y * vector.y);

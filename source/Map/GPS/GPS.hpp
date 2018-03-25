@@ -34,8 +34,10 @@ private:
 	sf::Sprite *radarTexture;
 	sf::RenderTexture *gpsTexture;
 
+	sf::Vector2f zoneSize;
+
 	std::vector<Point*>crossing;
-	std::vector<sf::Vector2f>linkCrossing;
+	std::vector<std::vector<std::vector<sf::Vector2f>>>zones;
 
 	std::vector<Point*>bestRoad;
 
