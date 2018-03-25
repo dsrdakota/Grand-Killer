@@ -4,8 +4,9 @@
 #include "../Minimap.hpp"
 #include "../Radar.hpp"
 
-#include <iostream>
 #include <fstream>
+
+#define M_PI 3.14159265359
 
 GPS::GPS()
 {
@@ -20,11 +21,11 @@ GPS::GPS()
 			tiles[point.y][point.x]->getTileMapSprite()->getPosition().y + TilesManager::getTileSize() / 2.f
 		), point));
 
-	for(const auto &i:crossing)
+	for (const auto &i : crossing)
 		checkMoveablePoints(i);
 
 	std::vector<Point*>linkedPoints;
-	
+
 	for (auto &i : crossing)
 	{
 		if (std::find(linkedPoints.begin(), linkedPoints.end(), i) == linkedPoints.end())
@@ -77,8 +78,9 @@ void GPS::setPlayer(IObject * player)
 
 void GPS::setTarget()
 {
+	targetPos->resetPoint();
 	targetPos->setPosition(getTheClosestAsphaltPosFromTarget(Minimap::Instance().targetTile->getTileMapSprite()->getPosition()));
-	
+
 	for (const auto &i : crossing)
 		if (checkRoadBeetwen(targetPos, i))
 			targetPos->addPointToMoveable(i);
@@ -96,7 +98,7 @@ void GPS::findBestRoute()
 			Minimap::Instance().targetIsSet = false;
 			Radar::Instance().resetTexture();
 		}
-		else if(targetPos->getPointPosition() != playerPos->getPointPosition())
+		else if (targetPos->getPointPosition() != playerPos->getPointPosition())
 		{
 			playerPos->resetPoint();
 
@@ -112,75 +114,119 @@ void GPS::findBestRoute()
 
 void GPS::doRoad()
 {
-	std::vector<std::thread>threads;
-
-	isRoadFinded = false;
 	bestRoad.clear();
 
-	actualRoadLength = -1;
+	std::vector<Point*> roadFromPlayer;
+	std::vector<Point*> roadFromTarget;
 
-	std::vector<Point*>road;
-	road.push_back(playerPos);
+	float roadLengthFromPlayer = -1;
+	float roadLengthFromTarget = -1;
+
+	roadFromPlayer.push_back(playerPos);
+	roadFromTarget.push_back(targetPos);
 
 	if (checkRoadBeetwen(playerPos, targetPos))
 	{
-		road.push_back(targetPos);
-		bestRoad = road;
+		bestRoad.push_back(playerPos);
+		bestRoad.push_back(targetPos);
 		return;
 	}
 
-	while(std::find(bestRoad.begin(), bestRoad.end(), targetPos) == bestRoad.end())
-		checkAvailablePoints(road);
+	std::vector<std::thread>threads;
+
+	threads.push_back(std::thread(&GPS::checkAvailablePoints, this, std::ref(roadFromPlayer), targetPos, std::ref(roadLengthFromPlayer)));
+	threads.push_back(std::thread(&GPS::checkAvailablePoints, this, std::ref(roadFromTarget), playerPos, std::ref(roadLengthFromTarget)));
+
+	for (auto &i : threads)
+		i.join();
+
+	if (roadLengthFromPlayer < roadLengthFromTarget)
+		bestRoad = roadFromPlayer;
+	else
+		bestRoad = roadFromTarget;
+
+	optimazeRoad();
 }
 
-void GPS::checkAvailablePoints(std::vector<Point*> &actualRoad)
+void GPS::checkAvailablePoints(std::vector<Point*> &actualRoad, Point *endTarget, float &roadLength)
 {
-	Point* point = nullptr;
-	float smallestLength = -1.f;
+	std::vector<Point*> savedRoadToTarget;
 
-	for (const auto &i : actualRoad[actualRoad.size() - 1]->getPointsToMoveable())
+	while (std::find(savedRoadToTarget.begin(), savedRoadToTarget.end(), endTarget) == savedRoadToTarget.end())
 	{
-		if (std::find(actualRoad.begin(), actualRoad.end(), i) != actualRoad.end())
-			continue;
+		Point* point = nullptr;
+		float smallestLength = -1.f;
 
-		if (checkRoadBeetwen(targetPos, i))
+		for (const auto &i : actualRoad[actualRoad.size() - 1]->getPointsToMoveable())
 		{
-			actualRoad.push_back(i);
-			actualRoad.push_back(targetPos);
+			if (std::find(actualRoad.begin(), actualRoad.end(), i) != actualRoad.end())
+				continue;
 
-			float length = 0;
-			for (size_t i = 0; i < actualRoad.size() - 1; ++i)
+			if (checkRoadBeetwen(endTarget, i))
 			{
-				sf::Vector2f len = actualRoad[i]->getPointPosition() - actualRoad[i + 1]->getPointPosition();
-				length += sqrt(len.x * len.x + len.y *len.y);
+				actualRoad.push_back(i);
+				actualRoad.push_back(endTarget);
+
+				float length = 0;
+				for (size_t i = 0; i < actualRoad.size() - 1; ++i)
+				{
+					sf::Vector2f len = actualRoad[i]->getPointPosition() - actualRoad[i + 1]->getPointPosition();
+					length += sqrt(len.x * len.x + len.y *len.y);
+				}
+
+				if (roadLength == -1 ||
+					roadLength > length)
+				{
+					roadLength = length;
+					savedRoadToTarget = actualRoad;
+				}
+
+				actualRoad.pop_back();
+				actualRoad.pop_back();
+
+				continue;
 			}
 
-			if (actualRoadLength == -1 ||
-				actualRoadLength > length)
+			sf::Vector2f vector = endTarget->getPointPosition() - i->getPointPosition();
+			float lenght = sqrt(vector.x * vector.x + vector.y * vector.y);
+
+			if (lenght < smallestLength ||
+				smallestLength == -1.f)
 			{
-				actualRoadLength = length;
-				bestRoad = actualRoad;
+				smallestLength = lenght;
+				point = i;
 			}
-
-			actualRoad.pop_back();
-			actualRoad.pop_back();
-
-			continue;
 		}
 
-		sf::Vector2f vector = targetPos->getPointPosition() - i->getPointPosition();
-		float lenght = sqrt(vector.x * vector.x + vector.y * vector.y);
+		if (std::find(actualRoad.begin(), actualRoad.end(), endTarget) == actualRoad.end() && point)
+			actualRoad.push_back(point);
+	}
+	actualRoad = savedRoadToTarget;
+}
 
-		if (lenght < smallestLength ||
-			smallestLength == -1.f)
-		{
-			smallestLength = lenght;
-			point = i;
-		}
+void GPS::optimazeRoad()
+{
+	for (size_t i = 0; i < bestRoad.size() - 2; ++i)
+		if (checkRoadBeetwen(bestRoad[i], bestRoad[i + 2]))
+			bestRoad.erase(bestRoad.begin() + i + 1, bestRoad.begin() + i + 2);
+}
+
+void GPS::createSegment(sf::RectangleShape &segment, Point * start, Point * stop)
+{
+	if (start->getPointPosition().x == stop->getPointPosition().x)
+	{
+		segment.setSize(sf::Vector2f(200 , start->getPointPosition().y - stop->getPointPosition().y));
+		segment.setOrigin(100, 0);
+		segment.setPosition(start->getPointPosition());
+	}
+	else // y is the same
+	{
+		segment.setSize(sf::Vector2f(start->getPointPosition().x - stop->getPointPosition().x, 200));
+		segment.setOrigin(0, 100);
+		segment.setPosition(start->getPointPosition());
 	}
 
-	if (std::find(actualRoad.begin(), actualRoad.end(), targetPos) == actualRoad.end() && point)
-		actualRoad.push_back(point);
+	segment.setRotation(180);
 }
 
 void GPS::checkMoveablePoints(Point * point)
@@ -214,20 +260,29 @@ sf::Vector2f GPS::getTheClosestAsphaltPosFromTarget(const sf::Vector2f & positio
 
 void GPS::drawGpsTexture()
 {
-	sf::RectangleShape shape(sf::Vector2f(80, 80));
-	shape.setFillColor(sf::Color::Red);
-	shape.setOrigin(40, 40);
+	sf::CircleShape point(100);
+	point.setOrigin(point.getRadius(), point.getRadius());
 
 	gpsTexture->clear();
 	gpsTexture->draw(*radarTexture);
 
-	shape.setPosition(playerPos->getPointPosition());
-	gpsTexture->draw(shape);
-
-	for (const auto &i : bestRoad)
+	for (size_t i = 0;i < bestRoad.size() - 1;++i)
 	{
-		shape.setPosition(i->getPointPosition());
-		gpsTexture->draw(shape);
+		sf::RectangleShape roadSegment;
+		createSegment(roadSegment, bestRoad[i], bestRoad[i + 1]);
+		
+		// if it is mission - yellow color else violet
+
+		roadSegment.setFillColor(sf::Color(164, 76, 242));
+		point.setFillColor(sf::Color(164, 76, 242));
+
+		point.setPosition(bestRoad[i]->getPointPosition());
+		gpsTexture->draw(point);
+
+		point.setPosition(bestRoad[i + 1]->getPointPosition());
+		gpsTexture->draw(point);
+
+		gpsTexture->draw(roadSegment);
 	}
 
 	gpsTexture->display();
@@ -255,8 +310,14 @@ bool GPS::checkRoadBeetwen(Point * p1, Point * p2)
 			Point *lower = p1->getPointPosition().y > p2->getPointPosition().y ? p2 : p1;
 
 			for (auto i = lower->getTileIndex().y; i < higher->getTileIndex().y; i++)
-				if (tiles[i][p1->getTileIndex().x]->getIndex() >= 64)
+			{
+				size_t index = tiles[i][p1->getTileIndex().x]->getIndex();
+
+				if (!(index == 0 ||
+					(index >= 29 && index <= 34) ||
+					(index >= 59 && index <= 63)))
 					return false;
+			}
 
 		}
 		else if (p1->getPointPosition().y == p2->getPointPosition().y)
@@ -265,8 +326,14 @@ bool GPS::checkRoadBeetwen(Point * p1, Point * p2)
 			Point *lower = p1->getPointPosition().x > p2->getPointPosition().x ? p2 : p1;
 
 			for (auto i = lower->getTileIndex().x; i < higher->getTileIndex().x; i++)
-				if (tiles[p1->getTileIndex().y][i]->getIndex() >= 64)
-					return false;
+			{
+				size_t index = tiles[p1->getTileIndex().y][i]->getIndex();
+
+				if (!(index == 0 ||
+					(index >= 29 && index <= 34) ||
+					(index >= 59 && index <= 63)))
+				return false;
+			}
 		}
 
 		return true;

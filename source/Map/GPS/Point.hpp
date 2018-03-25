@@ -18,11 +18,6 @@ public:
 	void addPointToMoveable(Point *point);
 	void resetPoint();
 
-	bool operator==(const Point &point)
-	{
-		return this->position == point.position;
-	}
-
 private:
 
 	sf::Vector2u tileIndex;

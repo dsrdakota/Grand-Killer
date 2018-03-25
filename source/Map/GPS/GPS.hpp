@@ -44,11 +44,11 @@ private:
 	Point *playerPos;
 	Point *targetPos;
 
-	float actualRoadLength;
-	bool isRoadFinded;
-
 	void doRoad();
-	void checkAvailablePoints(std::vector<Point*> &actualRoad);
+	void checkAvailablePoints(std::vector<Point*> &actualRoad, Point *endTarget, float &roadLength);
+	void optimazeRoad();
+
+	void createSegment(sf::RectangleShape &segment, Point * start, Point * stop);
 
 	void checkMoveablePoints(Point *point);
 
