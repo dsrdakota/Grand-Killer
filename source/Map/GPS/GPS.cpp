@@ -134,6 +134,11 @@ void GPS::findBestRoute()
 	}
 }
 
+std::vector<sf::Drawable*>& GPS::getDirections()
+{
+	return directions;
+}
+
 void GPS::doRoad()
 {
 	bestRoad.clear();
@@ -233,22 +238,22 @@ void GPS::optimazeRoad()
 			bestRoad.erase(bestRoad.begin() + i + 1, bestRoad.begin() + i + 2);
 }
 
-void GPS::createSegment(sf::RectangleShape &segment, Point * start, Point * stop)
+void GPS::createSegment(sf::RectangleShape *segment, Point * start, Point * stop)
 {
 	if (start->getPointPosition().x == stop->getPointPosition().x)
 	{
-		segment.setSize(sf::Vector2f(200 , start->getPointPosition().y - stop->getPointPosition().y));
-		segment.setOrigin(100, 0);
-		segment.setPosition(start->getPointPosition());
+		segment->setSize(sf::Vector2f(200 , start->getPointPosition().y - stop->getPointPosition().y));
+		segment->setOrigin(100, 0);
+		segment->setPosition(start->getPointPosition());
 	}
 	else // y is the same
 	{
-		segment.setSize(sf::Vector2f(start->getPointPosition().x - stop->getPointPosition().x, 200));
-		segment.setOrigin(0, 100);
-		segment.setPosition(start->getPointPosition());
+		segment->setSize(sf::Vector2f(start->getPointPosition().x - stop->getPointPosition().x, 200));
+		segment->setOrigin(0, 100);
+		segment->setPosition(start->getPointPosition());
 	}
 
-	segment.setRotation(180);
+	segment->setRotation(180);
 }
 
 void GPS::checkMoveablePoints(Point * point)
@@ -309,36 +314,25 @@ sf::Vector2f GPS::getTheClosestAsphaltPosFromTarget(const sf::Vector2f & positio
 
 void GPS::drawGpsTexture()
 {
-	sf::CircleShape point(100);
-	point.setOrigin(point.getRadius(), point.getRadius());
-
-	gpsTexture->clear();
-	gpsTexture->draw(*radarTexture);
-
 	for (size_t i = 0;i < bestRoad.size() - 1;++i)
 	{
-		sf::RectangleShape roadSegment;
+		sf::RectangleShape *roadSegment = new sf::RectangleShape;
 		createSegment(roadSegment, bestRoad[i], bestRoad[i + 1]);
 		
 		// if it is mission - yellow color else violet
 
-		roadSegment.setFillColor(sf::Color(164, 76, 242));
-		point.setFillColor(sf::Color(164, 76, 242));
+		for (size_t j = 0;j < 2;++j)
+		{
+			sf::CircleShape *point = new sf::CircleShape(100);
+			point->setOrigin(point->getRadius(), point->getRadius());
+			point->setFillColor(sf::Color(164, 76, 242));
+			point->setPosition(bestRoad[i]->getPointPosition());
+			directions.push_back(point);
+		}
 
-		point.setPosition(bestRoad[i]->getPointPosition());
-		gpsTexture->draw(point);
-
-		point.setPosition(bestRoad[i + 1]->getPointPosition());
-		gpsTexture->draw(point);
-
-		gpsTexture->draw(roadSegment);
+		roadSegment->setFillColor(sf::Color(164, 76, 242));
+		directions.push_back(roadSegment);
 	}
-
-	gpsTexture->display();
-	gpsTexture->setSmooth(true);
-
-	Radar::Instance().getRadarSprite()->setTexture(gpsTexture->getTexture());
-	Minimap::Instance().map->setTexture(gpsTexture->getTexture());
 }
 
 bool GPS::checkRoadBeetwen(Point * p1, Point * p2)

@@ -27,6 +27,8 @@ public:
 	void setTarget();
 	void findBestRoute();
 
+	std::vector<sf::Drawable*>&getDirections();
+
 private:
 
 	GPS();
@@ -39,6 +41,8 @@ private:
 	std::vector<Point*>crossing;
 	std::vector<std::vector<std::vector<sf::Vector2f>>>zones;
 
+	std::vector<sf::Drawable*>directions;
+
 	std::vector<Point*>bestRoad;
 
 	IObject *player;
@@ -50,7 +54,7 @@ private:
 	void checkAvailablePoints(std::vector<Point*> &actualRoad, Point *endTarget, float &roadLength);
 	void optimazeRoad();
 
-	void createSegment(sf::RectangleShape &segment, Point * start, Point * stop);
+	void createSegment(sf::RectangleShape *segment, Point * start, Point * stop);
 
 	void checkMoveablePoints(Point *point);
 

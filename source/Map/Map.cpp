@@ -61,6 +61,11 @@ sf::Sprite * Map::getMap()
 
 void Map::drawUnder()
 {
+	for (const auto &i : GPS::Instance().getDirections())
+		delete i;
+
+	GPS::Instance().getDirections().clear();
+
 	GPS::Instance().findBestRoute();
 
 	Painter::Instance().addToDraw(map);
@@ -92,6 +97,9 @@ void Map::drawUnder()
 
 			Painter::Instance().addToDraw(allCarSingleTraces[i].first);
 	}
+
+	for (const auto &i : GPS::Instance().getDirections())
+		Painter::Instance().addToDraw(i);
 
 	updateTimeInTrace();
 }
