@@ -7,11 +7,11 @@ Black_viper::Black_viper(const sf::Vector2f & startPos, const float & startRot)
 	sprite->setPosition(startPos);
 	sprite->setOrigin(44, 111);
 	sprite->setRotation(startRot);
-	shadow->setRotation(startRot);
 
 	shadow = new sf::Sprite(*TextureManager::get("black_viper_shadow"));
 	shadow->setPosition(startPos.x + 40, startPos.y);
 	shadow->setOrigin(79, 128);
+	shadow->setRotation(startRot);
 
 	countTires = 4;
 	countDoors = 2;

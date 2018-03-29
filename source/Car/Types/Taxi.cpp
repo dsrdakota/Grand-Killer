@@ -7,11 +7,11 @@ Taxi::Taxi(const sf::Vector2f &startPos, const float &startRot)
 	sprite->setPosition(startPos);
 	sprite->setOrigin(41,99);
 	sprite->setRotation(startRot);
-	shadow->setRotation(startRot);
 
 	shadow->setTexture(*TextureManager::get("taxi_shadow"));
 	shadow->setPosition(startPos.x + 20, startPos.y);
 	shadow->setOrigin(81, 129);
+	shadow->setRotation(startRot);
 
 	countTires = 4;
 	countDoors = 4;

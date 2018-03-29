@@ -6,6 +6,8 @@
 
 #include <fstream>
 
+#include <iostream>
+
 Map::Map()
 {
 	mapSize = new sf::Vector2f(6000, 6000);
@@ -40,6 +42,11 @@ Map::Map()
 
 	map = new sf::Sprite(textureOfMap->getTexture());
 	hitboxGrass = new sf::Image(textureOfHitboxGrass.getTexture().copyToImage());
+
+	zoneSize = sf::Vector2f(1000, 1000);
+
+	createZones();
+	createZone(TypeOfZones::GPS);
 }
 
 Map::~Map()
@@ -70,38 +77,10 @@ void Map::drawUnder()
 
 	Painter::Instance().addToDraw(map);
 
-	if (allCarSingleTraces.size() > 600 * allCarSingleTraces.size())
-	{
-		for (auto i = 0;i < 10;++i)
-		{
-			delete allCarSingleTraces[i].first;
-			delete allCarSingleTraces[i].second;
-		}
-
-		allCarSingleTraces.erase(allCarSingleTraces.begin(), allCarSingleTraces.begin() + 10);
-	}
-
-	for (size_t i = 0;i<allCarSingleTraces.size();i++)
-	{
-		if (*allCarSingleTraces[i].second <= 0 &&
-			Camera::isOutsideView(sf::Vector2f(allCarSingleTraces[i].first->getGlobalBounds().left + allCarSingleTraces[i].first->getGlobalBounds().width,
-				allCarSingleTraces[i].first->getGlobalBounds().top + allCarSingleTraces[i].first->getGlobalBounds().height)))
-		{
-			delete allCarSingleTraces[i].first;
-			delete allCarSingleTraces[i].second;
-			allCarSingleTraces.erase(allCarSingleTraces.begin() + i, allCarSingleTraces.begin() + i + 1);
-			--i;
-		}
-		else if (!Camera::isOutsideView(sf::Vector2f(allCarSingleTraces[i].first->getGlobalBounds().left + allCarSingleTraces[i].first->getGlobalBounds().width,
-			allCarSingleTraces[i].first->getGlobalBounds().top + allCarSingleTraces[i].first->getGlobalBounds().height)))
-
-			Painter::Instance().addToDraw(allCarSingleTraces[i].first);
-	}
+	updateTraces();
 
 	for (const auto &i : GPS::Instance().getDirections())
 		Painter::Instance().addToDraw(i);
-
-	updateTimeInTrace();
 }
 
 void Map::drawOn()
@@ -141,6 +120,49 @@ bool Map::isPointInCollisionArea(const sf::Vector2f & pos)
 	return false;
 }
 
+const sf::Vector2f &Map::getZoneSize() const
+{
+	return zoneSize;
+}
+
+std::vector<sf::Vector2f> &Map::getZone(const TypeOfZones & type, const sf::Vector2i & index)
+{
+	return zones[index.y][index.x][type];
+}
+
+void Map::updateTraces()
+{
+	if (allCarSingleTraces.size() > 600 * allCarSingleTraces.size())
+	{
+		for (auto i = 0;i < 10;++i)
+		{
+			delete allCarSingleTraces[i].first;
+			delete allCarSingleTraces[i].second;
+		}
+
+		allCarSingleTraces.erase(allCarSingleTraces.begin(), allCarSingleTraces.begin() + 10);
+	}
+
+	for (size_t i = 0;i<allCarSingleTraces.size();i++)
+	{
+		if (*allCarSingleTraces[i].second <= 0 &&
+			Camera::isOutsideView(sf::Vector2f(allCarSingleTraces[i].first->getGlobalBounds().left + allCarSingleTraces[i].first->getGlobalBounds().width,
+				allCarSingleTraces[i].first->getGlobalBounds().top + allCarSingleTraces[i].first->getGlobalBounds().height)))
+		{
+			delete allCarSingleTraces[i].first;
+			delete allCarSingleTraces[i].second;
+			allCarSingleTraces.erase(allCarSingleTraces.begin() + i, allCarSingleTraces.begin() + i + 1);
+			--i;
+		}
+		else if (!Camera::isOutsideView(sf::Vector2f(allCarSingleTraces[i].first->getGlobalBounds().left + allCarSingleTraces[i].first->getGlobalBounds().width,
+			allCarSingleTraces[i].first->getGlobalBounds().top + allCarSingleTraces[i].first->getGlobalBounds().height)))
+
+			Painter::Instance().addToDraw(allCarSingleTraces[i].first);
+	}
+
+	updateTimeInTrace();
+}
+
 void Map::updateTimeInTrace()
 {
 	auto &traces = Map::Instance().getAllCarTraces();
@@ -153,5 +175,35 @@ void Map::updateTimeInTrace()
 
 		clock.clock->restart();
 		*clock.time = clock.time->Zero;
+	}
+}
+
+void Map::createZones()
+{
+	for (size_t i = 0;i < mapSize->y / zoneSize.y;++i)
+	{
+		std::vector<std::unordered_map<TypeOfZones, std::vector<sf::Vector2f>>>example;
+		zones.push_back(example);
+	}
+
+	for (size_t i = 0;i < mapSize->y / zoneSize.y;++i)
+	{
+		for (size_t j = 0;j < mapSize->x / zoneSize.x;++j)
+		{
+			std::unordered_map<TypeOfZones, std::vector<sf::Vector2f>>example;
+			zones[i].push_back(example);
+		}
+	}
+}
+
+void Map::createZone(const TypeOfZones & type)
+{
+	for (size_t i = 0;i < mapSize->y / zoneSize.y;++i)
+	{
+		for (size_t j = 0;j < mapSize->x / zoneSize.x;++j)
+		{
+			std::vector<sf::Vector2f>example;
+			zones[i][j][type] = example;
+		}
 	}
 }

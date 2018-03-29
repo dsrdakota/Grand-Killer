@@ -15,7 +15,7 @@ bool Loader::play()
 {
 	isError = false;
 
-	unsigned amountOfFiles = carsName.size() * carTextures1.size() + carTextures2.size() + carDoors.size() * carsName.size() + textureWithName.size() + otherTextures.size() + 113 + /* minimapTiles*/56 + carsName.size() * carsConfigFiles.size();
+	unsigned amountOfFiles = carsName.size() * carTextures1.size() + carTextures2.size() + carDoors.size() * carsName.size() + /*carTires */ 20 * carsName.size() + textureWithName.size() + otherTextures.size() + 113 + /* minimapTiles*/56 + carsName.size() * carsConfigFiles.size();
 
 	text = new Text(sf::Color::White, 50, "Loader ( to change ), files to load: " + std::to_string(amountOfFiles));
 
@@ -51,7 +51,7 @@ void Loader::loadCarTextures1()
 			std::string path = j;
 			path.replace(path.find("carName"), 7, i);
 
-			drawLoadingText(path);
+			drawLoadingText("Loading: " + path);
 
 			auto result = TextureManager::load(i + '_' + path.substr(path.find_last_of('/') + 1, path.find(".gk") - path.find_last_of('/') - 1), path);
 
@@ -69,7 +69,7 @@ void Loader::loadCarTextures2()
 {
 	for (const auto &j : carTextures2)
 	{
-		drawLoadingText(j);
+		drawLoadingText("Loading: " + j);
 
 		auto result = TextureManager::load(j.substr(j.find_last_of('/') + 1, j.find(".gk") - j.find_last_of('/') - 1), j);
 
@@ -92,7 +92,7 @@ void Loader::loadCarDoors()
 			std::string path = j;
 			path.replace(path.find("carName"), 7, i);
 
-			drawLoadingText(path);
+			drawLoadingText("Loading: " + path);
 
 			auto result = TextureManager::load(i + '_' + path.substr(path.find_last_of('/') + 1, path.find(".gk") - path.find_last_of('/') - 1), path);
 
@@ -104,6 +104,31 @@ void Loader::loadCarDoors()
 		}
 	}
 
+	loadCarTires();
+}
+
+void Loader::loadCarTires()
+{
+	for (const auto &i : carsName)
+	{
+		for(size_t j =1;j<=20;++j)
+		{
+			std::string path = carTires[0];
+			path.replace(path.find("carName"), 7, i);
+
+			path = path + std::to_string(j) + ".gk";
+
+			drawLoadingText("Loading: " + path);
+
+			auto result = TextureManager::load(i + "tire" + std::to_string(j), path);
+
+			if (!result)
+			{
+				error(path);
+				return;
+			}
+		}
+	}
 	loadMapTiles();
 }
 
@@ -118,7 +143,7 @@ void Loader::loadMapTiles()
 	{
 		file >> line;
 
-		drawLoadingText(line);
+		drawLoadingText("Loading: " + line);
 
 		auto result = TextureManager::load(std::to_string(i), line);
 
@@ -134,7 +159,7 @@ void Loader::loadMapTiles()
 			(i >= 29 && i <= 34) ||
 			(i >= 59 && i <= 63))
 		{
-			drawLoadingText("data/Map/Minimap/asphalt.gk");
+			drawLoadingText("Loading: data/Map/Minimap/asphalt.gk");
 
 			result = TextureManager::load(std::to_string(i) + "_Minimap", "data/Map/Minimap/asphalt.gk");
 
@@ -147,7 +172,7 @@ void Loader::loadMapTiles()
 
 		else if (i >= 64)
 		{
-			drawLoadingText("data/Map/Minimap/grass.gk");
+			drawLoadingText("Loading: data/Map/Minimap/grass.gk");
 
 			result = TextureManager::load(std::to_string(i) + "_Minimap", "data/Map/Minimap/grass.gk");
 
@@ -160,7 +185,7 @@ void Loader::loadMapTiles()
 
 		else
 		{
-			drawLoadingText(pathToTileMinimap);
+			drawLoadingText("Loading: " + pathToTileMinimap);
 
 			result = TextureManager::load(std::to_string(i) + "_Minimap", pathToTileMinimap);
 
@@ -173,7 +198,7 @@ void Loader::loadMapTiles()
 
 		if (line.find("grass") != std::string::npos)
 		{
-			drawLoadingText(line.substr(0, line.find(".")) + "_G.gk");
+			drawLoadingText("Loading: " + line.substr(0, line.find(".")) + "_G.gk");
 
 			result = TextureManager::load(std::to_string(i) + "_Hitbox", line.substr(0, line.find(".")) + "_G.gk");
 
@@ -186,7 +211,7 @@ void Loader::loadMapTiles()
 
 		else
 		{
-			drawLoadingText("data/Map/Tileset/asphalt_G.gk");
+			drawLoadingText("Loading: data/Map/Tileset/asphalt_G.gk");
 
 			result = TextureManager::load(std::to_string(i) + "_Hitbox", "data/Map/Tileset/asphalt_G.gk");
 
@@ -208,7 +233,7 @@ void Loader::loadOtherTextures()
 {
 	for (const auto &j : otherTextures)
 	{
-		drawLoadingText(j);
+		drawLoadingText("Loading: " + j);
 
 		auto result = TextureManager::load(j.substr(j.find_last_of('/') + 1, j.find(".gk") - j.find_last_of('/') -1), j);
 

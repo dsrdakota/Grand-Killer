@@ -38,8 +38,8 @@ public:
 private:
 
 	Car *car;
-	std::pair<sf::Sprite*, sf::Sprite*>tiresFront;
-	std::pair<sf::Sprite*, sf::Sprite*>tiresBack;
+	std::pair<sf::RectangleShape*, sf::RectangleShape*>tiresFront;
+	std::pair<sf::RectangleShape*, sf::RectangleShape*>tiresBack;
 
 	Slide *slide;
 
@@ -59,8 +59,8 @@ private:
 
 	Status *drivingStatus;
 
-	void turn(sf::Sprite *tire, sf::Sprite *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar);
-	void straight(sf::Sprite *tire, sf::Sprite *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar);
+	void turn(sf::RectangleShape *tire, sf::RectangleShape *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar);
+	void straight(sf::RectangleShape *tire, sf::RectangleShape *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar);
 	void rotateCar(const float & actualValueRotateCar, const Hitbox::collisionSide &sideFirst, const Hitbox::collisionSide &sideSecond, const std::pair<std::vector<sf::CircleShape*>,std::vector<sf::CircleShape*>>&hitboxLeftRight);
 
 	bool checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const float & angle);

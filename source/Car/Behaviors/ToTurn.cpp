@@ -125,7 +125,7 @@ void ToTurn::updatePosition()
 	slide->setOverSteer(static_cast<int>(*drivingStatus));
 }
 
-void ToTurn::turn(sf::Sprite *tire, sf::Sprite *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar)
+void ToTurn::turn(sf::RectangleShape *tire, sf::RectangleShape *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar)
 {
 	if (*actualValueRotateTire < *MAX_ROTATE_TIRE)
 	{
@@ -138,7 +138,7 @@ void ToTurn::turn(sf::Sprite *tire, sf::Sprite *counterTire, double *actualValue
 	}
 }
 
-void ToTurn::straight(sf::Sprite *tire, sf::Sprite *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar)
+void ToTurn::straight(sf::RectangleShape *tire, sf::RectangleShape *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar)
 {
 	if (*actualValueRotateTire > 0)
 	{

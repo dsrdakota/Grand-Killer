@@ -4,7 +4,6 @@
 #include "../Minimap.hpp"
 #include "../Radar.hpp"
 
-#include <iostream>
 #include <fstream>
 
 #define M_PI 3.14159265359
@@ -57,26 +56,9 @@ GPS::GPS()
 			linkedPoints.push_back(i);
 		}
 	}
-	
-	zoneSize = sf::Vector2f(1000, 1000);
-
-	for (size_t i = 0;i < Map::getMapSize().y / zoneSize.y;++i)
-	{
-		std::vector<std::vector<sf::Vector2f>>example;
-		zones.push_back(example);
-	}
-
-	for (size_t i = 0;i < Map::getMapSize().y / zoneSize.y;++i)
-	{
-		for (size_t j = 0;j < Map::getMapSize().y / zoneSize.y;++j)
-		{
-			std::vector<sf::Vector2f>example;
-			zones[i].push_back(example);
-		}
-	}
 
 	for (const auto &i : linkCrossing)
-		zones[i.y / zoneSize.y][i.x / zoneSize.x].push_back(i);
+		Map::Instance().getZone(Map::TypeOfZones::GPS, sf::Vector2i(i.y / Map::Instance().getZoneSize().y, i.x / Map::Instance().getZoneSize().x)).push_back(i);
 
 	playerPos = new Point(sf::Vector2f(0, 0));
 	targetPos = new Point(sf::Vector2f(0, 0));
@@ -159,13 +141,16 @@ void GPS::doRoad()
 		return;
 	}
 
-	std::vector<std::thread>threads;
+	//std::vector<std::thread>threads;
 
-	threads.push_back(std::thread(&GPS::checkAvailablePoints, this, std::ref(roadFromPlayer), targetPos, std::ref(roadLengthFromPlayer)));
-	threads.push_back(std::thread(&GPS::checkAvailablePoints, this, std::ref(roadFromTarget), playerPos, std::ref(roadLengthFromTarget)));
+	//threads.push_back(std::thread(&GPS::checkAvailablePoints, this, std::ref(roadFromPlayer), targetPos, std::ref(roadLengthFromPlayer)));
+	//threads.push_back(std::thread(&GPS::checkAvailablePoints, this, std::ref(roadFromTarget), playerPos, std::ref(roadLengthFromTarget)));
 
-	for (auto &i : threads)
-		i.join();
+	//for (auto &i : threads)
+		//i.join();
+
+	checkAvailablePoints(roadFromPlayer, targetPos, roadLengthFromPlayer);
+	checkAvailablePoints(roadFromTarget, playerPos, roadLengthFromTarget);
 
 	if (roadLengthFromPlayer < roadLengthFromTarget)
 		bestRoad = roadFromPlayer;
@@ -238,8 +223,10 @@ void GPS::optimazeRoad()
 			bestRoad.erase(bestRoad.begin() + i + 1, bestRoad.begin() + i + 2);
 }
 
-void GPS::createSegment(sf::RectangleShape *segment, Point * start, Point * stop)
+sf::RectangleShape* GPS::createSegment(Point * start, Point * stop)
 {
+	sf::RectangleShape *segment = new sf::RectangleShape;
+
 	if (start->getPointPosition().x == stop->getPointPosition().x)
 	{
 		segment->setSize(sf::Vector2f(200 , start->getPointPosition().y - stop->getPointPosition().y));
@@ -254,6 +241,7 @@ void GPS::createSegment(sf::RectangleShape *segment, Point * start, Point * stop
 	}
 
 	segment->setRotation(180);
+	return segment;
 }
 
 void GPS::checkMoveablePoints(Point * point)
@@ -271,14 +259,14 @@ sf::Vector2f GPS::getTheClosestAsphaltPosFromTarget(const sf::Vector2f & positio
 	std::vector<sf::Vector2f>closestZone;
 	float lengthFromZone = -1.f;
 
-	closestZone = zones[position.y / zoneSize.y][position.x / zoneSize.x];
+	closestZone = Map::Instance().getZone(Map::TypeOfZones::GPS,sf::Vector2i(position.y / Map::Instance().getZoneSize().y, position.x / Map::Instance().getZoneSize().x));
 
 	if (closestZone.size() < 1)
 	{
 		std::vector<sf::Vector2f>ZonesPosition;
 
-		for (size_t i = 0;i < Map::getMapSize().y; i += zoneSize.y)
-			for (size_t j = 0;j < Map::getMapSize().x; j += zoneSize.x)
+		for (size_t i = 0;i < Map::getMapSize().y; i += Map::Instance().getZoneSize().y)
+			for (size_t j = 0;j < Map::getMapSize().x; j += Map::Instance().getZoneSize().x)
 				ZonesPosition.push_back(sf::Vector2f(i, j));
 
 		for (const auto &i : ZonesPosition)
@@ -286,12 +274,12 @@ sf::Vector2f GPS::getTheClosestAsphaltPosFromTarget(const sf::Vector2f & positio
 			sf::Vector2f vector = position - i;
 			float lenght = sqrt(vector.x * vector.x + vector.y * vector.y);
 
-			if (zones[i.y / zoneSize.y][i.x / zoneSize.x].size() > 0 &&
+			if (Map::Instance().getZone(Map::TypeOfZones::GPS, sf::Vector2i(i.y / Map::Instance().getZoneSize().y, i.x / Map::Instance().getZoneSize().x)).size() > 0 &&
 				(lenght < lengthFromZone ||
 					lengthFromZone == -1.f))
 			{
 				lengthFromZone = lenght;
-				closestZone = zones[i.y / zoneSize.y][i.x / zoneSize.x];
+				closestZone = Map::Instance().getZone(Map::TypeOfZones::GPS, sf::Vector2i(i.y / Map::Instance().getZoneSize().y, i.x / Map::Instance().getZoneSize().x));
 			}
 		}
 	}
@@ -316,8 +304,7 @@ void GPS::drawGpsTexture()
 {
 	for (size_t i = 0;i < bestRoad.size() - 1;++i)
 	{
-		sf::RectangleShape *roadSegment = new sf::RectangleShape;
-		createSegment(roadSegment, bestRoad[i], bestRoad[i + 1]);
+		sf::RectangleShape *roadSegment = createSegment(bestRoad[i], bestRoad[i + 1]);
 		
 		// if it is mission - yellow color else violet
 

@@ -5,8 +5,6 @@
 #include "../Car.hpp"
 #include "../Attributes/Hitbox.hpp"
 
-// need optimize it, but later
-
 Traces::Traces(Car *car, const sf::CircleShape *tiresPos)
 {
 	this->car = car;
@@ -51,7 +49,7 @@ bool Traces::isSameTraceOnVector(const sf::Vector2f &pos, const float &rot)
 {
 	auto &traces = Map::Instance().getAllCarTraces();
 
-	for (const auto &i : traces)
+	for(const auto &i: traces)
 		if (i.first->getGlobalBounds().contains(pos) && i.first->getRotation() == rot)
 			return true;
 	return false;

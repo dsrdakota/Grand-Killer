@@ -7,11 +7,11 @@ Dodge::Dodge(const sf::Vector2f & startPos, const float & startRot)
 	sprite->setPosition(startPos);
 	sprite->setOrigin(42, 105);
 	sprite->setRotation(startRot);
-	shadow->setRotation(startRot);
 
 	shadow = new sf::Sprite(*TextureManager::get("dodge_shadow"));
 	shadow->setPosition(startPos.x + 40, startPos.y);
 	shadow->setOrigin(77, 122);
+	shadow->setRotation(startRot);
 
 	countTires = 4;
 	countDoors = 4;

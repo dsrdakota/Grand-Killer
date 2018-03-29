@@ -36,10 +36,7 @@ private:
 	sf::Sprite *radarTexture;
 	sf::RenderTexture *gpsTexture;
 
-	sf::Vector2f zoneSize;
-
 	std::vector<Point*>crossing;
-	std::vector<std::vector<std::vector<sf::Vector2f>>>zones;
 
 	std::vector<sf::Drawable*>directions;
 
@@ -54,7 +51,7 @@ private:
 	void checkAvailablePoints(std::vector<Point*> &actualRoad, Point *endTarget, float &roadLength);
 	void optimazeRoad();
 
-	void createSegment(sf::RectangleShape *segment, Point * start, Point * stop);
+	sf::RectangleShape* createSegment(Point * start, Point * stop);
 
 	void checkMoveablePoints(Point *point);
 

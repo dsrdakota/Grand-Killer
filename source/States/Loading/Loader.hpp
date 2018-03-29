@@ -15,6 +15,7 @@ private:
 	void loadCarTextures1();
 	void loadCarTextures2();
 	void loadCarDoors();
+	void loadCarTires();
 	void loadMapTiles();
 	void loadOtherTextures();
 	void loadTexturesWithName();
@@ -43,7 +44,6 @@ private:
 	};
 
 	std::vector<std::string> carTextures1 = {
-		"data/Models/Cars/carName/tire.gk",
 		"data/Models/Cars/carName/tracesTexture/asphalt.gk",
 		"data/Models/Cars/carName/tracesTexture/grass.gk"
 	};
@@ -74,6 +74,10 @@ private:
 	std::vector<std::string> carDoors = {
 		"data/Models/Cars/carName/doors/leftF.gk",
 		"data/Models/Cars/carName/doors/rightF.gk",
+	};
+
+	std::vector<std::string> carTires = {
+		"data/Models/Cars/carName/tire/",
 	};
 
 	std::vector<std::string> otherTextures = {

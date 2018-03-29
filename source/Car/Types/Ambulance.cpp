@@ -7,11 +7,11 @@ Ambulance::Ambulance(const sf::Vector2f & startPos, const float & startRot)
 	sprite->setPosition(startPos);
 	sprite->setOrigin(39, 107);
 	sprite->setRotation(startRot);
-	shadow->setRotation(startRot);
 
 	shadow = new sf::Sprite(*TextureManager::get("ambulance_shadow"));
 	shadow->setPosition(startPos.x + 40, startPos.y);
 	shadow->setOrigin(79, 122);
+	shadow->setRotation(startRot);
 
 	countTires = 4;
 	countDoors = 2;

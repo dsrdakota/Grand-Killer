@@ -21,7 +21,7 @@ public:
 		Back_right
 	};
 
-	inline sf::Sprite* getTires(const size_t &index) { return &tires[index]; }
+	inline sf::RectangleShape* getTires(const size_t &index) { return &tires[index]; }
 	inline sf::CircleShape* getTiresPos(const size_t &index) { return &tiresPos[index]; }
 
 	void updatePosition();
@@ -38,7 +38,10 @@ private:
 
 	unsigned countTires;
 
-	sf::Sprite *tires;
+	size_t textureIndex;
+	Time clock;
+
+	sf::RectangleShape *tires;
 
 	sf::CircleShape *tiresPos;
 

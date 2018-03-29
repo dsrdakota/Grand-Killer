@@ -4,13 +4,17 @@
 
 #include "../../Engine/Engine.hpp"
 
+#include <iostream>
+
 Tire::Tire(Car *car)
 {
 	this->car = car;
 	countTires = car->getCountTires();
 
-	tires = new sf::Sprite[countTires];
+	tires = new sf::RectangleShape[countTires];
 	tiresPos = new sf::CircleShape[countTires];
+
+	textureIndex = 1;
 
 	sf::CircleShape shape(3);
 	shape.setOrigin(3, 3);
@@ -18,7 +22,8 @@ Tire::Tire(Car *car)
 
 	for (size_t i = 0;i < countTires;++i)
 	{
-		tires[i].setTexture(*TextureManager::get(car->getName() + "_tire"));
+		tires[i].setSize(sf::Vector2f(11, 28));
+		tires[i].setTexture(TextureManager::get(car->getName() + "tire1"));
 		tires[i].setRotation(car->getSprite()->getRotation());
 	}
 
@@ -33,6 +38,21 @@ Tire::~Tire()
 
 void Tire::updatePosition()
 {
+	if (static_cast<int>(*car->getMovementClass()->getSpeed()) * 20 / static_cast<int>(*car->getMovementClass()->getMaxSpeed()) < 20)
+		textureIndex = static_cast<int>(*car->getMovementClass()->getSpeed()) * 20 / static_cast<int>(*car->getMovementClass()->getMaxSpeed());
+	else
+	{
+		if (clock.time->asSeconds() > 0.15f)
+		{
+			textureIndex++;
+			clock.clock->restart();
+			*clock.time = sf::Time::Zero;
+		}
+	}
+
+	if (textureIndex >= 20)
+		textureIndex = 14;
+
 	for (size_t i = 0; i < countTires; ++i)
 	{
 		tiresPos[i].setPosition(car->getSprite()->getPosition());
@@ -40,6 +60,8 @@ void Tire::updatePosition()
 
 		tires[i].setPosition(tiresPos[i].getGlobalBounds().left + tiresPos[i].getGlobalBounds().width / 2,
 			tiresPos[i].getGlobalBounds().top + tiresPos[i].getGlobalBounds().height / 2);
+
+		tires[i].setTexture(TextureManager::get(car->getName() + "tire" + std::to_string(textureIndex + 1)));
 	}
 }
 
