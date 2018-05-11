@@ -156,6 +156,17 @@ void Minimap::show(bool fromMenu)
 
 	Painter::Instance().addToInterfaceDraw(map);
 
+	if (Minimap::Instance().isTargetSet())
+	{
+		setGPSOnMinimap();
+
+		for (const auto &i : GPS::Instance().getDirections())
+				Painter::Instance().addToInterfaceDraw(i);
+
+		for (const auto &i : GPS::Instance().getLinks())
+				Painter::Instance().addToInterfaceDraw(i);
+	}
+
 	if (mapArea->getGlobalBounds().contains(player->getPosition()) && playerIsVisible)
 		Painter::Instance().addToInterfaceDraw(player);
 
@@ -254,9 +265,9 @@ void Minimap::toControl()
 		if (targetIsSet)
 		{
 			targetIsSet = false;
-			Radar::Instance().resetTexture();
-			map->setTexture(*Radar::getRadarSprite()->getTexture());
+			GPS::Instance().clear();
 		}
+
 		else if (!targetIsSet)
 		{
 			targetIsSet = true;
@@ -275,8 +286,7 @@ void Minimap::toControl()
 		if (targetIsSet)
 		{
 			targetIsSet = false;
-			Radar::Instance().resetTexture();
-			map->setTexture(*Radar::getRadarSprite()->getTexture());
+			GPS::Instance().clear();
 		}
 
 		else if (!targetIsSet)
@@ -420,4 +430,26 @@ void Minimap::setTarget()
 {
 	target->setPosition(sf::Vector2f(targetTile->getTileMiniMapSprite()->getPosition().x + lengthTargetFromTileOrigin.x,
 		targetTile->getTileMiniMapSprite()->getPosition().y + lengthTargetFromTileOrigin.y));
+}
+
+void Minimap::setGPSOnMinimap()
+{
+	sf::Vector2f scale = sf::Vector2f(map->getGlobalBounds().width / Map::getMapSize().x,
+		map->getGlobalBounds().height / Map::getMapSize().y);
+
+	for (const auto &i : GPS::Instance().getDirections())
+	{
+		i->setPosition(i->getPosition().x * (map->getGlobalBounds().width / Map::getMapSize().x) + map->getPosition().x,
+			i->getPosition().y * (map->getGlobalBounds().height / Map::getMapSize().y) + map->getPosition().y);
+
+		i->setScale(scale);
+	}
+
+	for (const auto &i : GPS::Instance().getLinks())
+	{
+		i->setPosition(i->getPosition().x * (map->getGlobalBounds().width / Map::getMapSize().x) + map->getPosition().x,
+			i->getPosition().y * (map->getGlobalBounds().height / Map::getMapSize().y) + map->getPosition().y);
+
+		i->setScale(scale);
+	}
 }

@@ -4,6 +4,7 @@
 #include "../Minimap.hpp"
 #include "../Radar.hpp"
 
+#include <iostream>
 #include <fstream>
 
 #define M_PI 3.14159265359
@@ -62,11 +63,7 @@ GPS::GPS()
 
 	playerPos = new Point(sf::Vector2f(0, 0));
 	targetPos = new Point(sf::Vector2f(0, 0));
-
-	radarTexture = new sf::Sprite(*Radar::Instance().getRadarSprite()->getTexture());
-
-	gpsTexture = new sf::RenderTexture;
-	gpsTexture->create(static_cast<unsigned>(Map::getMapSize().x), static_cast<unsigned>(Map::getMapSize().y));
+	missionPos = new Point(sf::Vector2f(0, 0));
 }
 
 GPS::~GPS()
@@ -90,18 +87,29 @@ void GPS::setTarget()
 			targetPos->addPointToMoveable(i);
 }
 
+void GPS::setMission()
+{
+	missionPos->resetPoint();
+	missionPos->setPosition(getTheClosestAsphaltPosFromTarget(Minimap::Instance().targetTile->getTileMapSprite()->getPosition()));
+
+	for (const auto &i : crossing)
+		if (checkRoadBeetwen(missionPos, i))
+			missionPos->addPointToMoveable(i);
+}
+
 void GPS::findBestRoute()
 {
-	if (Minimap::Instance().isTargetSet() && Minimap::Instance().map->getGlobalBounds().contains(Minimap::Instance().target->getPosition()))
+	if (Minimap::Instance().isTargetSet() && Minimap::Instance().map->getGlobalBounds().contains(Minimap::Instance().target->getPosition())
+		/* || is mission*/)
 	{
+		clear();
+
 		playerPos->setPosition(getTheClosestAsphaltPosFromTarget(player->getPosition()));
 
 		if (targetPos->getPointPosition() == playerPos->getPointPosition() &&
 			mGame::Instance().getGameState() == mGame::state::MainGame)
-		{
 			Minimap::Instance().targetIsSet = false;
-			Radar::Instance().resetTexture();
-		}
+
 		else if (targetPos->getPointPosition() != playerPos->getPointPosition())
 		{
 			playerPos->resetPoint();
@@ -111,14 +119,30 @@ void GPS::findBestRoute()
 					playerPos->addPointToMoveable(i);
 
 			doRoad();
-			drawGpsTexture();
+			drawGpsTexture(sf::Color(164, 76, 242));
 		}
 	}
 }
 
-std::vector<sf::Drawable*>& GPS::getDirections()
+void GPS::clear()
+{
+	for (const auto &i : directions)
+		delete i;
+	for (const auto &i : links)
+		delete i;
+
+	directions.clear();
+	links.clear();
+}
+
+std::vector<sf::RectangleShape*>& GPS::getDirections()
 {
 	return directions;
+}
+
+std::vector<sf::CircleShape*>& GPS::getLinks()
+{
+	return links;
 }
 
 void GPS::doRoad()
@@ -141,14 +165,6 @@ void GPS::doRoad()
 		return;
 	}
 
-	//std::vector<std::thread>threads;
-
-	//threads.push_back(std::thread(&GPS::checkAvailablePoints, this, std::ref(roadFromPlayer), targetPos, std::ref(roadLengthFromPlayer)));
-	//threads.push_back(std::thread(&GPS::checkAvailablePoints, this, std::ref(roadFromTarget), playerPos, std::ref(roadLengthFromTarget)));
-
-	//for (auto &i : threads)
-		//i.join();
-
 	checkAvailablePoints(roadFromPlayer, targetPos, roadLengthFromPlayer);
 	checkAvailablePoints(roadFromTarget, playerPos, roadLengthFromTarget);
 
@@ -156,8 +172,6 @@ void GPS::doRoad()
 		bestRoad = roadFromPlayer;
 	else
 		bestRoad = roadFromTarget;
-
-	optimazeRoad();
 }
 
 void GPS::checkAvailablePoints(std::vector<Point*> &actualRoad, Point *endTarget, float &roadLength)
@@ -214,13 +228,6 @@ void GPS::checkAvailablePoints(std::vector<Point*> &actualRoad, Point *endTarget
 			actualRoad.push_back(point);
 	}
 	actualRoad = savedRoadToTarget;
-}
-
-void GPS::optimazeRoad()
-{
-	for (size_t i = 0; i < bestRoad.size() - 2; ++i)
-		if (checkRoadBeetwen(bestRoad[i], bestRoad[i + 2]))
-			bestRoad.erase(bestRoad.begin() + i + 1, bestRoad.begin() + i + 2);
 }
 
 sf::RectangleShape* GPS::createSegment(Point * start, Point * stop)
@@ -299,25 +306,27 @@ sf::Vector2f GPS::getTheClosestAsphaltPosFromTarget(const sf::Vector2f & positio
 
 	return pos;
 }
-
-void GPS::drawGpsTexture()
+// if it is mission - yellow color else violet
+void GPS::drawGpsTexture(const sf::Color &roadColor)
 {
+	auto createLink = [&](const sf::Vector2f &position) {
+		sf::CircleShape *point = new sf::CircleShape(100);
+		point->setOrigin(point->getRadius(), point->getRadius());
+		point->setFillColor(roadColor);
+		point->setPosition(position);
+		links.push_back(point);
+	};
+
+	createLink(targetPos->getPointPosition());
+
 	for (size_t i = 0;i < bestRoad.size() - 1;++i)
 	{
 		sf::RectangleShape *roadSegment = createSegment(bestRoad[i], bestRoad[i + 1]);
-		
-		// if it is mission - yellow color else violet
-
+	
 		for (size_t j = 0;j < 2;++j)
-		{
-			sf::CircleShape *point = new sf::CircleShape(100);
-			point->setOrigin(point->getRadius(), point->getRadius());
-			point->setFillColor(sf::Color(164, 76, 242));
-			point->setPosition(bestRoad[i]->getPointPosition());
-			directions.push_back(point);
-		}
+			createLink(bestRoad[i]->getPointPosition());
 
-		roadSegment->setFillColor(sf::Color(164, 76, 242));
+		roadSegment->setFillColor(roadColor);
 		directions.push_back(roadSegment);
 	}
 }

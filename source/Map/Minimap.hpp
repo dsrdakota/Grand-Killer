@@ -84,6 +84,8 @@ private:
 	void setPlayerVisible();
 	void setTarget();
 
+	void setGPSOnMinimap();
+
 	friend class MapInMenu;
 	friend class GPS;
 	friend class Radar;

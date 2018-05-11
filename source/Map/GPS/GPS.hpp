@@ -6,8 +6,6 @@
 #include "../../Engine/Engine.hpp"
 #include "Point.hpp"
 
-#include <thread>
-
 class GPS
 {
 public:
@@ -25,20 +23,21 @@ public:
 
 	void setPlayer(IObject *player);
 	void setTarget();
+	void setMission();
 	void findBestRoute();
+	void clear();
 
-	std::vector<sf::Drawable*>&getDirections();
+	std::vector<sf::RectangleShape*>&getDirections();
+	std::vector<sf::CircleShape*>&getLinks();
 
 private:
 
 	GPS();
 
-	sf::Sprite *radarTexture;
-	sf::RenderTexture *gpsTexture;
-
 	std::vector<Point*>crossing;
 
-	std::vector<sf::Drawable*>directions;
+	std::vector<sf::RectangleShape*>directions;
+	std::vector<sf::CircleShape*>links;
 
 	std::vector<Point*>bestRoad;
 
@@ -46,17 +45,17 @@ private:
 
 	Point *playerPos;
 	Point *targetPos;
+	Point *missionPos;
 
 	void doRoad();
 	void checkAvailablePoints(std::vector<Point*> &actualRoad, Point *endTarget, float &roadLength);
-	void optimazeRoad();
 
 	sf::RectangleShape* createSegment(Point * start, Point * stop);
 
 	void checkMoveablePoints(Point *point);
 
 	sf::Vector2f getTheClosestAsphaltPosFromTarget(const sf::Vector2f &position);
-	void drawGpsTexture();
+	void drawGpsTexture(const sf::Color &roadColor);
 
 	bool checkRoadBeetwen(Point *p1, Point *p2);
 };

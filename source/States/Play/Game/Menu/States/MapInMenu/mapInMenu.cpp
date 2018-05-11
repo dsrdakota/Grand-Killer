@@ -2,6 +2,7 @@
 
 #include "../../../../../../Map/Radar.hpp"
 #include "../../../../../../Map/Minimap.hpp"
+#include "../../../../../../Map/GPS/GPS.hpp"
 
 MapInMenu::MapInMenu()
 {
@@ -100,15 +101,36 @@ void MapInMenu::cutMap()
 
 	cuttedMapTexture->create(static_cast<unsigned>(mapArea->getGlobalBounds().width), static_cast<unsigned>(mapArea->getGlobalBounds().height));
 
-	cuttedMapTexture->clear(sf::Color(0,0,0,0));
+	cuttedMapTexture->clear(sf::Color(0, 0, 0, 0));
 
-	map->move(-mapArea->getPosition());
+	map->setPosition(map->getPosition() - mapArea->getPosition());
 	cuttedMapTexture->draw(*map);
+
+	if (Minimap::Instance().targetIsSet)
+	{
+		for (const auto &i : GPS::Instance().getDirections())
+		{
+			sf::Vector2f pos = i->getPosition();
+			i->setPosition(i->getPosition() - mapArea->getPosition());
+			cuttedMapTexture->draw(*i);
+
+			i->setPosition(pos);
+		}
+
+		for (const auto &i : GPS::Instance().getLinks())
+		{
+			sf::Vector2f pos = i->getPosition();
+			i->setPosition(i->getPosition() - mapArea->getPosition());
+			cuttedMapTexture->draw(*i);
+
+			i->setPosition(pos);
+		}
+	}
 
 	cuttedMapTexture->display();
 
 	cuttedMapTexture->setSmooth(true);
-
+	
 	cuttedMap->setTexture(cuttedMapTexture->getTexture());
 	cuttedMap->setPosition(mapArea->getPosition());
 }

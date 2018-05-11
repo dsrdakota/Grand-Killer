@@ -68,19 +68,11 @@ sf::Sprite * Map::getMap()
 
 void Map::drawUnder()
 {
-	for (const auto &i : GPS::Instance().getDirections())
-		delete i;
-
-	GPS::Instance().getDirections().clear();
-
 	GPS::Instance().findBestRoute();
 
 	Painter::Instance().addToDraw(map);
 
 	updateTraces();
-
-	for (const auto &i : GPS::Instance().getDirections())
-		Painter::Instance().addToDraw(i);
 }
 
 void Map::drawOn()

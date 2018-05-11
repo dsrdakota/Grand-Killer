@@ -8,6 +8,7 @@
 #include "../../Map/Map.hpp"
 
 #include "../Car.hpp"
+#include <iostream>
 
 #define PI 3.14159265359f
 
@@ -80,6 +81,16 @@ void Movement::setSpeed(const float & speed)
 const double * Movement::getMaxSpeed()
 {
 	return MAX_SPEED;
+}
+
+void Movement::setCollidSide(const Hitbox::collisionSide & side)
+{
+	collideSide = side;
+}
+
+Hitbox::collisionSide Movement::getCollidSide()
+{
+	return collideSide;
 }
 
 void Movement::updatePosition()
@@ -162,14 +173,15 @@ void Movement::move()
 	sf::Vector2f v(0, 0);
 	sf::Vector2f w = getMovementVector(car->getSprite()->getRotation() - static_cast<float>(*car->getToTurnClass()->getSlidePhycics()->getOverSteer()));
 
-	double SPEED = 0;
+	double *SPEED = nullptr;
 	switch (*movingState)
 	{
+	case stateMoving::stop:
 	case stateMoving::front:
-		SPEED = *speedf;
+		SPEED = speedf;
 		break;
 	case stateMoving::back:
-		SPEED = *speedb;
+		SPEED = speedb;
 		w = -w;
 		break;
 	}
@@ -179,18 +191,49 @@ void Movement::move()
 	rotateAble = true;
 	moveAble = true;
 
-	Hitbox::collisionSide firstCheckingSide = Hitbox::collisionSide::None;
-	Hitbox::collisionSide secondCheckingSide = Hitbox::collisionSide::None;
+	// rotate crash
+	Hitbox::collisionSide rotateFirstCheckingSide = Hitbox::collisionSide::None;
+	Hitbox::collisionSide rotateSecondCheckingSide = Hitbox::collisionSide::None;
+
+	// move crash
+	Hitbox::collisionSide moveFirstCheckingSide = Hitbox::collisionSide::None;
+	Hitbox::collisionSide moveSecondCheckingSide = Hitbox::collisionSide::None;
+	Hitbox::collisionSide moveThirdCheckingSide = Hitbox::collisionSide::None;
 
 	if (powerOfCrashRotate.second > 0) // right rotate
 	{
-		firstCheckingSide = Hitbox::collisionSide::RightUp;
-		secondCheckingSide = Hitbox::collisionSide::LeftDown;
+		rotateFirstCheckingSide = Hitbox::collisionSide::RightUp;
+		rotateSecondCheckingSide = Hitbox::collisionSide::LeftDown;
 	}
 	else if (powerOfCrashRotate.second < 0) // left rotate
 	{
-		firstCheckingSide = Hitbox::collisionSide::LeftUp;
-		secondCheckingSide = Hitbox::collisionSide::RightDown;
+		rotateFirstCheckingSide = Hitbox::collisionSide::LeftUp;
+		rotateSecondCheckingSide = Hitbox::collisionSide::RightDown;
+	}
+
+	if (collideSide == Hitbox::collisionSide::Front)
+	{
+		moveFirstCheckingSide = Hitbox::collisionSide::LeftDown;
+		moveSecondCheckingSide = Hitbox::collisionSide::Back;
+		moveThirdCheckingSide = Hitbox::collisionSide::RightDown;
+	}
+	else if (collideSide == Hitbox::collisionSide::Back)
+	{
+		moveFirstCheckingSide = Hitbox::collisionSide::LeftUp;
+		moveSecondCheckingSide = Hitbox::collisionSide::Front;
+		moveThirdCheckingSide = Hitbox::collisionSide::RightUp;
+	}
+	else if (collideSide == Hitbox::collisionSide::Left)
+	{
+		moveFirstCheckingSide = Hitbox::collisionSide::LeftUp;
+		moveSecondCheckingSide = Hitbox::collisionSide::Left;
+		moveThirdCheckingSide = Hitbox::collisionSide::LeftDown;
+	}
+	else if (collideSide == Hitbox::collisionSide::Right)
+	{
+		moveFirstCheckingSide = Hitbox::collisionSide::RightUp;
+		moveSecondCheckingSide = Hitbox::collisionSide::Right;
+		moveThirdCheckingSide = Hitbox::collisionSide::RightDown;
 	}
 
 	// some car simulation like in Box2d ;d
@@ -199,7 +242,7 @@ void Movement::move()
 
 	for (float i = 1;i <= 4;i += simulationStep)
 	{
-		v = w * static_cast<float>(SPEED) / 4.f * simulationStep;
+		v = w * static_cast<float>(*SPEED) / 4.f * simulationStep;
 		car->getHitboxClass()->moveHitboxes(v);
 
 		auto resultWithWall = carWithWall::checkCollisions(car, false);
@@ -209,8 +252,8 @@ void Movement::move()
 
 		if (powerOfCrashRotate.second != 0)
 		{
-			if (resultWithWall == firstCheckingSide ||
-				resultWithWall == secondCheckingSide)
+			if (resultWithWall == rotateFirstCheckingSide ||
+				resultWithWall == rotateSecondCheckingSide)
 				rotateAble = false;
 		}
 
@@ -219,25 +262,26 @@ void Movement::move()
 			auto resultWithCars = carWithCar::checkCollisions(car, j);
 			if (resultWithCars != Hitbox::collisionSide::None)
 			{
-				if ((resultWithCars == Hitbox::collisionSide::Front ||
-					resultWithCars == Hitbox::collisionSide::LeftUp ||
-					resultWithCars == Hitbox::collisionSide::RightUp) &&
+				/*if (resultWithCars == Hitbox::collisionSide::Front &&
 					*movingState == stateMoving::front)
 					breakLoop = true;
 
-				else if ((resultWithCars == Hitbox::collisionSide::Back ||
-					resultWithCars == Hitbox::collisionSide::LeftDown ||
-					resultWithCars == Hitbox::collisionSide::RightDown) &&
+				else if (resultWithCars == Hitbox::collisionSide::Back &&
 					*movingState == stateMoving::back)
-					breakLoop = true;
+					breakLoop = true;*/
 
-				powerOfCrashMove = std::make_pair(sf::Vector2f(0, 0), 0.f);
-				moveAble = false;
+				if (resultWithCars == moveFirstCheckingSide ||
+					resultWithCars == moveSecondCheckingSide ||
+					resultWithCars == moveThirdCheckingSide)
+				{
+					powerOfCrashMove = std::make_pair(sf::Vector2f(0, 0), 0.f);
+					moveAble = false;
+				}
 
 				if (powerOfCrashRotate.second != 0 && rotateAble)
 				{
-					if (resultWithCars == firstCheckingSide ||
-						resultWithCars == secondCheckingSide)
+					if (resultWithCars == rotateFirstCheckingSide ||
+						resultWithCars == rotateSecondCheckingSide)
 						rotateAble = false;
 				}
 			}
@@ -260,13 +304,13 @@ void Movement::move()
 		}
 
 		if (powerOfCrashMove.second > 0)
-			car->move(powerOfCrashMove.first / 4.f * simulationStep);
+			car->move(powerOfCrashMove.first / 4.f * simulationStep * 2.f);
 
 		car->getTireClass()->setTraces();
 	}
 
-	powerOfCrashMove.second *= 0.2f;
-	powerOfCrashMove.first *= 0.2f;
+	powerOfCrashMove.second *= 0.9f;
+	powerOfCrashMove.first *= 0.9f;
 
 	if (fabs(powerOfCrashMove.second) < 0.021f)
 	{
@@ -276,11 +320,16 @@ void Movement::move()
 
 	carWithWall::checkCollisions(car);
 
-	if (SPEED < 0.02) // eliminate bugs ;/
+	if (*SPEED < 0.02) // eliminate bugs ;/
 	{
 		*speedf = 0;
 		*speedb = 0;
 	}
+	
+	for (size_t i = 0;i < 8;++i)
+		car->getHitboxClass()->getBoolIsCollision(static_cast<Hitbox::collisionSide>(i)) = false;
+
+	collideSide = Hitbox::collisionSide::None;
 }
 
 void Movement::acceleratingFunction(double *speed, double *counterSpeed, const double MAX_SPEED, bool &stateKey)

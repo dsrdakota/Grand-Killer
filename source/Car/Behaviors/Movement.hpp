@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "../Attributes/Hitbox.hpp"
+
 class Car;
 
 class Movement
@@ -23,6 +25,8 @@ public:
 	int getTypeOfDrive() { return static_cast<int>(drive); };
 	int getStateMoving() { return static_cast<int>(*movingState); }
 
+	void setCollidSide(const Hitbox::collisionSide &side);
+	Hitbox::collisionSide getCollidSide();
 	void setPowerOfCrashMove(const std::pair<sf::Vector2f, float> &power) { powerOfCrashMove = power; }
 	void setPowerOfCrashRotate(const std::pair<float,float>&power) { powerOfCrashRotate = power; }
 
@@ -48,6 +52,7 @@ private:
 
 	TypeOfDrive drive;
 
+	Hitbox::collisionSide collideSide;
 	std::pair<sf::Vector2f,float> powerOfCrashMove;
 	std::pair<float, float> powerOfCrashRotate;
 

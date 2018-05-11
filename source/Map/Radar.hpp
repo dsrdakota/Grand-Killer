@@ -24,8 +24,6 @@ public:
 	void update(IObject *player);
 	void draw();
 
-	void resetTexture();
-
 private:
 
 	Radar();
@@ -38,6 +36,9 @@ private:
 	sf::Sprite *radarView;
 	sf::Sprite *radarView2; // more opacity
 	sf::RectangleShape *radarArea;
+
+	sf::RectangleShape *gps;
+	sf::RectangleShape *gps2; // more opacity
 
 	sf::Vector2f scale;
 
@@ -54,4 +55,6 @@ private:
 	sf::RectangleShape *thirdBackground;
 
 	void centerMapOnPlayer();
+	void setGPSOnRadar();
+	void cutGPSDirections();
 };
