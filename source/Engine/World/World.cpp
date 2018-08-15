@@ -2,6 +2,8 @@
 
 #include "../../Physics/CollisionChecker/CollisionChecker.hpp"
 
+#include <iostream>
+
 std::vector<Moveable*> &World::getObjects()
 {
 	return objects;
@@ -20,18 +22,25 @@ void World::simulate()
 	{
 		for (auto object : objects)
 		{
-			sf::Vector2f vector = object->getMovementVector() * object->getSpeed() / 4.f * simulationStep;
+			sf::Vector2f movementVector = object->getMovementVector();
 
-			if (vector != sf::Vector2f(0, 0) && object->collider->collideCount <= 0)
+			if (object->getStateMoving() == Moveable::StateMoving::Back)
+				movementVector = -movementVector;
+
+			sf::Vector2f vector = movementVector * object->getSpeed() / 4.f * simulationStep;
+
+			//if (vector != sf::Vector2f(0, 0) && object->collider->collideCount <= 0)
 				object->move(vector);
 		}
 
-		CollisionChecker::checkCollision();
+		//CollisionChecker::checkCollision();
 	}
 
 	for (auto object : objects)
 	{
-		object->rigidbody->applyForces();
-		object->rigidbody->applyTorques();
+		object->setStateMoving();
+
+		//object->rigidbody->applyForces();
+		//object->rigidbody->applyTorques();
 	}
 }

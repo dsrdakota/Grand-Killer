@@ -76,9 +76,9 @@ void Camera::setViewScale(IObject * player)
 
 	if (player->getCar() != nullptr)
 	{
-		if (*player->getCar()->getMovementClass()->getSpeed() > 5.f)
+		if (player->getCar()->getSpeed() > 5.f)
 		{
-			newScale = 0.9f + ((static_cast<float>(*player->getCar()->getMovementClass()->getSpeed()) - 5.f) * 0.1f) / (static_cast<float>(*player->getCar()->getMovementClass()->getMaxSpeed()) / 3.f);
+			newScale = 0.9f + ((static_cast<float>(player->getCar()->getSpeed()) - 5.f) * 0.1f) / (static_cast<float>(player->getCar()->getMaxSpeed()) / 3.f);
 
 			if (scale != newScale)
 			{
@@ -104,7 +104,7 @@ void Camera::setViewScale(IObject * player)
 		}
 		else
 		{
-			newScale = 0.9f + (static_cast<float>(*player->getCar()->getMovementClass()->getSpeed()) * 0.1f) / (static_cast<float>(*player->getCar()->getMovementClass()->getMaxSpeed()) / 3.f);
+			newScale = 0.9f + (static_cast<float>(player->getCar()->getSpeed()) * 0.1f) / (static_cast<float>(player->getCar()->getMaxSpeed()) / 3.f);
 			
 			if (scale > newScale)
 			{

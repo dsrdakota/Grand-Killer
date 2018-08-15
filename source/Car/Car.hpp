@@ -7,16 +7,14 @@
 #include "Attributes/Door.hpp"
 #include "Attributes/Tire.hpp"
 
-#include "Behaviors/Movement.hpp"
 #include "Behaviors/ToTurn.hpp"
 #include "Behaviors/Slide.hpp"
 #include "Behaviors/Traces.hpp"
 
-class Car 
+class Car : public Moveable
 {
 public: 
 
-	Movement* getMovementClass();
 	ToTurn* getToTurnClass();
 	Door* getDoorClass();
 	Tire* getTireClass();
@@ -37,9 +35,13 @@ public:
 	void setDriver(IObject *driver);
 	IObject* getDriver();
 
+	const sf::Vector2f getPosition() const override;
+	const float getRotation() const override;
+
+	void move(const sf::Vector2f& offset) const override;
+	void rotate(const float &angle) const override;
+
 	void control();
-	void move(const sf::Vector2f &offset);
-	void rotate(const float &angle);
 
 	void draw();
 	void drawShadow();
@@ -48,7 +50,6 @@ protected:
 
 	IObject *driver;
 
-	Movement *movement;
 	ToTurn *toTurn;
 
 	Door *door;

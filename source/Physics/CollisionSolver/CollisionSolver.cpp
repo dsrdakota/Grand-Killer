@@ -1,5 +1,6 @@
 #include "CollisionSolver.hpp"
 
+#include "../Force/Force.hpp"
 #include "../../Tools/Equation.hpp"
 
 #include <iostream>
@@ -23,17 +24,11 @@ void CollisionSolver::addMoveForce()
 	auto force1 = object1->rigidbody->getFinalForce();
 	auto force2 = object2->rigidbody->getFinalForce();
 
-	std::cout << force1->getDirection().x << ' ' << force1->getDirection().y << ' ' << force1->getPower() << std::endl;
-	std::cout << force2->getDirection().x << ' ' << force2->getDirection().y << ' ' << force2->getPower() << std::endl;
+	object1->rigidbody->addForce(Force(force2.getDirection(), (force1.getPower() + force2.getPower()) / 4.f));
+	object2->rigidbody->addForce(Force(-force2.getDirection(), (force1.getPower() + force2.getPower()) / 8.f));
 
-	object1->rigidbody->addForce(new Force(pointOfCollision, force2->getDirection(), (force1->getPower() + force2->getPower()) / 4.f));
-	object2->rigidbody->addForce(new Force(pointOfCollision, -force2->getDirection(), (force1->getPower() + force2->getPower()) / 8.f));
-
-	object2->rigidbody->addForce(new Force(pointOfCollision, force1->getDirection(), (force1->getPower() + force2->getPower()) / 4.f));
-	object1->rigidbody->addForce(new Force(pointOfCollision, -force1->getDirection(), (force1->getPower() + force2->getPower()) / 8.f));
-
-	delete force1;
-	delete force2;
+	object2->rigidbody->addForce(Force(force1.getDirection(), (force1.getPower() + force2.getPower()) / 4.f));
+	object1->rigidbody->addForce(Force(-force1.getDirection(), (force1.getPower() + force2.getPower()) / 8.f));
 }
 
 void CollisionSolver::addRotateForce()
@@ -49,20 +44,17 @@ void CollisionSolver::calculateRotateForce(Moveable * object1, Moveable * object
 	auto force1 = object1->rigidbody->getFinalForce();
 	auto force2 = object2->rigidbody->getFinalForce();
 
-	float power = (force1->getPower() + force2->getPower()) / 2.f;
+	float power = (force1.getPower() + force2.getPower()) / 2.f;
 
-	float torque = lengthVector.x * force1->getDirection().y * power - lengthVector.y * force1->getDirection().x * power;
+	float torque = lengthVector.x * force1.getDirection().y * power - lengthVector.y * force1.getDirection().x * power;
 
 	torque /= 200.f;
 
 	object2->rigidbody->addTorque(torque);
 
-	torque = lengthVector.x * force1->getDirection().y * power - lengthVector.y * force1->getDirection().x * power;
+	torque = lengthVector.x * force1.getDirection().y * power - lengthVector.y * force1.getDirection().x * power;
 
 	torque /= 200.f;
 
 	object1->rigidbody->addTorque(torque);
-
-	delete force1;
-	delete force2;
 }

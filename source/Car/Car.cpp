@@ -21,11 +21,6 @@ Car::~Car()
 	delete weight;
 }
 
-Movement * Car::getMovementClass()
-{
-	return movement;
-}
-
 ToTurn * Car::getToTurnClass()
 {
 	return toTurn;
@@ -95,13 +90,17 @@ IObject * Car::getDriver()
 	return driver;
 }
 
-void Car::control()
+const sf::Vector2f Car::getPosition() const
 {
-	if (!driver)
-		noneDriver();
+	return sprite->getPosition();
 }
 
-void Car::move(const sf::Vector2f &offset)
+const float Car::getRotation() const
+{
+	return sprite->getRotation();
+}
+
+void Car::move(const sf::Vector2f & offset) const
 {
 	sprite->move(offset);
 	shadow->move(offset);
@@ -109,7 +108,7 @@ void Car::move(const sf::Vector2f &offset)
 	door->move(offset);
 }
 
-void Car::rotate(const float & angle)
+void Car::rotate(const float & angle) const
 {
 	sprite->rotate(angle);
 	shadow->rotate(angle);
@@ -117,18 +116,27 @@ void Car::rotate(const float & angle)
 	door->rotate(angle);
 }
 
+void Car::control()
+{
+	if (!driver)
+		noneDriver();
+}
+
 void Car::setAttributes()
 {
+	MAX_SPEED = CarConfig::getValue(name, "MAX_SPEED");
+	acceleration = CarConfig::getValue(name, "acceleration");
+	breakingForce = CarConfig::getValue(name, "breakingForce");
+
 	door = new Door(this);
 	tire = new Tire(this);
 
-	movement = new Movement(this);
 	toTurn = new ToTurn(this);
 }
 
 void Car::noneDriver()
 {
-	movement->slack();
+	slack();
 	toTurn->updatePosition();
 }
 

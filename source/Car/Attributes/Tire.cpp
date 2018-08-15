@@ -38,8 +38,8 @@ Tire::~Tire()
 
 void Tire::updatePosition()
 {
-	if (static_cast<int>(*car->getMovementClass()->getSpeed()) * 20 / static_cast<int>(*car->getMovementClass()->getMaxSpeed()) < 20)
-		textureIndex = static_cast<int>(*car->getMovementClass()->getSpeed()) * 20 / static_cast<int>(*car->getMovementClass()->getMaxSpeed());
+	if (static_cast<int>(car->getSpeed()) * 20 / static_cast<int>(car->getMaxSpeed()) < 20)
+		textureIndex = static_cast<int>(car->getSpeed()) * 20 / static_cast<int>(car->getMaxSpeed());
 	else
 	{
 		if (clock.time->asSeconds() > 0.15f)

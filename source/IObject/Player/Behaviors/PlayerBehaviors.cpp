@@ -21,20 +21,16 @@ void PlayerBehaviors::controlBody()
 void PlayerBehaviors::controlCar()
 {
 	if (!sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Type::Break)) && sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Type::Gas)))
-		car->getMovementClass()->gas();
-	else
-		stateKeyGas = false;
+		car->gas();
 
 	if (sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Type::Break)))
-		car->getMovementClass()->brake();
-	else
-		stateKeyBrake = false;
+		car->brake();
 
 	if (sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Type::HandBreak)))
-		car->getMovementClass()->handBrake();
+		car->handBrake();
 
-	if (!stateKeyGas && !stateKeyBrake)
-		car->getMovementClass()->slack();
+	if (!sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Type::Break)) && !sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Type::Gas)))
+		car->slack();
 
 	if (sf::Keyboard::isKeyPressed(GlobalSteerage::getKey(GlobalSteerage::Sections::Car, GlobalSteerage::Type::TurnLeft)))
 		car->getToTurnClass()->turning(ToTurn::Direction::Left);

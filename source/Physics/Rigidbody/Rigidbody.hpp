@@ -12,9 +12,9 @@ public:
 	Rigidbody(Moveable *object);
 	~Rigidbody();
 
-	Force* getFinalForce();
+	Force getFinalForce();
 
-	void addForce(Force *force);
+	void addForce(const Force &force);
 
 	void addTorque(const float &power);
 
@@ -23,13 +23,11 @@ public:
 	void applyForces();
 	void applyTorques();
 
-	void draw(sf::RenderWindow &window);
-
 private:
 
 	Moveable *object;
 
-	std::vector<Force*>forces;
+	std::vector<Force>forces;
 
 	float torque;
 	std::vector<float>torques;

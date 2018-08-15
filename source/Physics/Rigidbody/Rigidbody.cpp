@@ -11,18 +11,17 @@ Rigidbody::Rigidbody(Moveable *object)
 
 Rigidbody::~Rigidbody()
 {
-	for (auto i : forces)
-		delete i;
+	
 }
 
-Force * Rigidbody::getFinalForce()
+Force Rigidbody::getFinalForce()
 {
 	sf::Vector2f direction = sf::Vector2f(0, 0);
 	float power = 0;
 	for (auto i : forces)
 	{
-		direction += i->getDirection();
-		power += i->getPower();
+		direction += i.getDirection();
+		power += i.getPower();
 	}
 
 	direction += object->getMovementVector();
@@ -31,10 +30,10 @@ Force * Rigidbody::getFinalForce()
 	direction /= static_cast<float>(forces.size()) + 1;
 	power /= static_cast<float>(forces.size()) + 1;
 
-	return new Force(object->collider->getPosition(), direction, power);
+	return Force(direction, power);
 }
 
-void Rigidbody::addForce(Force * force)
+void Rigidbody::addForce(const Force &force)
 {
 	forces.push_back(force);
 }
@@ -46,9 +45,6 @@ void Rigidbody::addTorque(const float & power)
 
 void Rigidbody::clearForces()
 {
-	for (auto i : forces)
-		delete i;
-
 	forces.clear();
 
 	torques.clear();
@@ -58,11 +54,11 @@ void Rigidbody::applyForces()
 {
 	for(size_t i = 0;i<forces.size();)
 	{
-		object->move(forces[i]->getDirection() * forces[i]->getPower());
+		object->move(forces[i].getDirection() * forces[i].getPower());
 
-		forces[i]->getPower() -= 0.09f;
+		forces[i].getPower() -= 0.09f;
 
-		if (forces[i]->getPower() <= 0)
+		if (forces[i].getPower() <= 0)
 		{
 			//delete forces[i];
 			forces.erase(forces.begin());
@@ -90,11 +86,5 @@ void Rigidbody::applyTorques()
 		else
 			++i;
 	}
-}
-
-void Rigidbody::draw(sf::RenderWindow & window)
-{
-	for (auto i : forces)
-		i->draw(window);
 }
 

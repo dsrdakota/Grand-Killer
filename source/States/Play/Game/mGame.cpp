@@ -55,6 +55,8 @@ bool mGame::play()
 
 			player->getBehaviors()->control();
 
+			World::Instance().simulate();
+
 			draw();
 
 			break;
@@ -97,15 +99,13 @@ void mGame::draw()
 	Map::Instance().drawUnder();
 
 	for (const auto &i : cars)
+	{
 		i->drawShadow();
 
-	for (const auto &i : cars)
-	{
 		i->draw();
 
 		if (*gameState == state::MainGame)
 		{
-			i->getMovementClass()->updatePosition();
 			i->control();
 		}
 	}
