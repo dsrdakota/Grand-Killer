@@ -25,8 +25,8 @@ mGame::mGame()
 	cars.push_back(new Dodge(sf::Vector2f(5200, 5200), 0));
 
 	cars.push_back(new Police(sf::Vector2f(1000, 200), 50));
-	cars.push_back(new Mini_truck(sf::Vector2f(2000, 2000), 180));
-	cars.push_back(new Black_viper(sf::Vector2f(5200, 2200), 80));
+	//cars.push_back(new Mini_truck(sf::Vector2f(2000, 2000), 180));
+	//cars.push_back(new Black_viper(sf::Vector2f(5200, 2200), 80));
 	cars.push_back(new Ambulance(sf::Vector2f(3200, 2200), 280));
 }
 

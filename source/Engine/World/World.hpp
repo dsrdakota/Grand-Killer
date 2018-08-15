@@ -1,25 +1,23 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include "../../Physics/Moveable/Moveable.hpp"
 
 class World
 {
 public:
 
-	~World();
-
-	World(const World &) = delete;
-	void operator=(const World &) = delete;
-
-	inline static World& Instance()
+	static World &Instance()
 	{
 		static World world;
 		return world;
 	}
 
+	std::vector<Moveable*> &getObjects();
+
+	void addMoveableObject(Moveable *object);
 	void simulate();
 
-private:
+//private:
 
-	World();
+	std::vector<Moveable*>objects;
 };

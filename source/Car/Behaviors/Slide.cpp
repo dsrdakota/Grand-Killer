@@ -79,10 +79,10 @@ void Slide::setOverSteer(const int & drivingStatus)
 	if (*car->getMovementClass()->getSpeed() > 1 && !car->getMovementClass()->getStateMoving() &&
 		(*car->getMovementClass()->getSpeed() > *car->getMovementClass()->getMaxSpeed() * 0.92f || // car on asphalt
 			isSlide ||
-			(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && *car->getMovementClass()->getSpeed() > 0) ||
-			(car->getMovementClass()->getTypeOfDrive() ?
-				Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*car->getTireClass()->getTiresPos(2))) && Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*car->getTireClass()->getTiresPos(3)))
-				: Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*car->getTireClass()->getTiresPos(0))) && Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*car->getTireClass()->getTiresPos(1))))))
+			(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && *car->getMovementClass()->getSpeed() > 0))) //||
+			//(car->getMovementClass()->getTypeOfDrive() ?
+				//Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*car->getTireClass()->getTiresPos(2))) && Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*car->getTireClass()->getTiresPos(3)))
+				//: Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*car->getTireClass()->getTiresPos(0))) && Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*car->getTireClass()->getTiresPos(1))))))
 	{
 		Status status = static_cast<Status>(drivingStatus);
 		if (status == Status::TurningLeft)
@@ -197,15 +197,15 @@ void Slide::isTireOnGrass(sf::CircleShape * hitbox, double &powerDoing, double &
 	const double POWER_REDUCE_ON_ASPHALT = 0.7;
 	const double POWER_REDUCE_ON_GRASS = 0.6;
 
-	if (Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*hitbox)))
+	//if (Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*hitbox)))
 	{
 		powerDoing += POWER_DOING_ON_GRASS;
 		powerReduce += POWER_REDUCE_ON_GRASS;
 	}
 
-	else
+	//else
 	{
-		powerDoing += POWER_DOING_ON_ASPHALT;
-		powerReduce += POWER_REDUCE_ON_ASPHALT;
+		//powerDoing += POWER_DOING_ON_ASPHALT;
+		//powerReduce += POWER_REDUCE_ON_ASPHALT;
 	}
 }

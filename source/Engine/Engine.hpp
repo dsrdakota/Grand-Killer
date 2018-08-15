@@ -16,6 +16,7 @@
 #include "GlobalSettings/GlobalSettings.hpp"
 #include "GlobalSettings/GlobalSteerage.hpp"
 #include "Config/CarConfig.hpp"
+#include "World/World.hpp"
 
 class Engine
 {

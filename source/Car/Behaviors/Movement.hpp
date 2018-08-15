@@ -2,8 +2,6 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../Attributes/Hitbox.hpp"
-
 class Car;
 
 class Movement
@@ -19,14 +17,12 @@ public:
 	Movement(Car *car);
 	~Movement();
 
-	const double* getSpeed();
+	const float* getSpeed();
 	void setSpeed(const float &speed);
-	const double* getMaxSpeed();
+	const float* getMaxSpeed();
 	int getTypeOfDrive() { return static_cast<int>(drive); };
 	int getStateMoving() { return static_cast<int>(*movingState); }
 
-	void setCollidSide(const Hitbox::collisionSide &side);
-	Hitbox::collisionSide getCollidSide();
 	void setPowerOfCrashMove(const std::pair<sf::Vector2f, float> &power) { powerOfCrashMove = power; }
 	void setPowerOfCrashRotate(const std::pair<float,float>&power) { powerOfCrashRotate = power; }
 
@@ -44,15 +40,14 @@ public:
 
 private:
 
-	double *speedf, *speedb; // f - front , b - back
+	float *speedf, *speedb; // f - front , b - back
 
-	double *acceleration; // not const cuz can do car tuning ;d
-	double *breakingForce;
-	const double *MAX_SPEED;
+	float *acceleration; // not const cuz can do car tuning ;d
+	float *breakingForce;
+	const float *MAX_SPEED;
 
 	TypeOfDrive drive;
 
-	Hitbox::collisionSide collideSide;
 	std::pair<sf::Vector2f,float> powerOfCrashMove;
 	std::pair<float, float> powerOfCrashRotate;
 
@@ -72,8 +67,8 @@ private:
 
 	void move();
 	void setStateMoving();
-	void acceleratingFunction(double *speed, double *counterSpeed, const double MAX_SPEED, bool &stateKey);
-	void breakingFunction(double * speed, double breakValue = 0, double minSpeed = 0);
+	void acceleratingFunction(float *speed, float *counterSpeed, const float MAX_SPEED, bool &stateKey);
+	void breakingFunction(float * speed, float breakValue = 0, float minSpeed = 0);
 	float toRad(float degrees);
 
 	Car *car;

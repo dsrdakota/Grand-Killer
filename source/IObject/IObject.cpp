@@ -25,7 +25,7 @@ void IObject::getOutOfCar()
 
 const sf::Vector2f & IObject::getPosition()
 {
-	if (car)
+	if (car != nullptr)
 		return car->getSprite()->getPosition();
 	else
 		return sprite->getPosition();

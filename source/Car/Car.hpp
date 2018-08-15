@@ -6,7 +6,6 @@
 
 #include "Attributes/Door.hpp"
 #include "Attributes/Tire.hpp"
-#include "Attributes/Hitbox.hpp"
 
 #include "Behaviors/Movement.hpp"
 #include "Behaviors/ToTurn.hpp"
@@ -21,7 +20,6 @@ public:
 	ToTurn* getToTurnClass();
 	Door* getDoorClass();
 	Tire* getTireClass();
-	Hitbox* getHitboxClass();
 
 	const std::string& getName();
 	const sf::Sprite* getSprite();
@@ -55,7 +53,6 @@ protected:
 
 	Door *door;
 	Tire *tire;
-	Hitbox *hitbox;
 
 	unsigned *weight;
 	int *damageCondition;

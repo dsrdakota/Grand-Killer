@@ -2,7 +2,7 @@
 
 Mini_truck::Mini_truck(const sf::Vector2f & startPos, const float & startRot)
 {
-	name = "Mini_truck";
+	name = "Mini truck";
 	sprite = new sf::Sprite(*TextureManager::get("mini_truck"));
 	sprite->setPosition(startPos);
 	sprite->setOrigin(54, 116);

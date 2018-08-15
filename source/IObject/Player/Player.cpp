@@ -10,6 +10,8 @@ Player::Player(const sf::Vector2f &startPos, const float &startRot)
 	armor = 100;
 	condition = 100;
 
+	car = nullptr;
+
 	behaviors = new PlayerBehaviors;
 }
 

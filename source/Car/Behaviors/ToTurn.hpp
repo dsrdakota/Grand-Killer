@@ -2,8 +2,6 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../Attributes/Hitbox.hpp"
-
 #include "Movement.hpp"
 #include "ToTurn.hpp"
 #include "Slide.hpp"
@@ -61,9 +59,7 @@ private:
 
 	void turn(sf::RectangleShape *tire, sf::RectangleShape *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar);
 	void straight(sf::RectangleShape *tire, sf::RectangleShape *counterTire, double *actualValueRotateTire, const double &angleTire, double *actualValueRotateCar, const double *angleCar);
-	void rotateCar(const float & actualValueRotateCar, const Hitbox::collisionSide &sideFirst, const Hitbox::collisionSide &sideSecond, const std::pair<std::vector<sf::CircleShape*>,std::vector<sf::CircleShape*>>&hitboxLeftRight);
-
-	bool checkCollisionWithOneHitbox(const std::vector<sf::CircleShape*>& hitbox, const float & angle);
+	void rotateCar(const float & actualValueRotateCar);
 
 	void addValue(double &value, const double &addValue, const double &max);
 	void reduceValue(double &value, const double &reduceValue, const double &min);

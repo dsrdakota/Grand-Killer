@@ -27,7 +27,7 @@ Tire::Tire(Car *car)
 		tires[i].setRotation(car->getSprite()->getRotation());
 	}
 
-	traces = new Traces(car, tiresPos);
+	//traces = new Traces(car, tiresPos);
 }
 
 Tire::~Tire()
@@ -88,7 +88,7 @@ void Tire::rotate(const double & angle)
 
 void Tire::setTraces()
 {
-	traces->setTraces();
+	//traces->setTraces();
 }
 
 void Tire::draw()

@@ -41,11 +41,6 @@ Tire * Car::getTireClass()
 	return tire;
 }
 
-Hitbox * Car::getHitboxClass()
-{
-	return hitbox;
-}
-
 const std::string & Car::getName()
 {
 	return name;
@@ -126,7 +121,6 @@ void Car::setAttributes()
 {
 	door = new Door(this);
 	tire = new Tire(this);
-	hitbox = new Hitbox(this);
 
 	movement = new Movement(this);
 	toTurn = new ToTurn(this);
@@ -140,8 +134,6 @@ void Car::noneDriver()
 
 void Car::draw()
 {
-	hitbox->update();
-
 	if (!Camera::isOutsideView(shadow->getGlobalBounds()) &&
 		!Camera::isOutsideView(this->getGlobalBounds()))
 	{
@@ -150,8 +142,6 @@ void Car::draw()
 		Painter::Instance().addToDraw(sprite);
 
 		door->drawDoors();
-
-		hitbox->draw();
 	}
 }
 

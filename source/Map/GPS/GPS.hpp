@@ -6,6 +6,8 @@
 #include "../../Engine/Engine.hpp"
 #include "Point.hpp"
 
+#include <iostream>
+
 class GPS
 {
 public:
@@ -48,6 +50,7 @@ private:
 	Point *missionPos;
 
 	void doRoad();
+
 	void checkAvailablePoints(std::vector<Point*> &actualRoad, Point *endTarget, float &roadLength);
 
 	sf::RectangleShape* createSegment(Point * start, Point * stop);

@@ -148,7 +148,7 @@ std::vector<sf::CircleShape*>& GPS::getLinks()
 void GPS::doRoad()
 {
 	bestRoad.clear();
-
+	
 	std::vector<Point*> roadFromPlayer;
 	std::vector<Point*> roadFromTarget;
 

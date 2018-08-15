@@ -1,6 +1,7 @@
 #include "CarConfig.hpp"
 
 #include <fstream>
+#include <iostream>
 
 void CarConfig::loadCarConfig(const std::string &carName)
 {
@@ -22,6 +23,10 @@ void CarConfig::loadMovementConfig(const std::string &carName)
 
 	double value;
 	file >> value;
+
+	if (carName == "Black viper")
+		std::cout << value << std::endl;
+
 	Instance().values[carName]["MAX_SPEED"] = value;
 	file >> value;
 	Instance().values[carName]["acceleration"] = value;

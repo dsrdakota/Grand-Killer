@@ -2,7 +2,7 @@
 
 Black_viper::Black_viper(const sf::Vector2f & startPos, const float & startRot)
 {
-	name = "Black_viper";
+	name = "Black viper";
 	sprite = new sf::Sprite(*TextureManager::get("black_viper"));
 	sprite->setPosition(startPos);
 	sprite->setOrigin(44, 111);
