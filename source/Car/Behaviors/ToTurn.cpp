@@ -155,7 +155,9 @@ void ToTurn::rotateCar(const float & actualValueRotateCar)
 	if (car->getSpeed() < 4)
 		valueRotate = actualValueRotateCar * static_cast<float>(car->getSpeed()) / 4.f;
 
-	if (car->getStateMoving() != Moveable::StateMoving::Stop)
+	switch (car->getStateMoving())
+	{
+	case Car::StateMoving::Front:
 	{
 		int side = valueRotate > 0 ? 2 : 1; // right : left
 
@@ -164,8 +166,13 @@ void ToTurn::rotateCar(const float & actualValueRotateCar)
 		else
 			car->rotate(-valueRotate);
 	}
-	else if (car->getStateMoving() == Moveable::StateMoving::Back)
+		break;
+	case Car::StateMoving::Back:
+
 		car->rotate(valueRotate);
+
+		break;
+	}
 }
 
 void ToTurn::addValue(double & value, const double & addValue, const double & max)
