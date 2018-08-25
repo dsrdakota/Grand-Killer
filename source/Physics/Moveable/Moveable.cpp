@@ -2,10 +2,11 @@
 
 #include "../../Engine/Engine.hpp"
 
-#include <iostream>
+#include "../../Car/Car.hpp"
 
-Moveable::Moveable()
+Moveable::Moveable(Car *car)
 {
+	this->car = car;
 	speedf = 0;
 	speedb = 0;
 	World::Instance().addMoveableObject(this);
@@ -34,7 +35,8 @@ const float Moveable::getSpeed() const
 const sf::Vector2f Moveable::getMovementVector() const
 {
 	sf::Vector2f v;
-	float rad = toRad(getRotation());
+	float oversterr = car == nullptr ? 0 : car->getToTurnClass()->getSlidePhycics()->getOverSteer();
+	float rad = toRad(getRotation() - oversterr);
 
 	v.x = std::sin(rad);
 	v.y = -std::cos(rad);
@@ -76,7 +78,10 @@ void Moveable::setSpeed(const float & speed)
 
 void Moveable::gas()
 {
-	acceleratingFunction(speedf, speedb, MAX_SPEED);
+	if (!car->getToTurnClass()->getSlidePhycics()->getSlideBool() && !sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		acceleratingFunction(speedf, speedb, MAX_SPEED);
+	else
+		breakingFunction(speedf, 0.1f, 5.f);
 }
 
 void Moveable::brake()

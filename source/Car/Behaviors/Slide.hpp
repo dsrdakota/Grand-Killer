@@ -9,12 +9,11 @@ class Slide
 public:
 
 	Slide(Car *car);
-	~Slide();
 
-	const double* getOverSteer();
+	const float getOverSteer();
 	const int getOverSteerSide();
 	const bool getSlideBool();
-	double *getBreakingForceOfSlide();
+	float& getBreakingForceOfSlide();
 	void breakSlide();
 	void setOverSteer(const int &drivingStatus);
 	void setPowerOfSlide(std::pair<sf::CircleShape*, sf::CircleShape*>hitbox);
@@ -30,16 +29,16 @@ private:
 
 	Car *car;
 
-	const double *MAX_OVERSTEER_LEFT, *MAX_OVERSTEER_RIGHT;
-	double *overSteerLeft, *overSteerRight;
-	double *powerDoingSlide;
-	double *powerReduceSlide;
+	const float MAX_OVERSTEER_LEFT, MAX_OVERSTEER_RIGHT;
+	float overSteerLeft, overSteerRight;
+	float powerDoingSlide;
+	float powerReduceSlide;
 	bool isSlide;
 
-	double *breakingForce;
+	float breakingForce;
 
 	void reduceOverSteer();
-	void doSlide(const double &angle, double *overSteer, const double *MAX_OVERSTEER);
-	void reduceSlide(const double&angle, double *overSteer);
-	void isTireOnGrass(sf::CircleShape * hitbox, double &powerDoing, double &powerReduce);
+	void doSlide(const float &angle, float &overSteer, const float &MAX_OVERSTEER);
+	void reduceSlide(const float&angle, float &overSteer);
+	void isTireOnGrass(sf::CircleShape * hitbox, float &powerDoing, float &powerReduce);
 };

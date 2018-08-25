@@ -4,40 +4,25 @@
 
 #include "../Car.hpp"
 
-Slide::Slide(Car * car)
+Slide::Slide(Car * car) : MAX_OVERSTEER_LEFT(-60), MAX_OVERSTEER_RIGHT(60)
 {
 	this->car = car;
-	MAX_OVERSTEER_LEFT = new const double(-60);
-	MAX_OVERSTEER_RIGHT = new const double(60);
-	overSteerLeft = new double(0);
-	overSteerRight = new double(0);
-	powerDoingSlide = new double(0.5);
-	powerReduceSlide = new double(1);
+	overSteerLeft = 0;
+	overSteerRight = 0;
+	powerDoingSlide = 0.5;
+	powerReduceSlide = 1;
 	isSlide = false;
 
-	breakingForce = new double(0);
+	breakingForce = 0;
 }
 
-Slide::~Slide()
+const float Slide::getOverSteer()
 {
-	delete overSteerLeft;
-	delete overSteerRight;
-	delete powerDoingSlide;
-	delete powerReduceSlide;
+	float overSteer = 0;
 
-	delete MAX_OVERSTEER_LEFT;
-	delete MAX_OVERSTEER_RIGHT;
-
-	delete breakingForce;
-}
-
-const double * Slide::getOverSteer()
-{
-	double *overSteer = new double(0);
-
-	if (fabs(*overSteerLeft) >0 && fabs(*overSteerRight) <= 0)
+	if (fabs(overSteerLeft) >0 && fabs(overSteerRight) <= 0)
 		return overSteerLeft;
-	else if (fabs(*overSteerRight) >0 && fabs(*overSteerLeft) <= 0)
+	else if (fabs(overSteerRight) >0 && fabs(overSteerLeft) <= 0)
 		return overSteerRight;
 
 	return overSteer;
@@ -45,9 +30,9 @@ const double * Slide::getOverSteer()
 
 const int Slide::getOverSteerSide()
 {
-	if (fabs(*overSteerLeft) >0 && fabs(*overSteerRight) <= 0)
+	if (fabs(overSteerLeft) >0 && fabs(overSteerRight) <= 0)
 		return 1;
-	else if (fabs(*overSteerRight) >0 && fabs(*overSteerLeft) <= 0)
+	else if (fabs(overSteerRight) >0 && fabs(overSteerLeft) <= 0)
 		return 2;
 	return 0;
 }
@@ -57,15 +42,15 @@ const bool Slide::getSlideBool()
 	return isSlide;
 }
 
-double * Slide::getBreakingForceOfSlide()
+float& Slide::getBreakingForceOfSlide()
 {
 	return breakingForce;
 }
 
 void Slide::breakSlide()
 {
-	*overSteerLeft = 0;
-	*overSteerRight = 0;
+	overSteerLeft = 0;
+	overSteerRight = 0;
 }
 
 void Slide::setOverSteer(const int & drivingStatus)
@@ -87,53 +72,53 @@ void Slide::setOverSteer(const int & drivingStatus)
 		Status status = static_cast<Status>(drivingStatus);
 		if (status == Status::TurningLeft)
 		{
-			if (fabs(*overSteerRight) <= 0)
-				doSlide(-*powerDoingSlide, overSteerLeft, MAX_OVERSTEER_LEFT);
+			if (fabs(overSteerRight) <= 0)
+				doSlide(-powerDoingSlide, overSteerLeft, MAX_OVERSTEER_LEFT);
 			else
-				reduceSlide(-(*powerReduceSlide * 2), overSteerRight);
+				reduceSlide(-(powerReduceSlide * 2), overSteerRight);
 		}
 		else if (status == Status::TurningRight)
 		{
-			if (fabs(*overSteerLeft) <= 0)
-				doSlide(*powerDoingSlide, overSteerRight, MAX_OVERSTEER_RIGHT);
+			if (fabs(overSteerLeft) <= 0)
+				doSlide(powerDoingSlide, overSteerRight, MAX_OVERSTEER_RIGHT);
 			else
-				reduceSlide(*powerReduceSlide * 2, overSteerLeft);
+				reduceSlide(powerReduceSlide * 2, overSteerLeft);
 		}
 		else
 		{
-			if (*overSteerLeft && !*overSteerRight)
-				reduceSlide(*powerReduceSlide, overSteerLeft);
+			if (overSteerLeft && !overSteerRight)
+				reduceSlide(powerReduceSlide, overSteerLeft);
 			else
-				*overSteerLeft = 0;
+				overSteerLeft = 0;
 
-			if (*overSteerRight && !*overSteerLeft)
-				reduceSlide(-*powerReduceSlide, overSteerRight);
+			if (overSteerRight && !overSteerLeft)
+				reduceSlide(-powerReduceSlide, overSteerRight);
 			else
-				*overSteerRight = 0;
+				overSteerRight = 0;
 
-			if (!*overSteerRight && !*overSteerLeft)
+			if (!overSteerRight && !overSteerLeft)
 				isSlide = false;
 		}
 	}
 	else
 	{
-		if (*overSteerLeft && !*overSteerRight)
-			reduceSlide(*powerReduceSlide, overSteerLeft);
+		if (overSteerLeft && !overSteerRight)
+			reduceSlide(powerReduceSlide, overSteerLeft);
 		else
-			*overSteerLeft = 0;
+			overSteerLeft = 0;
 
-		if (*overSteerRight && !*overSteerLeft)
-			reduceSlide(-*powerReduceSlide, overSteerRight);
+		if (overSteerRight && !overSteerLeft)
+			reduceSlide(-powerReduceSlide, overSteerRight);
 		else
-			*overSteerRight = 0;
+			overSteerRight = 0;
 
-		if (!*overSteerRight && !*overSteerLeft)
+		if (!overSteerRight && !overSteerLeft)
 			isSlide = false;
 
 		if (car->getSpeed() <= 0)
 		{
-			*overSteerLeft = 0;
-			*overSteerRight = 0;
+			overSteerLeft = 0;
+			overSteerRight = 0;
 			isSlide = false;
 		}
 	}
@@ -143,8 +128,8 @@ void Slide::setPowerOfSlide(std::pair<sf::CircleShape*, sf::CircleShape*>hitbox)
 {
 	// R 133 G 91 B 0
 
-	double PowerDoingOfBothHitbox = 0;
-	double PowerReduceOfBothHitbox = 0;
+	float PowerDoingOfBothHitbox = 0;
+	float PowerReduceOfBothHitbox = 0;
 
 	isTireOnGrass(hitbox.first, PowerDoingOfBothHitbox, PowerReduceOfBothHitbox);
 	isTireOnGrass(hitbox.second, PowerDoingOfBothHitbox, PowerReduceOfBothHitbox);
@@ -152,50 +137,50 @@ void Slide::setPowerOfSlide(std::pair<sf::CircleShape*, sf::CircleShape*>hitbox)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		PowerDoingOfBothHitbox += 2;
 
-	*powerDoingSlide = PowerDoingOfBothHitbox / 2;
-	*powerReduceSlide = PowerReduceOfBothHitbox / 2;
+	powerDoingSlide = PowerDoingOfBothHitbox / 2;
+	powerReduceSlide = PowerReduceOfBothHitbox / 2;
 }
 
-void Slide::doSlide(const double &angle, double *overSteer, const double *MAX_OVERSTEER)
+void Slide::doSlide(const float &angle, float &overSteer, const float &MAX_OVERSTEER)
 {
-	if (fabs(*overSteer) < fabs(*MAX_OVERSTEER))
+	if (fabs(overSteer) < fabs(MAX_OVERSTEER))
 	{
-		if (fabs(*overSteer) + -fabs(angle) <= fabs(*MAX_OVERSTEER))
-			*overSteer += angle;
+		if (fabs(overSteer) + -fabs(angle) <= fabs(MAX_OVERSTEER))
+			overSteer += angle;
 		else
-			*overSteer = *MAX_OVERSTEER;
-		car->rotate(static_cast<float>(angle));
+			overSteer = MAX_OVERSTEER;
+		car->rotate(angle);
 
-		*breakingForce += 0.1;
+		breakingForce += 0.1;
 
-		if (fabs(*overSteer) >= 5)
+		if (fabs(overSteer) >= 5)
 			isSlide = true;
 	}
 }
 
-void Slide::reduceSlide(const double & angle, double * overSteer)
+void Slide::reduceSlide(const float &angle, float &overSteer)
 {
-	if (fabs(*overSteer) > 0)
+	if (fabs(overSteer) > 0)
 	{
-		if (fabs(*overSteer) + -fabs(angle) >= 0)
-			*overSteer += angle;
+		if (fabs(overSteer) + -fabs(angle) >= 0)
+			overSteer += angle;
 		else
-			*overSteer = 0;
+			overSteer = 0;
 
 		isSlide = false;
 
-		if (*breakingForce - 0.1 > 0)
-			*breakingForce -= 0.1;
+		if (breakingForce - 0.1 > 0)
+			breakingForce -= 0.1;
 	}
 }
 
-void Slide::isTireOnGrass(sf::CircleShape * hitbox, double &powerDoing, double &powerReduce)
+void Slide::isTireOnGrass(sf::CircleShape * hitbox, float &powerDoing, float &powerReduce)
 {
-	const double POWER_DOING_ON_ASPHALT = 0.3;
-	const double POWER_DOING_ON_GRASS = 0.4;
+	const float POWER_DOING_ON_ASPHALT = 0.3;
+	const float POWER_DOING_ON_GRASS = 0.4;
 
-	const double POWER_REDUCE_ON_ASPHALT = 0.7;
-	const double POWER_REDUCE_ON_GRASS = 0.6;
+	const float POWER_REDUCE_ON_ASPHALT = 0.7;
+	const float POWER_REDUCE_ON_GRASS = 0.6;
 
 	//if (Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*hitbox)))
 	{

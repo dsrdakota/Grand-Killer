@@ -4,7 +4,7 @@
 
 #include "../Engine/Engine.hpp"
 
-Car::Car() 
+Car::Car() : Moveable(this)
 { 
 	sprite = new sf::Sprite();
 	shadow = new sf::Sprite();

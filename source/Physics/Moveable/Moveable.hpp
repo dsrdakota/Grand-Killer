@@ -4,6 +4,7 @@
 #include "../Collider/Collider.hpp"
 #include "../Rigidbody/Rigidbody.hpp"
 
+class Car;
 class Moveable
 {
 public:
@@ -32,6 +33,8 @@ public:
 
 //protected:
 
+	Car *car;
+
 	Rigidbody * rigidbody;
 	Collider *collider;
 
@@ -42,7 +45,7 @@ public:
 	float breakingForce;
 	float MAX_SPEED; // not const cuz can do car tuning ;d
 
-	Moveable();
+	Moveable(Car *car);
 	~Moveable();
 
 	virtual const sf::Vector2f getPosition() const = 0;
