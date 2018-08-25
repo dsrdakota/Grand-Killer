@@ -135,10 +135,10 @@ void Slide::setPowerOfSlide(std::pair<sf::CircleShape*, sf::CircleShape*>hitbox)
 	isTireOnGrass(hitbox.second, PowerDoingOfBothHitbox, PowerReduceOfBothHitbox);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-		PowerDoingOfBothHitbox += 2;
+		PowerDoingOfBothHitbox += 2.f;
 
-	powerDoingSlide = PowerDoingOfBothHitbox / 2;
-	powerReduceSlide = PowerReduceOfBothHitbox / 2;
+	powerDoingSlide = PowerDoingOfBothHitbox / 2.f;
+	powerReduceSlide = PowerReduceOfBothHitbox / 2.f;
 }
 
 void Slide::doSlide(const float &angle, float &overSteer, const float &MAX_OVERSTEER)
@@ -151,7 +151,7 @@ void Slide::doSlide(const float &angle, float &overSteer, const float &MAX_OVERS
 			overSteer = MAX_OVERSTEER;
 		car->rotate(angle);
 
-		breakingForce += 0.1;
+		breakingForce += 0.1f;
 
 		if (fabs(overSteer) >= 5)
 			isSlide = true;
@@ -169,18 +169,18 @@ void Slide::reduceSlide(const float &angle, float &overSteer)
 
 		isSlide = false;
 
-		if (breakingForce - 0.1 > 0)
-			breakingForce -= 0.1;
+		if (breakingForce - 0.1f > 0)
+			breakingForce -= 0.1f;
 	}
 }
 
 void Slide::isTireOnGrass(sf::CircleShape * hitbox, float &powerDoing, float &powerReduce)
 {
-	const float POWER_DOING_ON_ASPHALT = 0.3;
-	const float POWER_DOING_ON_GRASS = 0.4;
+	const float POWER_DOING_ON_ASPHALT = 0.3f;
+	const float POWER_DOING_ON_GRASS = 0.4f;
 
-	const float POWER_REDUCE_ON_ASPHALT = 0.7;
-	const float POWER_REDUCE_ON_GRASS = 0.6;
+	const float POWER_REDUCE_ON_ASPHALT = 0.7f;
+	const float POWER_REDUCE_ON_GRASS = 0.6f;
 
 	//if (Map::isPointOnGrass(Hitbox::getCenterOfHitbox(*hitbox)))
 	{

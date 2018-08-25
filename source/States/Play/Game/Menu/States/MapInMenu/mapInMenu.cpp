@@ -3,6 +3,8 @@
 #include "../../../../../../Map/Radar.hpp"
 #include "../../../../../../Map/Minimap.hpp"
 #include "../../../../../../Map/GPS/GPS.hpp"
+#include "../../../../../../Map/ObjectsManager/MinimapIcons.hpp"
+
 
 MapInMenu::MapInMenu()
 {
@@ -37,8 +39,9 @@ void MapInMenu::setPosition(const sf::Vector2f &borderXrange, const sf::Vector2f
 	map->setPosition(TilesManager::getTilesVector()[0][0]->getTileMiniMapSprite()->getPosition());
 	cutMap();
 
-	player = Minimap::Instance().player;
-	target = Minimap::Instance().target;
+	player = MinimapIcons::Instance().getIcons()[(int)MinimapIconType::Player]->getSprite();
+	target = MinimapIcons::Instance().getIcons()[(int)MinimapIconType::Target]->getSprite();
+	missionTarget = MinimapIcons::Instance().getIcons()[(int)MinimapIconType::MissionTarget]->getSprite();
 }
 
 bool MapInMenu::exit()
@@ -54,8 +57,9 @@ void MapInMenu::drawActive()
 	{
 		active = false;
 
-		player = Minimap::Instance().player;
-		target = Minimap::Instance().target;
+		player = MinimapIcons::Instance().getIcons()[(int)MinimapIconType::Player]->getSprite();
+		target = MinimapIcons::Instance().getIcons()[(int)MinimapIconType::Target]->getSprite();
+		missionTarget = MinimapIcons::Instance().getIcons()[(int)MinimapIconType::MissionTarget]->getSprite();
 
 		map->setScale(Minimap::Instance().scale);
 		map->setPosition(TilesManager::getTilesVector()[0][0]->getTileMiniMapSprite()->getPosition());
@@ -81,6 +85,9 @@ void MapInMenu::drawUnactive()
 
 	if (mapArea->getGlobalBounds().contains(target->getPosition()) && Minimap::Instance().targetIsSet)
 		Painter::Instance().addToInterfaceDraw(target);
+
+	if (mapArea->getGlobalBounds().contains(missionTarget->getPosition()) && Minimap::Instance().missionTargetIsSet)
+		Painter::Instance().addToInterfaceDraw(missionTarget);
 }
 
 bool MapInMenu::isActive()

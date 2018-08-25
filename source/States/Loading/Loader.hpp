@@ -94,6 +94,7 @@ private:
 
 	std::vector<std::pair<std::string, std::string>>textureWithName = {
 		std::make_pair("playerMinimap", "data/Map/Minimap/player.gk"),
+		std::make_pair("missionTargetMinimap", "data/Map/Minimap/missionTarget.gk"),
 		std::make_pair("targetMinimap", "data/Map/Minimap/target.gk"),
 		std::make_pair("Audi_rightB", "data/Models/Cars/Audi/doors/rightB.gk"),
 		std::make_pair("Audi_leftB", "data/Models/Cars/Audi/doors/leftB.gk"),

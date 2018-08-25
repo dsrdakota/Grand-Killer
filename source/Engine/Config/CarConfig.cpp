@@ -10,7 +10,7 @@ void CarConfig::loadCarConfig(const std::string &carName)
 	loadTurnConfig(carName);
 }
 
-double CarConfig::getValue(const std::string &carName, const std::string & valueName)
+float CarConfig::getValue(const std::string &carName, const std::string & valueName)
 {
 	return Instance().values[carName][valueName];
 }
@@ -21,7 +21,7 @@ void CarConfig::loadMovementConfig(const std::string &carName)
 	std::transform(lowerCarName.begin(), lowerCarName.end(), lowerCarName.begin(), ::tolower);
 	std::ifstream file("data/Models/Cars/" + carName + '/' + lowerCarName + ".movement"); // binary soon
 
-	double value;
+	float value;
 	file >> value;
 
 	if (carName == "Black viper")
@@ -45,7 +45,7 @@ void CarConfig::loadTurnConfig(const std::string &carName)
 	std::transform(lowerCarName.begin(), lowerCarName.end(), lowerCarName.begin(), ::tolower);
 	std::ifstream file("data/Models/Cars/" + carName + '/' + lowerCarName + ".turn"); // binary soon
 
-	double value;
+	float value;
 	file >> value;
 	Instance().values[carName]["SPEED_ROTATE_CAR"] = value;
 	file >> value;

@@ -13,6 +13,8 @@ public:
 
 	void operator=(const TextureManager &) = delete;
 
+	static void save(sf::Texture* texture, const std::string &textureName);
+
 	static sf::Texture* load(const std::string &textureName, const std::string &texturePath);
 
 	static bool unload(const std::string &textureName);

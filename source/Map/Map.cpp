@@ -68,7 +68,7 @@ sf::Sprite * Map::getMap()
 
 void Map::drawUnder()
 {
-	GPS::Instance().findBestRoute();
+	GPS::Instance().findBestRoutes();
 
 	Painter::Instance().addToDraw(map);
 

@@ -3,9 +3,9 @@
 #include "../Game.hpp"
 
 #include "../Engine/Engine.hpp"
-#include "../Map/ObjectsManager/Tiles.hpp"
-#include "../Map/Radar.hpp"
+#include "Radar.hpp"
 #include "GPS/GPS.hpp"
+#include "ObjectsManager/MinimapIcons.hpp"
 
 Minimap::Minimap()
 {
@@ -22,11 +22,6 @@ Minimap::Minimap()
 	background = new sf::RectangleShape(static_cast<sf::Vector2f>(window->getSize()));
 	background->setFillColor(sf::Color(1, 36, 3, 200));
 
-	player = new sf::Sprite(*TextureManager::get("playerMinimap"));
-	player->setOrigin(player->getGlobalBounds().left + player->getGlobalBounds().width / 2.f, player->getGlobalBounds().top + player->getGlobalBounds().height / 2.f);
-
-	target = new sf::Sprite(*TextureManager::get("targetMinimap"));
-	target->setOrigin(target->getGlobalBounds().left + target->getGlobalBounds().width / 2.f, target->getGlobalBounds().top + target->getGlobalBounds().height / 2.f);
 
 	for (int i = 0;i < 4;++i)
 	{
@@ -47,8 +42,6 @@ Minimap::Minimap()
 
 	targetIsSet = false;
 	canSetTarget = false;
-
-	playerIsVisible = 2;
 
 	navigation.push_back(std::make_pair(new Text(sf::Color::White, 10, "PUNKT TRASY"), KeysManager::Instance().getKeySprite(KeysManager::Keys::Enter)));
 	navigation[0].second->setScale(0.9f, 0.9f);
@@ -79,9 +72,7 @@ Minimap::~Minimap()
 {
 	delete map;
 	delete mapArea;
-	delete player;
 
-	delete target;
 	delete cursor;
 
 	for (const auto &i : navigation)
@@ -146,10 +137,17 @@ void Minimap::setPosition()
 	resetCooldown();
 }
 
+void Minimap::setMissionTargetPosition(const sf::Vector2f & globalPosition)
+{
+	missionTargetIsSet = true;
+
+	MinimapIcons::Instance().getIcons()[(int)MinimapIconType::MissionTarget]->setPosition(globalPosition);
+	GPS::Instance().setMissionTarget();
+}
+
 void Minimap::show(bool fromMenu)
 {
 	toControl();
-	setPlayerVisible();
 
 	if (!fromMenu)
 		Painter::Instance().addToInterfaceDraw(background);
@@ -167,11 +165,24 @@ void Minimap::show(bool fromMenu)
 				Painter::Instance().addToInterfaceDraw(i);
 	}
 
-	if (mapArea->getGlobalBounds().contains(player->getPosition()) && playerIsVisible)
-		Painter::Instance().addToInterfaceDraw(player);
-
-	if (mapArea->getGlobalBounds().contains(target->getPosition()) && targetIsSet)
-		Painter::Instance().addToInterfaceDraw(target);
+	for (auto &icon : MinimapIcons::Instance().getIcons())
+	{
+		if (mapArea->getGlobalBounds().contains(icon->getPosition()))
+		{
+			if (icon->getType() == MinimapIconType::Target)
+			{
+				if (targetIsSet)
+					icon->draw();
+			}
+			else if (icon->getType() == MinimapIconType::MissionTarget)
+			{
+				if (missionTargetIsSet)
+					icon->draw();
+			}
+			else
+				icon->draw();
+		}
+	}
 
 	for (const auto &i : navigation)
 	{
@@ -204,16 +215,10 @@ const bool Minimap::isTargetSet()
 	return targetIsSet;
 }
 
-const sf::Vector2f & Minimap::getTargetPos()
+void Minimap::setPlayerPosition(const sf::Vector2f &globalPosition, const float &angle)
 {
-	return target->getPosition();
-}
-
-void Minimap::setPlayerPosition(Tile *playerTile, const sf::Vector2f &lengthPlayerFromTileOrigin, const float &rot)
-{
-	this->playerTile = playerTile;
-	this->lengthPlayerFromTileOrigin = lengthPlayerFromTileOrigin;
-	playerRotation = rot;
+	MinimapIcons::Instance().getIcons()[(int)MinimapIconType::Player]->setPosition(globalPosition);
+	MinimapIcons::Instance().getIcons()[(int)MinimapIconType::Player]->setRotation(angle);
 
 	setTilesScale();
 	centerMapOnPlayer();
@@ -260,43 +265,33 @@ void Minimap::toControl()
 	if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
 		canSetTarget = true;
 
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && canSetTarget)
+	if ((sf::Mouse::isButtonPressed(sf::Mouse::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) && canSetTarget)
 	{
 		if (targetIsSet)
 		{
 			targetIsSet = false;
 			GPS::Instance().clear();
 		}
-
-		else if (!targetIsSet)
+		else
 		{
 			targetIsSet = true;
 
-			targetTile = getTileUnderMouse();
-			lengthTargetFromTileOrigin = static_cast<sf::Vector2f>(sf::Mouse::getPosition()) - targetTile->getTileMiniMapSprite()->getPosition();
+			Tile *targetTile = nullptr;
+			sf::Vector2f lengthFromTile = sf::Vector2f(0, 0);
 
-			setTarget();
-			GPS::Instance().setTarget();
-		}
-		canSetTarget = false;
-	}
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				targetTile = getTileUnderMouse();
+				lengthFromTile = static_cast<sf::Vector2f>(sf::Mouse::getPosition()) - targetTile->getTileMiniMapSprite()->getPosition();
+			}
+			else
+			{
+				targetTile = getCenterTileOnWindow();
+				lengthFromTile = centerOfTag->getPosition() - targetTile->getTileMiniMapSprite()->getPosition();
+			}
 
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && canSetTarget)
-	{
-		if (targetIsSet)
-		{
-			targetIsSet = false;
-			GPS::Instance().clear();
-		}
-
-		else if (!targetIsSet)
-		{
-			targetIsSet = true;
-
-			targetTile = getCenterTileOnWindow();
-			lengthTargetFromTileOrigin = centerOfTag->getPosition() - targetTile->getTileMiniMapSprite()->getPosition();
-
-			setTarget();
+			MinimapIcons::Instance().getIcons()[(int)MinimapIconType::Target]->setPosition(targetTile, lengthFromTile);
+			updateIcons();
 			GPS::Instance().setTarget();
 		}
 		canSetTarget = false;
@@ -371,8 +366,11 @@ void Minimap::centerMapOnTile(sf::Sprite *tileSprite, const sf::Vector2f &length
 
 void Minimap::centerMapOnPlayer()
 {
-	sf::Vector2f moveOffset = sf::Vector2f((mapArea->getPosition().x + mapArea->getGlobalBounds().width / 2.f) - (playerTile->getTileMiniMapSprite()->getPosition().x + lengthPlayerFromTileOrigin.x * scale.x),
-		(mapArea->getPosition().y + mapArea->getGlobalBounds().height / 2.f) - (playerTile->getTileMiniMapSprite()->getPosition().y + lengthPlayerFromTileOrigin.y * scale.y));
+	Tile *playerTile = MinimapIcons::Instance().getIcons()[0]->getTile();
+	sf::Vector2f lengthFromTile = MinimapIcons::Instance().getIcons()[0]->getLengthFromTile();
+
+	sf::Vector2f moveOffset = sf::Vector2f((mapArea->getPosition().x + mapArea->getGlobalBounds().width / 2.f) - (playerTile->getTileMiniMapSprite()->getPosition().x + lengthFromTile.x * scale.x),
+		(mapArea->getPosition().y + mapArea->getGlobalBounds().height / 2.f) - (playerTile->getTileMiniMapSprite()->getPosition().y + lengthFromTile.y * scale.y));
 
 	moveAllTiles(moveOffset);
 }
@@ -390,12 +388,13 @@ void Minimap::updateIcons()
 {
 	map->setPosition(mapTiles[0][0]->getTileMiniMapSprite()->getPosition());
 
-	player->setPosition(sf::Vector2f(playerTile->getTileMiniMapSprite()->getPosition().x + lengthPlayerFromTileOrigin.x * scale.x,
-		playerTile->getTileMiniMapSprite()->getPosition().y + lengthPlayerFromTileOrigin.y * scale.y));
-	player->setRotation(playerRotation);
-
-	if (targetIsSet)
-		setTarget();
+	for (auto &icon : MinimapIcons::Instance().getIcons())
+	{
+		if(icon->getType() == MinimapIconType::Target)
+			icon->updatePosition();
+		else
+			icon->updatePosition(scale);
+	}
 }
 
 void Minimap::setTilesScale()
@@ -410,26 +409,6 @@ void Minimap::setTilesScale()
 
 	map->setScale(scale);
 	updateIcons();
-}
-
-void Minimap::setPlayerVisible()
-{
-	if (time.time->asSeconds() >= 0.25)
-	{
-		time.clock->restart();
-		*time.time = sf::Time::Zero;
-
-		if (playerIsVisible <= 0)
-			playerIsVisible = 2;
-		else
-			playerIsVisible--;
-	}
-}
-
-void Minimap::setTarget()
-{
-	target->setPosition(sf::Vector2f(targetTile->getTileMiniMapSprite()->getPosition().x + lengthTargetFromTileOrigin.x,
-		targetTile->getTileMiniMapSprite()->getPosition().y + lengthTargetFromTileOrigin.y));
 }
 
 void Minimap::setGPSOnMinimap()

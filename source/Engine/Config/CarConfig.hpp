@@ -12,7 +12,7 @@ public:
 	void operator=(const CarConfig &) = delete;
 
 	static void loadCarConfig(const std::string &carName);
-	static double getValue(const std::string &carName, const std::string &valueName);
+	static float getValue(const std::string &carName, const std::string &valueName);
 
 private:
 
@@ -24,7 +24,7 @@ private:
 
 	std::vector<std::string> savedCars;
 
-	std::unordered_map<std::string, std::unordered_map<std::string, double>> values;
+	std::unordered_map<std::string, std::unordered_map<std::string, float>> values;
 
 	CarConfig() { ; }
 

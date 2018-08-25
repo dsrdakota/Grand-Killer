@@ -151,7 +151,7 @@ void Menu::setPosition(const sf::Vector2f &playerPos, const float &playerRot)
 	sf::Vector2f lenght = playerPos - tile->getTileMapSprite()->getPosition();
 	
 	Minimap::Instance().setPosition();
-	Minimap::Instance().setPlayerPosition(tile, lenght, playerRot);
+	Minimap::Instance().setPlayerPosition(playerPos, playerRot);
 
 	for (const auto &i : options)
 		i->setPosition(sf::Vector2f(firstButton->getPosition().x,

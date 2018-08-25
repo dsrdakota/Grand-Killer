@@ -23,14 +23,16 @@ public:
 		return gps;
 	}
 
+	const sf::Texture &getTextureForRadar();
+
 	void setPlayer(IObject *player);
 	void setTarget();
-	void setMission();
-	void findBestRoute();
+	void setMissionTarget();
+	void findBestRoutes();
 	void clear();
 
-	std::vector<sf::RectangleShape*>&getDirections();
-	std::vector<sf::CircleShape*>&getLinks();
+	const std::vector<sf::RectangleShape*>&getDirections();
+	const std::vector<sf::CircleShape*>&getLinks();
 
 private:
 
@@ -41,7 +43,11 @@ private:
 	std::vector<sf::RectangleShape*>directions;
 	std::vector<sf::CircleShape*>links;
 
-	std::vector<Point*>bestRoad;
+	std::vector<Point*>bestRoadToTarget;
+	std::vector<Point*>bestRoadToMissionTarget;
+
+	sf::Texture textureForRadar;
+	sf::RenderTexture renderTexture;
 
 	IObject *player;
 
@@ -49,7 +55,10 @@ private:
 	Point *targetPos;
 	Point *missionPos;
 
-	void doRoad();
+	bool shouldFind();
+	void doRoad(std::vector<Point*> &actualRoad, Point *start, Point *stop);
+
+	void setGpsDirectionOnRadar();
 
 	void checkAvailablePoints(std::vector<Point*> &actualRoad, Point *endTarget, float &roadLength);
 
@@ -58,7 +67,7 @@ private:
 	void checkMoveablePoints(Point *point);
 
 	sf::Vector2f getTheClosestAsphaltPosFromTarget(const sf::Vector2f &position);
-	void drawGpsTexture(const sf::Color &roadColor);
+	void drawGpsTexture(std::vector<Point*> &actualRoad, const sf::Vector2f &targetPosition, const sf::Color &roadColor);
 
 	bool checkRoadBeetwen(Point *p1, Point *p2);
 };

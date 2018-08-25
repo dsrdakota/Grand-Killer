@@ -28,6 +28,8 @@ mGame::mGame()
 	//cars.push_back(new Mini_truck(sf::Vector2f(2000, 2000), 180));
 	//cars.push_back(new Black_viper(sf::Vector2f(5200, 2200), 80));
 	cars.push_back(new Ambulance(sf::Vector2f(3200, 2200), 280));
+
+	Minimap::Instance().setMissionTargetPosition(sf::Vector2f(2000, 3000));
 }
 
 mGame::~mGame()
@@ -142,7 +144,7 @@ void mGame::switchState()
 		sf::Vector2f lenght = player->getPosition() - tile->getTileMapSprite()->getPosition();
 
 		Minimap::Instance().setPosition();
-		Minimap::Instance().setPlayerPosition(tile, lenght, player->getRotation());
+		Minimap::Instance().setPlayerPosition(player->getPosition(), player->getRotation());
 
 		window->setMouseCursorVisible(true);
 		*gameState = state::Map;

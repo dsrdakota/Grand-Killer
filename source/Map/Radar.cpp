@@ -4,6 +4,7 @@
 #include "../Engine/Engine.hpp"
 #include "Minimap.hpp"
 #include "GPS/GPS.hpp"
+#include "ObjectsManager/MinimapIcons.hpp"
 
 Radar::Radar() : window(Game::Instance().getWindow())
 {
@@ -105,12 +106,20 @@ void Radar::update(IObject *player)
 
 	centerMapOnPlayer();
 
-	if (Minimap::Instance().targetIsSet)
+	if (Minimap::Instance().targetIsSet || Minimap::Instance().missionTargetIsSet)
 	{
-		target->setPosition(radar->getPosition().x + (Minimap::Instance().targetTile->getTileMapSprite()->getPosition().x + Minimap::Instance().lengthTargetFromTileOrigin.x) * (radar->getGlobalBounds().width / Map::getMapSize().x),
-			radar->getPosition().y + (Minimap::Instance().targetTile->getTileMapSprite()->getPosition().y + Minimap::Instance().lengthTargetFromTileOrigin.y) * (radar->getGlobalBounds().height / Map::getMapSize().y));
+		Tile *targetTile = MinimapIcons::Instance().getIcons()[(int)MinimapIconType::Target]->getTile();
+		sf::Vector2f lengthFromTile = MinimapIcons::Instance().getIcons()[(int)MinimapIconType::Target]->getLengthFromTile();
 
-		setGPSOnRadar();
+		target->setPosition(radar->getPosition().x + (targetTile->getTileMapSprite()->getPosition().x + lengthFromTile.x) * (radar->getGlobalBounds().width / Map::getMapSize().x),
+			radar->getPosition().y + (targetTile->getTileMapSprite()->getPosition().y + lengthFromTile.y) * (radar->getGlobalBounds().height / Map::getMapSize().y));
+
+		gps->setTexture(&GPS::Instance().getTextureForRadar());
+		gps2->setTexture(&GPS::Instance().getTextureForRadar());
+		gps2->setFillColor(sf::Color(255, 255, 255, 100));
+
+		gps->setPosition(radarView->getPosition());
+		gps2->setPosition(radarView2->getPosition());
 	}
 }
 
@@ -171,132 +180,16 @@ void Radar::centerMapOnPlayer()
 	third->setPosition(thirdBackground->getPosition());
 }
 
-void Radar::setGPSOnRadar()
-{
-	for (const auto &i : GPS::Instance().getDirections())
-	{
-		i->setPosition(i->getPosition().x * (radar->getGlobalBounds().width / Map::getMapSize().x) + radar->getPosition().x,
-			i->getPosition().y * (radar->getGlobalBounds().height / Map::getMapSize().y) + radar->getPosition().y);
-
-		// insta changing size
-		i->setSize(sf::Vector2f(i->getSize().x * (radar->getGlobalBounds().width / Map::getMapSize().x),
-			i->getSize().y * (radar->getGlobalBounds().height / Map::getMapSize().y)));
-
-		i->setOrigin(sf::Vector2f(i->getOrigin().x * (radar->getGlobalBounds().width / Map::getMapSize().x),
-			i->getOrigin().y * (radar->getGlobalBounds().height / Map::getMapSize().y)));
-	}
-
-	for (const auto &i : GPS::Instance().getLinks())
-	{
-		i->setPosition(i->getPosition().x * (radar->getGlobalBounds().width / Map::getMapSize().x) + radar->getPosition().x,
-			i->getPosition().y * (radar->getGlobalBounds().height / Map::getMapSize().y) + radar->getPosition().y);
-	
-		i->setRadius(i->getRadius() * (radar->getGlobalBounds().width / Map::getMapSize().x));
-
-		i->setOrigin(sf::Vector2f(i->getOrigin().x * (radar->getGlobalBounds().width / Map::getMapSize().x),
-			i->getOrigin().y * (radar->getGlobalBounds().height / Map::getMapSize().y)));
-	}
-
-	cutGPSDirections();
-}
-
-void Radar::cutGPSDirections()
-{
-	sf::Vector2f radarPos = radarView2->getPosition() - radar->getPosition() + radar->getPosition();
-
-	for (const auto &i : GPS::Instance().getDirections())
-	{
-		if (radarView2->getGlobalBounds().intersects(i->getGlobalBounds()))
-		{
-			sf::Vector2f scale = sf::Vector2f(1, 1);
-			sf::Vector2f newSize = sf::Vector2f(0, 0);
-			sf::Vector2f newPosition = sf::Vector2f(0, 0);
-
-			// y
-
-			if (i->getPosition().y < radarPos.y)
-			{
-				newSize.y = -(i->getPosition().y + fabs(i->getSize().y) - radarPos.y);
-				newPosition.y = radarPos.y;
-			}
-
-			else if (i->getPosition().y > radarPos.y + radarView2->getGlobalBounds().height)
-			{
-				newSize.y = -(radarPos.y + radarView2->getGlobalBounds().height - (i->getPosition().y - fabs(i->getSize().y)));
-				newPosition.y = i->getPosition().y - fabs(i->getSize().y);
-			}
-
-			else if (i->getPosition().y - i->getSize().y < radarPos.y)
-			{
-				newSize.y = i->getPosition().y - radarPos.y;
-				newPosition.y = i->getPosition().y;
-			}
-
-			else if (i->getPosition().y - i->getSize().y > radarPos.y + radarView2->getGlobalBounds().height)
-			{
-				newSize.y = -(radarPos.y + radarView2->getGlobalBounds().height - i->getPosition().y);
-				newPosition.y = i->getPosition().y;
-			}
-
-			// x 
-
-			else if (i->getPosition().x < radarPos.x)
-			{
-				newSize.x = -(i->getPosition().x + fabs(i->getSize().x) - radarPos.x);
-				newPosition.x = radarPos.x;
-			}
-
-			else if (i->getPosition().x > radarPos.x + radarView2->getGlobalBounds().width)
-			{
-				newSize.x = -(radarPos.x + radarView2->getGlobalBounds().width - (i->getPosition().x - fabs(i->getSize().x)));
-				newPosition.x = i->getPosition().x - fabs(i->getSize().x);
-			}
-
-			else if (i->getPosition().x - i->getSize().x < radarPos.x)
-			{
-				newSize.x = i->getPosition().x - radarPos.x;
-				newPosition.x = i->getPosition().x;
-			}
-
-			else if (i->getPosition().x - i->getSize().x > radarPos.x + radarView2->getGlobalBounds().width)
-			{
-				newSize.x = -(radarPos.x + radarView2->getGlobalBounds().width - i->getPosition().x);
-				newPosition.x = i->getPosition().x;
-			}
-
-			if(!newSize.x)
-				newSize.x = i->getSize().x;
-			if (!newSize.y)
-				newSize.y = i->getSize().y;
-
-			if (!newPosition.x)
-				newPosition.x = i->getPosition().x;
-			if (!newPosition.y)
-				newPosition.y = i->getPosition().y;
-
-			scale = sf::Vector2f(newSize.x / i->getSize().x, newSize.y / i->getSize().y);
-
-			i->setScale(scale);
-			i->setPosition(newPosition);
-		}
-	}
-}
-
 void Radar::draw()
 {
 	//Painter::Instance().addToInterfaceDraw(radar);
 	Painter::Instance().addToInterfaceDraw(radarView);
 	Painter::Instance().addToInterfaceDraw(radarView2);
 
-	if (Minimap::Instance().isTargetSet())
+	if (Minimap::Instance().isTargetSet() || Minimap::Instance().missionTargetIsSet)
 	{
-		for (const auto &i : GPS::Instance().getDirections())
-			if (radarView2->getGlobalBounds().intersects(i->getGlobalBounds()))
-				Painter::Instance().addToInterfaceDraw(i);
-
-		for (const auto &i : GPS::Instance().getLinks())
-			if (radarView->getGlobalBounds().intersects(i->getGlobalBounds()))
-				Painter::Instance().addToInterfaceDraw(i);
+		Painter::Instance().addToInterfaceDraw(gps);
+		Painter::Instance().addToInterfaceDraw(gps2);
 	}
 
 	if (Minimap::Instance().isTargetSet() && radarView->getGlobalBounds().contains(target->getPosition()))

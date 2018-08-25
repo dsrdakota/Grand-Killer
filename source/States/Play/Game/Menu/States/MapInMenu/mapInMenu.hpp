@@ -27,6 +27,7 @@ private:
 
 	sf::Sprite *player;
 	sf::Sprite *target;
+	sf::Sprite *missionTarget;
 
 	bool active;
 

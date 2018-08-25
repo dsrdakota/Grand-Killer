@@ -6,9 +6,13 @@ TextureManager::~TextureManager()
 		delete data.second;
 }
 
+void TextureManager::save(sf::Texture * texture, const std::string & textureName)
+{
+	Instance().textures[textureName] = texture;
+}
+
 sf::Texture * TextureManager::load(const std::string & textureName, const std::string & texturePath)
 {
-
 	sf::Texture* result = new sf::Texture;
 
 	if (!result->loadFromFile(texturePath))

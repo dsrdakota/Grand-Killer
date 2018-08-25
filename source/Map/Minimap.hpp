@@ -22,10 +22,10 @@ public:
 	}
 
 	const bool isTargetSet();
-	const sf::Vector2f &getTargetPos();
 
 	void setPosition();
-	void setPlayerPosition(Tile *playerTile, const sf::Vector2f &lengthPlayerFromTileOrigin, const float &rot);
+	void setMissionTargetPosition(const sf::Vector2f &globalPosition);
+	void setPlayerPosition(const sf::Vector2f &globalPosition, const float &angle);
 	void show(bool fromMenu = false);
 
 	bool canExitMinimap();
@@ -40,20 +40,11 @@ private:
 	sf::RectangleShape *mapArea;
 	std::vector<std::vector<Tile*>>mapTiles;
 
-	sf::Sprite *player;
-	sf::Sprite *target;
 	sf::Sprite *cursor; // to change !!!
 	std::vector<sf::RectangleShape*>tag;
 	sf::CircleShape *centerOfTag;
 
 	std::vector<std::pair<Text*, sf::Sprite*>>navigation;
-
-	Tile *playerTile;
-	sf::Vector2f lengthPlayerFromTileOrigin;
-	float playerRotation;
-
-	Tile *targetTile;
-	sf::Vector2f lengthTargetFromTileOrigin;
 
 	sf::Vector2f scale;
 	const sf::Vector2f *minScale;
@@ -61,10 +52,10 @@ private:
 
 	sf::RectangleShape *background;
 
-	Time time;
 	Time cooldown;
 
-	int playerIsVisible;
+	bool missionTargetIsSet;
+
 	bool targetIsSet;
 	bool canSetTarget;
 
@@ -80,9 +71,6 @@ private:
 	void moveAllTiles(const sf::Vector2f &offset);
 	void updateIcons();
 	void setTilesScale();
-
-	void setPlayerVisible();
-	void setTarget();
 
 	void setGPSOnMinimap();
 

@@ -55,6 +55,4 @@ private:
 	sf::RectangleShape *thirdBackground;
 
 	void centerMapOnPlayer();
-	void setGPSOnRadar();
-	void cutGPSDirections();
 };
