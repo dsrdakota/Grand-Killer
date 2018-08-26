@@ -34,10 +34,10 @@ void MapInMenu::setPosition(const sf::Vector2f &borderXrange, const sf::Vector2f
 	Minimap::Instance().scale = sf::Vector2f(0.25f, 0.25f);
 	Minimap::Instance().setTilesScale();
 	Minimap::Instance().centerMapOnPlayer();
-
+	
 	map->setScale(Minimap::Instance().scale);
 	map->setPosition(TilesManager::getTilesVector()[0][0]->getTileMiniMapSprite()->getPosition());
-	cutMap();
+	map->setPosition(map->getPosition() - mapArea->getPosition());
 
 	player = MinimapIcons::Instance().getIcons()[(int)MinimapIconType::Player]->getSprite();
 	target = MinimapIcons::Instance().getIcons()[(int)MinimapIconType::Target]->getSprite();
@@ -63,6 +63,7 @@ void MapInMenu::drawActive()
 
 		map->setScale(Minimap::Instance().scale);
 		map->setPosition(TilesManager::getTilesVector()[0][0]->getTileMiniMapSprite()->getPosition());
+		map->setPosition(map->getPosition() - mapArea->getPosition());
 		cutMap();
 	}
 }
@@ -77,7 +78,8 @@ void MapInMenu::drawUnactive()
 		Minimap::Instance().centerMapOnPlayer();
 		Minimap::Instance().canSetTarget = false;
 	}
-
+	Minimap::Instance().setGPSOnMinimap();
+	cutMap();
 	Painter::Instance().addToInterfaceDraw(cuttedMap);
 
 	if (mapArea->getGlobalBounds().contains(player->getPosition()))
@@ -104,18 +106,15 @@ bool MapInMenu::mouseOnMap()
 
 void MapInMenu::cutMap()
 {
-	map->setTexture(*Radar::getRadarSprite()->getTexture());
-
 	cuttedMapTexture->create(static_cast<unsigned>(mapArea->getGlobalBounds().width), static_cast<unsigned>(mapArea->getGlobalBounds().height));
 
 	cuttedMapTexture->clear(sf::Color(0, 0, 0, 0));
 
-	map->setPosition(map->getPosition() - mapArea->getPosition());
 	cuttedMapTexture->draw(*map);
 
-	if (Minimap::Instance().targetIsSet)
+	if (Minimap::Instance().targetIsSet || Minimap::Instance().missionTargetIsSet)
 	{
-		for (const auto &i : GPS::Instance().getDirections())
+		for (const auto &i : GPS::Instance().getLinks())
 		{
 			sf::Vector2f pos = i->getPosition();
 			i->setPosition(i->getPosition() - mapArea->getPosition());
@@ -124,7 +123,7 @@ void MapInMenu::cutMap()
 			i->setPosition(pos);
 		}
 
-		for (const auto &i : GPS::Instance().getLinks())
+		for (const auto &i : GPS::Instance().getDirections())
 		{
 			sf::Vector2f pos = i->getPosition();
 			i->setPosition(i->getPosition() - mapArea->getPosition());

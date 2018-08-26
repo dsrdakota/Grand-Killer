@@ -31,6 +31,7 @@ private:
 	sf::RenderWindow *window;
 
 	sf::RenderTexture *textureOfRadar;
+	sf::RenderTexture *textureOfGPS;
 
 	sf::Sprite *radar;
 	sf::Sprite *radarView;
@@ -55,4 +56,6 @@ private:
 	sf::RectangleShape *thirdBackground;
 
 	void centerMapOnPlayer();
+	void setGPSOnRadar();
+	void drawGPSTexture();
 };

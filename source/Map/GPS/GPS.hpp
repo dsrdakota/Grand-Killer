@@ -23,8 +23,6 @@ public:
 		return gps;
 	}
 
-	const sf::Texture &getTextureForRadar();
-
 	void setPlayer(IObject *player);
 	void setTarget();
 	void setMissionTarget();
@@ -46,9 +44,6 @@ private:
 	std::vector<Point*>bestRoadToTarget;
 	std::vector<Point*>bestRoadToMissionTarget;
 
-	sf::Texture textureForRadar;
-	sf::RenderTexture renderTexture;
-
 	IObject *player;
 
 	Point *playerPos;
@@ -57,8 +52,6 @@ private:
 
 	bool shouldFind();
 	void doRoad(std::vector<Point*> &actualRoad, Point *start, Point *stop);
-
-	void setGpsDirectionOnRadar();
 
 	void checkAvailablePoints(std::vector<Point*> &actualRoad, Point *endTarget, float &roadLength);
 

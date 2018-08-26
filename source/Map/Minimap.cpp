@@ -154,14 +154,14 @@ void Minimap::show(bool fromMenu)
 
 	Painter::Instance().addToInterfaceDraw(map);
 
-	if (Minimap::Instance().isTargetSet())
+	if (targetIsSet || missionTargetIsSet)
 	{
 		setGPSOnMinimap();
 
-		for (const auto &i : GPS::Instance().getDirections())
-				Painter::Instance().addToInterfaceDraw(i);
-
 		for (const auto &i : GPS::Instance().getLinks())
+			Painter::Instance().addToInterfaceDraw(i);
+
+		for (const auto &i : GPS::Instance().getDirections())
 				Painter::Instance().addToInterfaceDraw(i);
 	}
 

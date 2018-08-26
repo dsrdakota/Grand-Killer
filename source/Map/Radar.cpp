@@ -14,6 +14,9 @@ Radar::Radar() : window(Game::Instance().getWindow())
 	textureOfRadar = new sf::RenderTexture;
 	textureOfRadar->create(static_cast<unsigned>(Map::getMapSize().x), static_cast<unsigned>(Map::getMapSize().y));
 
+	textureOfGPS = new sf::RenderTexture;
+	textureOfGPS->create(static_cast<unsigned>(radarArea->getSize().x), static_cast<unsigned>(radarArea->getSize().y));
+
 	auto radarTiles = TilesManager::getTileRadarVector();
 
 	scale = sf::Vector2f(0.1f, 0.1f);
@@ -83,6 +86,9 @@ Radar::~Radar()
 	delete hp;
 	delete armor;
 	delete third;
+
+	delete gps;
+	delete gps2;
 }
 
 sf::Sprite * Radar::getRadarSprite()
@@ -114,12 +120,7 @@ void Radar::update(IObject *player)
 		target->setPosition(radar->getPosition().x + (targetTile->getTileMapSprite()->getPosition().x + lengthFromTile.x) * (radar->getGlobalBounds().width / Map::getMapSize().x),
 			radar->getPosition().y + (targetTile->getTileMapSprite()->getPosition().y + lengthFromTile.y) * (radar->getGlobalBounds().height / Map::getMapSize().y));
 
-		gps->setTexture(&GPS::Instance().getTextureForRadar());
-		gps2->setTexture(&GPS::Instance().getTextureForRadar());
-		gps2->setFillColor(sf::Color(255, 255, 255, 100));
-
-		gps->setPosition(radarView->getPosition());
-		gps2->setPosition(radarView2->getPosition());
+		setGPSOnRadar();
 	}
 }
 
@@ -178,6 +179,63 @@ void Radar::centerMapOnPlayer()
 	thirdBackground->setPosition(armorBackground->getPosition().x + armorBackground->getGlobalBounds().width,
 		armorBackground->getPosition().y);
 	third->setPosition(thirdBackground->getPosition());
+}
+
+void Radar::setGPSOnRadar()
+{
+	for (const auto &i : GPS::Instance().getDirections())
+	{
+		i->setPosition(i->getPosition().x * (radar->getGlobalBounds().width / Map::getMapSize().x) + radar->getPosition().x,
+			i->getPosition().y * (radar->getGlobalBounds().height / Map::getMapSize().y) + radar->getPosition().y);
+
+		// insta changing size
+		i->setSize(sf::Vector2f(i->getSize().x * (radar->getGlobalBounds().width / Map::getMapSize().x),
+			i->getSize().y * (radar->getGlobalBounds().height / Map::getMapSize().y)));
+
+		i->setOrigin(sf::Vector2f(i->getOrigin().x * (radar->getGlobalBounds().width / Map::getMapSize().x),
+			i->getOrigin().y * (radar->getGlobalBounds().height / Map::getMapSize().y)));
+	}
+
+	for (const auto &i : GPS::Instance().getLinks())
+	{
+		i->setPosition(i->getPosition().x * (radar->getGlobalBounds().width / Map::getMapSize().x) + radar->getPosition().x,
+			i->getPosition().y * (radar->getGlobalBounds().height / Map::getMapSize().y) + radar->getPosition().y);
+
+		i->setRadius(i->getRadius() * (radar->getGlobalBounds().width / Map::getMapSize().x));
+
+		i->setOrigin(sf::Vector2f(i->getOrigin().x * (radar->getGlobalBounds().width / Map::getMapSize().x),
+			i->getOrigin().y * (radar->getGlobalBounds().height / Map::getMapSize().y)));
+	}
+
+	drawGPSTexture();
+}
+
+void Radar::drawGPSTexture()
+{
+	textureOfGPS->clear(sf::Color(0, 0, 0, 0));
+	for (const auto &i : GPS::Instance().getLinks())
+		if (radarView->getGlobalBounds().intersects(i->getGlobalBounds()))
+		{
+			i->move(-radarView->getPosition());
+			textureOfGPS->draw(*i);
+		}
+
+	for (const auto &i : GPS::Instance().getDirections())
+		if (radarView2->getGlobalBounds().intersects(i->getGlobalBounds()))
+		{
+			i->move(-radarView->getPosition());
+			textureOfGPS->draw(*i);
+		}
+	textureOfGPS->display();
+	textureOfGPS->setSmooth(true);
+
+	gps->setTexture(&textureOfGPS->getTexture());
+	gps2->setTexture(&textureOfGPS->getTexture());
+
+	gps2->setFillColor(sf::Color(0, 0, 0, 70));
+
+	gps->setPosition(radarView->getPosition());
+	gps2->setPosition(radarView2->getPosition());
 }
 
 void Radar::draw()

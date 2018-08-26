@@ -66,8 +66,6 @@ GPS::GPS()
 	playerPos = new Point(sf::Vector2f(0, 0));
 	targetPos = new Point(sf::Vector2f(0, 0));
 	missionPos = new Point(sf::Vector2f(0, 0));
-
-	renderTexture.create(1000, 1000);
 }
 
 GPS::~GPS()
@@ -87,11 +85,6 @@ GPS::~GPS()
 	delete playerPos;
 	delete targetPos;
 	delete missionPos;
-}
-
-const sf::Texture & GPS::getTextureForRadar()
-{
-	return textureForRadar;
 }
 
 void GPS::setPlayer(IObject * player)
@@ -141,8 +134,6 @@ void GPS::findBestRoutes()
 
 		if (Minimap::Instance().missionTargetIsSet || Minimap::Instance().targetIsSet)
 		{
-			renderTexture.clear(sf::Color::Transparent);
-
 			playerPos->resetPoint();
 
 			for (const auto &i : crossing)
@@ -162,12 +153,6 @@ void GPS::findBestRoutes()
 			doRoad(bestRoadToMissionTarget, playerPos, missionPos);
 			drawGpsTexture(bestRoadToMissionTarget, missionPos->getPointPosition(), sf::Color(255, 255, 0));
 			//clear();
-		}
-
-		if (Minimap::Instance().missionTargetIsSet || Minimap::Instance().targetIsSet)
-		{
-			renderTexture.display();
-			textureForRadar = renderTexture.getTexture();
 		}
 	}
 }
@@ -235,35 +220,6 @@ void GPS::doRoad(std::vector<Point*> &actualRoad, Point *start, Point *stop)
 		actualRoad = roadFromStart;
 	else
 		actualRoad = roadFromStop;
-}
-
-void GPS::setGpsDirectionOnRadar()
-{
-	auto radar = Radar::Instance().getRadarSprite();
-
-	for (const auto &i : GPS::Instance().getDirections())
-	{
-		i->setPosition(i->getPosition().x * (radar->getGlobalBounds().width / Map::getMapSize().x),
-			i->getPosition().y * (radar->getGlobalBounds().height / Map::getMapSize().y));
-
-		// insta changing size
-		i->setSize(sf::Vector2f(i->getSize().x * (radar->getGlobalBounds().width / Map::getMapSize().x),
-			i->getSize().y * (radar->getGlobalBounds().height / Map::getMapSize().y)));
-
-		i->setOrigin(sf::Vector2f(i->getOrigin().x * (radar->getGlobalBounds().width / Map::getMapSize().x),
-			i->getOrigin().y * (radar->getGlobalBounds().height / Map::getMapSize().y)));
-	}
-
-	for (const auto &i : GPS::Instance().getLinks())
-	{
-		i->setPosition(i->getPosition().x * (radar->getGlobalBounds().width / Map::getMapSize().x),
-			i->getPosition().y * (radar->getGlobalBounds().height / Map::getMapSize().y));
-
-		i->setRadius(i->getRadius() * (radar->getGlobalBounds().width / Map::getMapSize().x));
-
-		i->setOrigin(sf::Vector2f(i->getOrigin().x * (radar->getGlobalBounds().width / Map::getMapSize().x),
-			i->getOrigin().y * (radar->getGlobalBounds().height / Map::getMapSize().y)));
-	}
 }
 
 void GPS::checkAvailablePoints(std::vector<Point*> &actualRoad, Point *endTarget, float &roadLength)
@@ -420,27 +376,6 @@ void GPS::drawGpsTexture(std::vector<Point*> &actualRoad, const sf::Vector2f &ta
 
 		roadSegment->setFillColor(roadColor);
 		directions.push_back(roadSegment);
-	}
-
-	setGpsDirectionOnRadar();
-
-	for (auto &i : links)
-	{
-		//sf::Vector2f offset = -Radar::Instance().getRadarSprite()->getPosition();
-		//i->move(offset);
-		i->setScale(0.08f, 0.08f);
-		i->setPosition(0, 0);
-		renderTexture.draw(*i);
-		Painter::Instance().addToInterfaceDraw(i);
-	}
-
-	for (auto &i : directions)
-	{
-		//sf::Vector2f offset = -Radar::Instance().getRadarSprite()->getPosition();
-		//i->move(offset);
-		renderTexture.draw(*i);
-		std::cout << i->getPosition().x << ' ' << i->getPosition().y << std::endl;
-		Painter::Instance().addToInterfaceDraw(i);
 	}
 }
 
